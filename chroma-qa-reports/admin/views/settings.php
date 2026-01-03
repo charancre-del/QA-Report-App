@@ -43,6 +43,10 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                         <?php esc_html_e( 'Configure Google OAuth 2.0 for user authentication. Create credentials at', 'chroma-qa-reports' ); ?>
                         <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a>.
                     </p>
+                    <p class="description">
+                        <strong><?php esc_html_e( 'Authorized Redirect URI:', 'chroma-qa-reports' ); ?></strong>
+                        <code><?php echo esc_url( home_url( '/qa-reports/auth/callback/' ) ); ?></code>
+                    </p>
 
                     <table class="form-table">
                         <tr>

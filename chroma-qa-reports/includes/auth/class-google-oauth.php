@@ -43,7 +43,7 @@ class Google_OAuth {
      * @return string
      */
     public static function get_redirect_uri() {
-        return admin_url( 'admin-ajax.php?action=cqa_oauth_callback' );
+        return home_url( '/qa-reports/auth/callback/' );
     }
 
     /**

@@ -108,6 +108,11 @@ class Frontend_Controller {
             'index.php?cqa_page=edit-report&cqa_report_id=$matches[1]', 
             'top' 
         );
+        add_rewrite_rule( 
+            '^qa-reports/auth/callback/?$', 
+            'index.php?cqa_page=oauth_callback', 
+            'top' 
+        );
     }
 
     /**
@@ -172,6 +177,9 @@ class Frontend_Controller {
                 break;
             case 'view-report':
                 include CQA_PLUGIN_DIR . 'public/views/report-view.php';
+                break;
+            case 'oauth_callback':
+                self::oauth_callback();
                 break;
             default:
                 include CQA_PLUGIN_DIR . 'public/views/404.php';
