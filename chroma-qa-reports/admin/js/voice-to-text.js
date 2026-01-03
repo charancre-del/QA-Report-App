@@ -28,7 +28,7 @@
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                console.log('Speech recognition not supported');
+                // console.log('Speech recognition not supported');
                 return;
             }
 
@@ -52,13 +52,13 @@
             this.recognition.onstart = function () {
                 self.isRecording = true;
                 self.updateUI(true);
-                console.log('Voice recording started');
+                // console.log('Voice recording started');
             };
 
             this.recognition.onend = function () {
                 self.isRecording = false;
                 self.updateUI(false);
-                console.log('Voice recording stopped');
+                // console.log('Voice recording stopped');
             };
 
             this.recognition.onresult = function (event) {

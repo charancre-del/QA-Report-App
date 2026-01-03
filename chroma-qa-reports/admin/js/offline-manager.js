@@ -49,7 +49,7 @@
 
                 request.onsuccess = function () {
                     self.db = request.result;
-                    console.log('Offline database ready');
+                    // console.log('Offline database ready');
                     resolve();
                 };
 
@@ -115,7 +115,7 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/wp-content/plugins/chroma-qa-reports/service-worker.js')
                     .then(function (registration) {
-                        console.log('Service worker registered:', registration.scope);
+                        // console.log('Service worker registered:', registration.scope);
                     })
                     .catch(function (error) {
                         console.error('Service worker registration failed:', error);
@@ -173,7 +173,7 @@
 
                 request.onsuccess = function () {
                     reportData.localId = request.result;
-                    console.log('Draft saved offline:', reportData.localId);
+                    // console.log('Draft saved offline:', reportData.localId);
                     resolve(reportData);
                 };
 
@@ -282,7 +282,7 @@
 
                 request.onsuccess = function () {
                     photoData.localId = request.result;
-                    console.log('Photo queued for upload:', photoData.localId);
+                    // console.log('Photo queued for upload:', photoData.localId);
                     resolve(photoData);
                 };
 
@@ -461,7 +461,7 @@
                         registration.sync.register('sync-photos')
                     ]);
                 }).then(function () {
-                    console.log('Background sync registered');
+                    // console.log('Background sync registered');
                 }).catch(function (error) {
                     console.error('Background sync failed, falling back:', error);
                     self.manualSync();

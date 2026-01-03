@@ -11,6 +11,7 @@ use ChromaQA\Models\School;
 use ChromaQA\Models\Report;
 use ChromaQA\Models\Checklist_Response;
 use ChromaQA\Models\Photo;
+use ChromaQA\Integrations\Google_Drive;
 use ChromaQA\Checklists\Checklist_Manager;
 use WP_REST_Server;
 use WP_REST_Request;
@@ -313,6 +314,9 @@ class REST_Controller {
             return new WP_Error( 'create_failed', __( 'Failed to create report.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
         }
 
+        // Process Photos
+        $this->process_report_photos( $report->id, $request );
+
         return new WP_REST_Response( $this->prepare_report_response( $report ), 201 );
     }
 
@@ -343,6 +347,9 @@ class REST_Controller {
         }
 
         $report->save();
+
+        // Process Photos
+        $this->process_report_photos( $report->id, $request );
 
         return new WP_REST_Response( $this->prepare_report_response( $report ), 200 );
     }
@@ -467,6 +474,104 @@ class REST_Controller {
     }
 
     // ===== HELPERS =====
+
+    /**
+     * Process report photos (upload to Drive or fallback to Local).
+     *
+     * @param int             $report_id Report ID.
+     * @param WP_REST_Request $request   Request object.
+     */
+    private function process_report_photos( $report_id, $request ) {
+        $new_photos = $request->get_param( 'new_photos' );
+        
+        if ( empty( $new_photos ) || ! is_array( $new_photos ) ) {
+            return;
+        }
+
+        $report = Report::find( $report_id );
+        if ( ! $report ) return;
+        
+        $school = $report->get_school();
+        $folder_id = $school->drive_folder_id ?? null;
+
+        // Load image functions for fallback
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+        
+        foreach ( $new_photos as $index => $data_url ) {
+            if ( ! is_string( $data_url ) ) continue;
+
+            // Decode Base64
+            if ( ! preg_match( '/^data:image\/(\w+);base64,/', $data_url, $type ) ) {
+                continue;
+            }
+
+            $data = substr( $data_url, strpos( $data_url, ',' ) + 1 );
+            $ext = strtolower( $type[1] );
+            
+            if ( ! in_array( $ext, [ 'jpg', 'jpeg', 'gif', 'png' ] ) ) {
+                continue;
+            }
+
+            $decoded_data = base64_decode( $data );
+            if ( $decoded_data === false ) {
+                continue;
+            }
+
+            $filename = 'report-' . $report_id . '-photo-' . time() . '-' . $index . '.' . $ext;
+            $drive_file_id = '';
+            $tmp_file = sys_get_temp_dir() . '/' . $filename;
+            
+            // 1. Try Google Drive Upload
+            if ( get_option( 'cqa_google_client_id' ) ) {
+                file_put_contents( $tmp_file, $decoded_data );
+                $drive_result = Google_Drive::upload_file( $tmp_file, $filename, $folder_id );
+                if ( ! is_wp_error( $drive_result ) && isset( $drive_result['id'] ) ) {
+                    $drive_file_id = $drive_result['id'];
+                }
+            }
+
+            // 2. Fallback to Local Media Library
+            if ( empty( $drive_file_id ) ) {
+                $upload = wp_upload_bits( $filename, null, $decoded_data );
+                
+                if ( ! $upload['error'] ) {
+                    $file_path = $upload['file'];
+                    $file_name = basename( $file_path );
+                    $file_type = wp_check_filetype( $file_name, null );
+                    
+                    $attachment = [
+                        'post_mime_type' => $file_type['type'],
+                        'post_title'     => sanitize_file_name( pathinfo( $file_name, PATHINFO_FILENAME ) ),
+                        'post_content'   => '',
+                        'post_status'    => 'inherit',
+                    ];
+                    
+                    $attach_id = wp_insert_attachment( $attachment, $file_path );
+                    $attach_data = wp_generate_attachment_metadata( $attach_id, $file_path );
+                    wp_update_attachment_metadata( $attach_id, $attach_data );
+                    
+                    $drive_file_id = 'wp_' . $attach_id;
+                }
+            }
+            
+            // Cleanup temp file
+            if ( file_exists( $tmp_file ) ) {
+                unlink( $tmp_file );
+            }
+
+            // Save Photo Record
+            if ( $drive_file_id ) {
+                $photo = new Photo();
+                $photo->report_id = $report_id;
+                $photo->drive_file_id = $drive_file_id;
+                $photo->filename = $filename;
+                $photo->section_key = 'general'; 
+                $photo->save();
+            }
+        }
+    }
 
     private function prepare_school_response( $school ) {
         return [

@@ -208,12 +208,14 @@ class Frontend_Controller {
         );
 
         wp_localize_script( 'cqa-frontend', 'cqaFrontend', [
-            'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
-            'restUrl'  => rest_url( 'cqa/v1/' ),
-            'nonce'    => wp_create_nonce( 'wp_rest' ),
-            'loginUrl' => home_url( '/qa-reports/login/' ),
-            'homeUrl'  => home_url( '/qa-reports/' ),
-            'strings'  => [
+            'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+            'restUrl'        => rest_url( 'cqa/v1/' ),
+            'nonce'          => wp_create_nonce( 'wp_rest' ),
+            'loginUrl'       => home_url( '/qa-reports/login/' ),
+            'homeUrl'        => home_url( '/qa-reports/' ),
+            'googleClientId' => get_option( 'cqa_google_client_id' ),
+            'developerKey'   => get_option( 'cqa_google_developer_key' ), // Needed for Picker API
+            'strings'        => [
                 'loading'     => __( 'Loading...', 'chroma-qa-reports' ),
                 'saving'      => __( 'Saving...', 'chroma-qa-reports' ),
                 'error'       => __( 'An error occurred', 'chroma-qa-reports' ),

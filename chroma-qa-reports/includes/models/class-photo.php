@@ -209,6 +209,14 @@ class Photo {
         if ( empty( $this->drive_file_id ) ) {
             return '';
         }
+
+        // Check for local WP attachment
+        if ( strpos( $this->drive_file_id, 'wp_' ) === 0 ) {
+            $attachment_id = (int) substr( $this->drive_file_id, 3 );
+            $src = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
+            return $src ? $src[0] : '';
+        }
+
         return "https://drive.google.com/thumbnail?id={$this->drive_file_id}&sz=w{$size}";
     }
 
@@ -221,6 +229,13 @@ class Photo {
         if ( empty( $this->drive_file_id ) ) {
             return '';
         }
+
+        // Check for local WP attachment
+        if ( strpos( $this->drive_file_id, 'wp_' ) === 0 ) {
+            $attachment_id = (int) substr( $this->drive_file_id, 3 );
+            return wp_get_attachment_url( $attachment_id ) ?: '';
+        }
+
         return "https://drive.google.com/file/d/{$this->drive_file_id}/view";
     }
 

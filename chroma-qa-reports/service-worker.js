@@ -22,12 +22,12 @@ const STATIC_ASSETS = [
 
 // Install event - cache static assets
 self.addEventListener('install', event => {
-    console.log('[SW] Installing service worker...');
+    // console.log('[SW] Installing service worker...');
 
     event.waitUntil(
         caches.open(STATIC_CACHE)
             .then(cache => {
-                console.log('[SW] Caching static assets');
+                // console.log('[SW] Caching static assets');
                 return cache.addAll(STATIC_ASSETS);
             })
             .then(() => self.skipWaiting())
@@ -36,7 +36,7 @@ self.addEventListener('install', event => {
 
 // Activate event - clean old caches
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating service worker...');
+    // console.log('[SW] Activating service worker...');
 
     event.waitUntil(
         caches.keys().then(keys => {
@@ -149,7 +149,7 @@ async function staleWhileRevalidate(request) {
 
 // Background sync for offline reports
 self.addEventListener('sync', event => {
-    console.log('[SW] Background sync triggered:', event.tag);
+    // console.log('[SW] Background sync triggered:', event.tag);
 
     if (event.tag === 'sync-draft-reports') {
         event.waitUntil(syncDraftReports());
@@ -175,7 +175,7 @@ async function syncDraftReports() {
 
             if (response.ok) {
                 await db.delete('drafts', draft.localId);
-                console.log('[SW] Synced draft:', draft.localId);
+                // console.log('[SW] Synced draft:', draft.localId);
             }
         }
 
@@ -210,7 +210,7 @@ async function syncPhotos() {
 
             if (response.ok) {
                 await db.delete('pending-photos', photo.localId);
-                console.log('[SW] Synced photo:', photo.localId);
+                // console.log('[SW] Synced photo:', photo.localId);
             }
         }
     } catch (error) {
@@ -295,4 +295,4 @@ self.addEventListener('notificationclick', event => {
     }
 });
 
-console.log('[SW] Service worker loaded');
+// console.log('[SW] Service worker loaded');
