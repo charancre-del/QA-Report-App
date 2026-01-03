@@ -235,7 +235,9 @@ class Frontend_Controller {
         }
 
         // Check if user has QA capabilities
-        if ( ! user_can( $user, 'cqa_create_reports' ) && ! user_can( $user, 'cqa_view_all_reports' ) ) {
+        if ( ! user_can( $user, 'cqa_create_reports' ) 
+            && ! user_can( $user, 'cqa_view_all_reports' ) 
+            && ! user_can( $user, 'cqa_view_own_reports' ) ) {
             wp_logout();
             wp_send_json_error( [ 'message' => __( 'You do not have access to QA Reports.', 'chroma-qa-reports' ) ] );
         }
