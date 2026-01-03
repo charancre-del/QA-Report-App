@@ -84,6 +84,16 @@ class Admin_Menu {
             [ $this, 'render_settings' ]
         );
 
+        // Help & Guide
+        add_submenu_page(
+            self::MENU_SLUG,
+            __( 'Help & Guide', 'chroma-qa-reports' ),
+            __( 'Help & Guide', 'chroma-qa-reports' ),
+            'read', // Available to all users
+            self::MENU_SLUG . '-docs',
+            [ $this, 'render_documentation' ]
+        );
+
         // Hidden pages (edit/view)
         add_submenu_page(
             null, // Hidden
@@ -312,6 +322,13 @@ class Admin_Menu {
      */
     public function render_view_report() {
         include CQA_PLUGIN_DIR . 'admin/views/report-view.php';
+    }
+
+    /**
+     * Render documentation page.
+     */
+    public function render_documentation() {
+        include CQA_PLUGIN_DIR . 'admin/views/documentation.php';
     }
 
     /**
