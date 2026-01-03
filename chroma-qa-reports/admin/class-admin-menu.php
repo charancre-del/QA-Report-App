@@ -352,6 +352,7 @@ class Admin_Menu {
         $fields = [
             'google_client_id',
             'google_client_secret',
+            'google_developer_key',
             'sso_domain',
             'sso_default_role',
             'gemini_api_key',
@@ -368,6 +369,14 @@ class Admin_Menu {
                 if ( $field === 'sso_domain' ) {
                     $value = preg_replace( '#^https?://(?:www\.)?#i', '', $value );
                     $value = rtrim( $value, '/' );
+                }
+
+                // Special handling for Drive Folder (URL to ID)
+                if ( $field === 'drive_root_folder' ) {
+                    // Extract ID from URL like https://drive.google.com/drive/folders/1abc123...
+                    if ( preg_match( '/folders\/([a-zA-Z0-9_-]+)/', $value, $matches ) ) {
+                        $value = $matches[1];
+                    }
                 }
                 
                 update_option( "cqa_{$field}", $value );

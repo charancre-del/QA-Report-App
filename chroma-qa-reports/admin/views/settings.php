@@ -69,6 +69,18 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                         </tr>
                         <tr>
                             <th scope="row">
+                                <label for="cqa_google_developer_key"><?php esc_html_e( 'Developer Key (API Key)', 'chroma-qa-reports' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="password" id="cqa_google_developer_key" name="cqa_google_developer_key" 
+                                       value="<?php echo esc_attr( get_option( 'cqa_google_developer_key', '' ) ); ?>" class="regular-text">
+                                <p class="description">
+                                    <?php esc_html_e( 'Required for Google Picker and Maps. Create an API key in Google Cloud Console.', 'chroma-qa-reports' ); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
                                 <label for="cqa_sso_domain"><?php esc_html_e( 'Allowed Domain (SSO)', 'chroma-qa-reports' ); ?></label>
                             </th>
                             <td>
