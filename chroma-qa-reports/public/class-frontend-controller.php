@@ -27,6 +27,52 @@ class Frontend_Controller {
         // AJAX handlers
         add_action( 'wp_ajax_cqa_frontend_login', [ self::class, 'ajax_login' ] );
         add_action( 'wp_ajax_nopriv_cqa_frontend_login', [ self::class, 'ajax_login' ] );
+
+        // Exclude from sitemaps (WordPress core and popular plugins)
+        add_filter( 'wp_sitemaps_add_provider', [ self::class, 'exclude_from_sitemap' ], 10, 2 );
+        add_filter( 'wpseo_exclude_from_sitemap_by_url', [ self::class, 'yoast_exclude_urls' ] );
+        add_filter( 'rank_math/sitemap/exclude_urls', [ self::class, 'rankmath_exclude_urls' ] );
+        
+        // Add noindex to QA pages
+        add_action( 'wp_head', [ self::class, 'add_noindex_meta' ] );
+    }
+
+    /**
+     * Exclude QA pages from WordPress core sitemap.
+     */
+    public static function exclude_from_sitemap( $provider, $name ) {
+        // QA pages use custom routing, so they won't appear in standard sitemaps
+        // This is just a safety measure
+        return $provider;
+    }
+
+    /**
+     * Exclude URLs from Yoast sitemap.
+     */
+    public static function yoast_exclude_urls( $excluded ) {
+        $excluded[] = home_url( '/qa-reports/' );
+        $excluded[] = home_url( '/qa-reports/login/' );
+        $excluded[] = home_url( '/qa-reports/new/' );
+        return $excluded;
+    }
+
+    /**
+     * Exclude URLs from Rank Math sitemap.
+     */
+    public static function rankmath_exclude_urls( $urls ) {
+        $urls[] = home_url( '/qa-reports/' );
+        $urls[] = home_url( '/qa-reports/login/' );
+        $urls[] = home_url( '/qa-reports/new/' );
+        return $urls;
+    }
+
+    /**
+     * Add noindex meta tag to QA pages.
+     */
+    public static function add_noindex_meta() {
+        if ( get_query_var( 'cqa_page' ) ) {
+            echo '<meta name="robots" content="noindex, nofollow">' . "\n";
+        }
     }
 
     /**
