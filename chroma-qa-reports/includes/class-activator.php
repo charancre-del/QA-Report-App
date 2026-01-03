@@ -99,6 +99,7 @@ class Activator {
             report_id BIGINT(20) UNSIGNED NOT NULL,
             section_key VARCHAR(100) DEFAULT '',
             item_key VARCHAR(100) DEFAULT '',
+            location_tag VARCHAR(100) DEFAULT '',
             drive_file_id VARCHAR(100) NOT NULL,
             filename VARCHAR(255) DEFAULT '',
             caption TEXT DEFAULT '',
@@ -108,7 +109,8 @@ class Activator {
             PRIMARY KEY (id),
             KEY report_id (report_id),
             KEY section_key (section_key),
-            KEY item_key (item_key)
+            KEY item_key (item_key),
+            KEY location_tag (location_tag)
         ) $charset_collate;";
 
         // AI Summaries table

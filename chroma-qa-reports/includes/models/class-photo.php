@@ -116,6 +116,7 @@ class Photo {
         $photo->report_id = (int) $row['report_id'];
         $photo->section_key = $row['section_key'];
         $photo->item_key = $row['item_key'] ?? null;
+        $photo->location_tag = $row['location_tag'] ?? null;
         $photo->drive_file_id = $row['drive_file_id'];
         $photo->filename = $row['filename'];
         $photo->caption = $row['caption'];
@@ -161,6 +162,7 @@ class Photo {
             'report_id'     => $this->report_id,
             'section_key'   => $this->section_key,
             'item_key'      => $this->item_key,
+            'location_tag'  => $this->location_tag,
             'drive_file_id' => $this->drive_file_id,
             'filename'      => $this->filename,
             'caption'       => $this->caption,
@@ -168,7 +170,7 @@ class Photo {
             'sort_order'    => $this->sort_order ?: 0,
         ];
 
-        $format = [ '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d' ];
+        $format = [ '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d' ];
 
         if ( $this->id ) {
             $result = $wpdb->update( $table, $data, [ 'id' => $this->id ], $format, [ '%d' ] );

@@ -9,8 +9,8 @@ use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
 
 $current_user = wp_get_current_user();
-$recent_reports = Report::get_by_user( $current_user->ID, 10 );
-$schools = School::get_all();
+$recent_reports = Report::all( [ 'user_id' => $current_user->ID, 'limit' => 10 ] );
+$schools = School::all();
 ?>
 
 <div class="cqa-dashboard">
