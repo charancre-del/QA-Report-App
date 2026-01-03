@@ -90,6 +90,41 @@ class Checklist_Manager {
     }
 
     /**
+     * Get full checklist for a school with per-classroom sections.
+     *
+     * @param string $type Report type.
+     * @param int    $school_id School ID.
+     * @return array
+     */
+    public static function get_full_checklist_for_school( $type, $school_id ) {
+        $checklist = self::get_checklist_for_type( $type );
+        
+        // Find where to insert classroom sections (after "classroom_ratios" section)
+        $insert_after = 'classroom_ratios';
+        $new_sections = [];
+        $classroom_sections = Classroom_Checklist::build_classroom_sections( $school_id );
+        
+        foreach ( $checklist['sections'] as $section ) {
+            // Skip the generic "classrooms" section - we're replacing it with per-room sections
+            if ( $section['key'] === 'classrooms' ) {
+                continue;
+            }
+            
+            $new_sections[] = $section;
+            
+            // Insert classroom sections after ratios section
+            if ( $section['key'] === $insert_after ) {
+                foreach ( $classroom_sections as $cs ) {
+                    $new_sections[] = $cs;
+                }
+            }
+        }
+        
+        $checklist['sections'] = $new_sections;
+        return $checklist;
+    }
+
+    /**
      * Get a flat list of all items for a checklist.
      *
      * @param string $type Report type.

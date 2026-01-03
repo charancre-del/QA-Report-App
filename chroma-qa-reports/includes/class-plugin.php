@@ -68,6 +68,7 @@ class Plugin {
 
         // Checklists
         require_once CQA_PLUGIN_DIR . 'includes/checklists/class-checklist-manager.php';
+        require_once CQA_PLUGIN_DIR . 'includes/checklists/class-classroom-checklist.php';
 
         // Auth
         require_once CQA_PLUGIN_DIR . 'includes/auth/class-google-oauth.php';

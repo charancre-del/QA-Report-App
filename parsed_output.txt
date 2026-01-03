@@ -1,0 +1,461 @@
+
+================================================================================
+FILE: QA and Compliance Checklist 2026 BLANK.docx
+================================================================================
+
+
+[TABLE START]
+  Row 0: Criterion | Yes      No
+  Row 1: Past Licensing Report - All cited items addressed within the timeline noted (most recent report included as reference) | 
+  Row 2: Lacks outstanding complaints/substantiated investigations | 
+  Row 3:  | 
+  Row 4: Classroom Ratios | Children on Roll
+  Row 5: Infant A                  ratio 1:6          group size 12 | 
+  Row 6: Toddler                   ratio 1:8          group size 16 | 
+  Row 7: Two-year-olds        ratio 1:10        group size 20 | 
+  Row 8: Three-year-olds      ratio 1:15        group size 30 | 
+  Row 9: Four-year-olds        ratio 1:18        group size 36 | 
+  Row 10: GA PreK                 ratio 1:10        group size 20 | 
+  Row 11: School-age              ratio 1:25        group size 50 | 
+[TABLE END]
+
+[Normal] Notes:
+
+[TABLE START]
+  Row 0: 
+  Row 1:  | Safety | Yes | 
+  Row 2:  | Fire Drills – Monthly (1 nap time drill per year) |  | 
+  Row 3:  | Tornado Drills – Every six months |  | 
+  Row 4:  | Documentation of Pediatric First aid and CPR for Staff |  | 
+  Row 5:  | Fire extinguishers serviced and tagged annually |  | 
+  Row 6:  | Emergency numbers near phones |  | 
+  Row 7:  | Allergy lists current using month/year and posted in classrooms/kitchen |  | 
+  Row 8:  | Medications | Yes | No
+  Row 9:  | Medication / Topical Forms complete / Medication stored and dispensed properly |  | 
+  Row 10:  | Classrooms | Yes | No
+  Row 11:  | Infant bottles labeled (tops too), dated/ready-to-feed, and staff engage while feeding |  | 
+  Row 12:  | Refrigerators in Infant and Toddler rooms are clean and with working thermometers (fridge 40 degrees F, freezer 0 degrees F) |  | 
+  Row 13:  | Handwashing/diapering procedures followed |  | 
+  Row 14:  | Supervision by sight and sound at all times (I/Todd) - preschoolers, the majority of the time |  | 
+  Row 15:  | Universal precautions followed - gloves used for any contact with bodily fluids |  | 
+  Row 16:  | Shelves organized with labels as visual aid to support emerging independence |  | 
+  Row 17:  | Sleeping equipment stored appropriately |  | 
+  Row 18:  | Staff belongings and hazardous (cleaning) materials are stored/out of reach |  | 
+  Row 19:  | Bulletin Boards decorated and current |  | 
+  Row 20:  | Print-rich environment, current lesson plans posted |  | 
+  Row 21:  | Learning centers are obvious by materials and signage |  | 
+  Row 22:  | Schedules are posted and being followed |  | 
+  Row 23:  | The climate is calm, flexible, and cheerful |  | 
+  Row 24:  | Equipment and materials are in good supply and well-maintained |  | 
+  Row 25:  | Photos of the children (and/or with families) present in classrooms |  | 
+  Row 26:  | Process art at eye-level & handwashing chart posted by sinks |  | 
+  Row 27:  | Appropriate conversations and discipline practiced |  | 
+  Row 28: Sleep/Nap | Sleep/Nap |  | 
+  Row 29: Crib mattresses in good repair with firm, tight-fitting sheets | Crib mattresses in good repair with firm, tight-fitting sheets | XX | 
+  Row 30: Cribs labeled and sheets changed daily as evident from laundry schedule | Cribs labeled and sheets changed daily as evident from laundry schedule |  | 
+  Row 31: Infants are being placed on their backs in a crib | Infants are being placed on their backs in a crib |  | 
+  Row 32: No pillows, toys, blankets/clip-on paci’s in cribs - cribs not used as storage of equipment of any kind | No pillows, toys, blankets/clip-on paci’s in cribs - cribs not used as storage of equipment of any kind |  | 
+  Row 33: Swaddling/positioning devices not being used without physicians’ statements | Swaddling/positioning devices not being used without physicians’ statements | XX | 
+  Row 34: Infants do not sleep in equipment other than a safety-approved crib | Infants do not sleep in equipment other than a safety-approved crib |  | 
+  Row 35: Cribs, Cots, and mats used by the same child daily and cots in good repair with no tears | Cribs, Cots, and mats used by the same child daily and cots in good repair with no tears | X | 
+  Row 36: 24” corridor between each row of mats/cots-children and in a head-to-toe arrangement | 24” corridor between each row of mats/cots-children and in a head-to-toe arrangement |  | 
+  Row 37: Each cot/crib has sheet/light cover/laundered weekly | Each cot/crib has sheet/light cover/laundered weekly |  | 
+  Row 38: Kitchen - Laundry | Kitchen - Laundry |  | 
+  Row 39: Kitchen is tidy, clean, and gloves are being used by kitchen staff | Kitchen is tidy, clean, and gloves are being used by kitchen staff |  | 
+  Row 40: Food is labeled and stored properly, free of dust and off the floor | Food is labeled and stored properly, free of dust and off the floor |  | 
+  Row 41: Refrigerator and freezers are clean and with working thermometers | Refrigerator and freezers are clean and with working thermometers |  | 
+  Row 42: Current menu and allergy list (month and year) posted | Current menu and allergy list (month and year) posted |  | 
+  Row 43: Trash cans covered; door is closed to kitchen | Trash cans covered; door is closed to kitchen |  | 
+  Row 44: Once prepared, the food is kept warm until serving using foil | Once prepared, the food is kept warm until serving using foil |  | 
+  Row 45: The laundry room is clean, tidy, and locked | The laundry room is clean, tidy, and locked |  | 
+  Row 46: Playgrounds | Playgrounds | Yes | No
+  Row 47: Playgrounds maintained/tidy | Playgrounds maintained/tidy |  | 
+  Row 48: Grass/mulch maintained | Grass/mulch maintained |  | 
+  Row 49: The proper fall zone is maintained | The proper fall zone is maintained |  | 
+  Row 50: Toys and equipment maintained with no evidence of rust/mildew/sharp edges | Toys and equipment maintained with no evidence of rust/mildew/sharp edges |  | 
+  Row 51: Teachers appropriately supervise children | Teachers appropriately supervise children |  | 
+  Row 52: Exterior gates securely fastened | Exterior gates securely fastened |  | 
+  Row 53: Interior gates locked with carabiner | Interior gates locked with carabiner |  | 
+  Row 54: No entrapment hazards | No entrapment hazards |  | 
+  Row 55: Fencing in good repair | Fencing in good repair |  | 
+  Row 56: No evidence of tripping hazards | No evidence of tripping hazards |  | 
+  Row 57: Picnic tables are clean | Picnic tables are clean |  | 
+  Row 58: At least one shade structure | At least one shade structure |  | 
+  Row 59: Any large roots presenting a trip hazard are painted and no low-hanging branches or those protruding through fence | Any large roots presenting a trip hazard are painted and no low-hanging branches or those protruding through fence |  | 
+[TABLE END]
+
+[Normal] Notes:
+
+[TABLE START]
+  Row 0:  |  | Bus - Van                                                                                      Yes                               No | Bus - Van                                                                                      Yes                               No | Bus - Van                                                                                      Yes                               No | Bus - Van                                                                                      Yes                               No | Bus - Van                                                                                      Yes                               No
+  Row 1: Properly maintained - clean/paint, decals, reg sticker on plate, tires, and exterior in good condition, and mechanically sound | Properly maintained - clean/paint, decals, reg sticker on plate, tires, and exterior in good condition, and mechanically sound | Properly maintained - clean/paint, decals, reg sticker on plate, tires, and exterior in good condition, and mechanically sound |  |  |  | 
+  Row 2: Transportation plans and logs properly documented | Transportation plans and logs properly documented | Transportation plans and logs properly documented |  |  |  | 
+  Row 3: Seatbelts in working condition | Seatbelts in working condition | Seatbelts in working condition |  |  |  | 
+  Row 4: Seats securely screwed into the floor | Seats securely screwed into the floor | Seats securely screwed into the floor |  |  |  | 
+  Row 5: No trash, or loose equipment (potential projectiles) | No trash, or loose equipment (potential projectiles) | No trash, or loose equipment (potential projectiles) |  |  |  | 
+  Row 6: Seat covers intact (no tears, cuts, etc.) | Seat covers intact (no tears, cuts, etc.) | Seat covers intact (no tears, cuts, etc.) |  |  |  | 
+  Row 7: Fire extinguisher maintained and secure | Fire extinguisher maintained and secure | Fire extinguisher maintained and secure |  |  |  | 
+  Row 8: First Aid Kit complete - *see below for documentation list | Please routinely check stock of all kits and avoid expired products. | First Aid Kit complete - *see below for documentation list | Please routinely check stock of all kits and avoid expired products. | First Aid Kit complete - *see below for documentation list | Please routinely check stock of all kits and avoid expired products. |  |  |  | 
+  Row 9: Copy of Insurance, annual vehicle inspection, and required staff training in notebook | Copy of Insurance, annual vehicle inspection, and required staff training in notebook | Copy of Insurance, annual vehicle inspection, and required staff training in notebook |  |  |  | 
+  Row 10: Posted Notices: Signage | Posted Notices: Signage | Posted Notices: Signage |  |  |  | 
+  Row 11: Current License | Current License | Current License |  |  |  | 
+  Row 12: Consumer Product Safety Poster | Consumer Product Safety Poster | Consumer Product Safety Poster |  |  |  | 
+  Row 13: No smoking sign | No smoking sign | No smoking sign |  |  |  | 
+  Row 14: Copy of “No liability insurance poster” only if center does NOT carry liability insurance. | Copy of “No liability insurance poster” only if center does NOT carry liability insurance. | Copy of “No liability insurance poster” only if center does NOT carry liability insurance. |  |  |  | 
+  Row 15: Current communicable disease chart | Current communicable disease chart | Current communicable disease chart |  |  |  | 
+  Row 16: Statement allowing parents access when a child is present | Statement allowing parents access when a child is present | Statement allowing parents access when a child is present |  |  |  | 
+  Row 17: Names of management responsible for administration | Names of management responsible for administration | Names of management responsible for administration |  |  |  | 
+  Row 18: Dated current week's menu for meals and snacks | Dated current week's menu for meals and snacks | Dated current week's menu for meals and snacks |  |  |  | 
+  Row 19: Severe weather, fire, and other emergency plans | Severe weather, fire, and other emergency plans | Severe weather, fire, and other emergency plans |  |  |  | 
+  Row 20: Require visitors to check in with staff when entering | Require visitors to check in with staff when entering | Require visitors to check in with staff when entering |  |  |  | 
+  Row 21: Right of parents to review most recent license report | Right of parents to review most recent license report | Right of parents to review most recent license report |  |  |  | 
+  Row 22: Notice: “Visitors check in” notification/sign-in sheet | Notice: “Visitors check in” notification/sign-in sheet | Notice: “Visitors check in” notification/sign-in sheet |  |  |  | 
+  Row 23: Current Rules & Regs in a binder and accessible | Current Rules & Regs in a binder and accessible | Current Rules & Regs in a binder and accessible |  |  |  | 
+  Row 24: First Aid Kit Checklist | First Aid Kit Checklist | First Aid Kit Checklist |  | Yes | Yes | No
+  Row 25: Scissors - Tweezers | Scissors - Tweezers | Scissors - Tweezers |  |  |  | 
+  Row 26: Gauze Pads | Gauze Pads | Gauze Pads |  |  |  | 
+  Row 27: Adhesive Tape | Adhesive Tape | Adhesive Tape |  |  |  | 
+  Row 28: Thermometer | Thermometer | Thermometer |  |  |  | 
+  Row 29: Band-Aids – assorted sizes | Band-Aids – assorted sizes | Band-Aids – assorted sizes |  |  |  | 
+  Row 30: Insect Sting Preparation | Insect Sting Preparation | Insect Sting Preparation |  |  |  | 
+  Row 31: Antibacterial Ointment | Antibacterial Ointment | Antibacterial Ointment |  |  |  | 
+  Row 32: Antiseptic Cleaning Solution | Antiseptic Cleaning Solution | Antiseptic Cleaning Solution |  |  |  | 
+  Row 33: Rubber Gloves – Cold Pack | Rubber Gloves – Cold Pack | Rubber Gloves – Cold Pack |  |  |  | 
+  Row 34: Triangular Bandage (or bandana) | Triangular Bandage (or bandana) | Triangular Bandage (or bandana) |  |  |  | 
+  Row 35: First Aid Manual/Face Mask/Protective Eyewear | First Aid Manual/Face Mask/Protective Eyewear | First Aid Manual/Face Mask/Protective Eyewear |  |  |  | 
+  Row 36:  | Building/Image/Curb Appeal/Maintenance | Building/Image/Curb Appeal/Maintenance | Yes | Yes | No
+  Row 37:  | Floors and vents are clean | Floors and vents are clean |  |  | 
+  Row 38:  | Countertops/window sills are free from dust | Countertops/window sills are free from dust |  |  | 
+  Row 39:  | Staff post, and are using opening/closing checklists | Staff post, and are using opening/closing checklists |  |  | 
+  Row 40:  | Walls clean and maintained - no chipping and/or graffiti | Walls clean and maintained - no chipping and/or graffiti |  |  | 
+  Row 41:  | Area rugs throughout (classrooms and lobby) are clean and with no trip hazards, (not curled or frayed edging) | Area rugs throughout (classrooms and lobby) are clean and with no trip hazards, (not curled or frayed edging) |  |  | 
+  Row 42:  | Furniture is clean and in good repair | Furniture is clean and in good repair |  |  | 
+  Row 43:  | All bathroom exhaust fans are dust-free and operational | All bathroom exhaust fans are dust-free and operational |  |  | 
+  Row 44:  | Bathrooms – clean and odor-free | Bathrooms – clean and odor-free |  |  | 
+  Row 45:  | Bathrooms stocked with proper supplies | Bathrooms stocked with proper supplies |  |  | 
+  Row 46:  | Quality Rated Signage | Quality Rated Signage |  |  | 
+[TABLE END]
+
+[Normal]     Notes: 
+
+[TABLE START]
+  Row 0: Curb Appeal |  | 
+  Row 1: Dumpster doors closed – flag and Chroma signage intact |  | 
+  Row 2: Exterior maintained and free from litter/debris, at entry, building looks inviting |  | 
+  Row 3: Landscaping shows well across entire perimeter of building (ie: weeds, overhanging branches, mulch, etc.) |  | 
+  Row 4: Parking lot well maintained |  | 
+  Row 5: Building/Office Management/Recordkeeping |  | 
+  Row 6: The lobby and front desk clean, organized, and inviting |  | 
+  Row 7: Security system, wi-fi, and Procare operational |  | 
+  Row 8: Required notebooks maintained – checklists, signed where required, dates, immunizations, CBC, training, etc. |  | 
+  Row 9: Staff and child files complete with checklists (orientation for staff, including documents for both staff and children) |  | 
+  Row 10: All staff and child files are stored in a locked file cabinet inaccessible to anyone other than management |  | 
+  Row 11: GA PreK Files uses its own checklist and complete |  | 
+  Row 12: Closets/storage cabinets are clean/well organized/uncluttered, and locked |  | 
+[TABLE END]
+
+[Normal] Notes: 
+
+[TABLE START]
+  Row 0: Lobby / Office / Staff |  | 
+  Row 1: Staff available at the front desk at all times |  | 
+  Row 2: Lobby and front desk are attractive and organized |  | 
+  Row 3: Appropriate music playing in lobby and at least, also in the infant classroom |  | 
+  Row 4: Dress code followed, and management in business casual |  | 
+  Row 5: Director's office clean, uncluttered, and professional in appearance |  | 
+  Row 6: Adult restroom is clean, tidy, and inviting for parents/staff |  | 
+  Row 7:  |  | 
+[TABLE END]
+
+[Normal] OVERALL RATING 
+[Normal] (Per standard protocol for all Chroma schools, a Plan of Improvement (POI) will follow in a few days as delivered by your Regional Director).
+[Normal] See below for overall rating ahead of notes and additional attached resources where helpful, and photos of spaces across all areas of your program. 
+[Normal] ☐ Exceeds
+☐ Meets
+☐ Needs Improvement
+[Normal] Notes: Supporting photos, (some with markups to clarify what is being communicated), will accompany this report using several separate documents based on space to include both interior and exterior areas for a comprehensive picture.  
+[Normal] Thank you for your dedication to upholding the mission, vision, and philosophy of Chroma Early Learning Academy.
+[Normal] Best,
+[Normal] Laura Newman
+[Normal] Chroma Early Learning Academy
+[Normal] Quality Assurance and Compliance Officer | Corporate
+================================================================================
+FILE: Level II Tier QA & Compliance Checklist_2026.docx
+================================================================================
+
+[Title] Level II Tier QA & Compliance Checklist 
+[Normal] Congratulations! Your program has reached an exciting milestone and will now be reviewed with a Continuous Quality Improvement (CQI) checklist. This achievement reflects your hard work, passion, and commitment to excellence. By living out Chroma’s mission and philosophy each day, you’re making a lasting difference for children, families, and the future of early learning. 
+[Normal] We are so proud of all you’ve accomplished together!
+[Normal] Campus:                                                                                Date:
+[Normal] Corporate Staff Conducting Visit:                                      Program Management: 
+[Normal] Each item will be rated as: 
+✅ Yes / Consistently   |   ⚠️ Sometimes / Needs Work   |   ❌ No / Not Yet in Place
+[Heading 2] Physical Environment: Health & Safety – Protecting children and staff from harm while supporting their health and well-being in a secure space to play, learn and grow. 
+[Normal] Environment is clean, safe, and well-maintained including all restrooms, and the exterior (side and front lots) of the building. ___
+[Normal] Ground cover is adequate, fencing in good repair, toys and equipment in good supply and free of rust/mildew. ___
+[Normal] Carabiners in place on fencing, no evidence of tripping hazards and at least one shade structure. ___
+[Normal] Wood mulch is at least 9” deep, and shredded /recycled rubber where used is at least 6” deep and maintained.  ___
+[Normal] Playgrounds include a variety of equipment and with no rust, no sharp edges. ___
+[Normal] Air vents, rugs, windows, and floors are clean/dust-free.  ___
+[Normal] Emergency procedures are posted and practiced regularly to include required drill logs. ___
+[Normal] Secure entry system, wi-fi and video monitoring are operational. ___
+[Normal] First-Aid kits are complete with no expired products.  ___
+[Normal] Menus are current and posted. ___
+[Normal] The laundry room is clean, organized, odor-free, and locked.  ___
+[Normal] Handwashing, diapering and sanitation routines are consistently followed. ___
+[Normal] The bus/van(s) are properly maintained, clean, mechanically sound, with a fire extinguisher and first-aid kit.  ___
+[Normal] The kitchen is clean, reflects state requirements and with the door closed.  ___
+[Normal] Safe sleep practices across all areas in the infant room are followed.  ___
+[Normal] Allergy lists are visible and updated monthly and with a cover sheet for confidentiality. ___
+[Normal] Vehicles are current on all requirements to include the annual mechanical inspection. ___
+[Normal] Infant bottles are properly labeled.  ___
+[Normal] Staff belongings are stored out of reach in all classrooms.  ___
+[Normal] All cribs and infant equipment are clean and well maintained.  ___
+[Normal] Infants don’t sleep in equipment other than safety-approved cribs spaced with a 36” corridor and head-to-toe arrangement reducing transmission of airborne germs. ___
+[Normal] Transportation log book and verifiable training for those who drive the bus is in place. ___
+[Heading 2] Relationships and Interactions – Helping children feel safe, valued and connected, building trust and in support of healthy learning and development.
+[Normal] Caregivers are warm, responsive, and nurturing. ___
+[Normal] Staff communication is respectful and sensitive. ___
+[Normal] The classroom/organizational climate is calm, flexible, and cheerful, representing cohesive teams.  ___
+[Normal] Positive guidance supports behavior. ___
+[Normal] Curriculum, Learning, and Teaching Practices – Guiding what children learn, how they are taught and ways staff support growth to build skills for school and life.
+[Normal] Balance of child-initiated and teacher-guided activities is provided with ongoing close supervision. ___
+[Normal] Bulletin boards are current and reflect the monthly theme.  ___
+[Normal] Children have opportunities for exploration, play, and problem-solving. ___
+[Normal] Supports are available for dual language learners with one staff on site able to communicate as needed. ___
+[Normal] Lesson plans are individualized using observation and assessment. ___
+[Normal] Families have an opportunity to participate (for a fee), specialty classes.  ___
+[Heading 2] Classroom Environment – Safe, welcoming, and well-organized where children explore, learn, and build positive relationships with caregivers and peers.
+[Normal] Classrooms are organized, inviting and clutter-free. ___
+[Normal] Learning centers (blocks, dramatic play, literacy/language, arts and crafts, science, sensory, music and movement, science, and cultural awareness.) are well stocked and in good condition. ___
+[Normal] Anti-bias books and culturally diverse dolls are present in at least some classrooms ___
+[Normal] The school-age classroom has materials unique to the age group and space, encouraging reasoning and critical thinking in addition to science and nature activities.  ___
+[Normal] Children’s process-art work is at the child’s eye-level, displayed throughout the classroom reflective of Chroma’s theme-based learning. ___
+[Normal] Staff bios with photos are posted to encourage a connection and trust by both prospective and enrolled families. ___
+[Normal] Classroom shelves labeled with photos and reflects a print-rich environment supporting literacy and independence. ___
+[Normal] Classroom doors are creatively decorated that uniquely showcase the age group. ___
+[Normal] Special displays are based on events and seasons of the calendar.  ___
+[Normal] Comfortable and inviting quiet spaces are available for children who need downtime. ___
+[Heading 2] Child Assessment & Individualization – Practices help teachers understand individual strengths, needs, and progress to support learning for all.
+[Normal] Ongoing observation and documentation of child progress occurs with child portfolios. ___
+[Normal] Developmental screenings are completed with family input (Ages & Stages Questionnaire). ___
+[Normal] Assessments guide adaptations to learning experiences where needed and possible according to staffing. ___
+[Normal] Family conferences are available to all who want. ___
+[Heading 2] Professionalism – Conduct, behavior, and attitude reflect respect, competence, and integrity fostering collaboration and excellence for a strong organizational climate.
+[Normal] Interactions support all learning styles and with consistent boundaries but with positive behavior reinforcement.  ___
+[Normal] All staff adhere to the Chroma dress code. ___
+[Normal] Program has low staff turnover. ___
+[Normal] Opening and Closing checklists are being used daily. ___
+[Normal] Management plans and then deliver staff meetings at least every month/quarter.  ___
+[Heading 2] Family & Community Engagement – Established and maintained collaborative relationships that support learning.
+[Normal] Orientation for new families include a personal meeting with follow up communication, setting the tone to a successful experience with established trust. ___
+[Normal] Parent Surveys are offered to families at least annually for anonymous feedback. ___
+[Normal] The program provides regular, two-way communication with families through Procare. ___
+[Normal] Families have opportunities for involvement (events, volunteering, etc.). ___
+[Normal] Family culture, language, and values are respected. ___
+[Normal] Program connects families with community resources, (electronically/print) as needed or requested. ___
+[Heading 2] Equity, Inclusion & Diversity - Policies and procedures ensure that every child feels valued, respected, and supported—laying the foundation for lifelong learning and belonging.
+[Normal] Program practices are inclusive for children of all abilities with supports as available for those in need. ___
+[Normal] Learning centers represent diverse cultures, languages, ability/non-traditional gender roles/family structures. ___
+[Normal] Leadership/Lobby/Office/Hallways, and Files – Management effectively guides staff, children, and families with the Chroma vision where everyone can thrive, including outstanding recordkeeping to align with state and federal regulations (CAPS, CACFP, GA PreK). 
+[Normal] The lobby, office, hallways, and front desk are tidy, inviting, professional, and reflective of Chroma branding ___
+[Normal] Required posted notices are in place. ___
+[Normal] Management creates and distribute monthly newsletters to families that are also posted on Parent Information Boards in each classroom.  ___
+[Normal] Music is softly, but noticeably playing in the lobby.  ___
+[Normal] Prior to classroom transition, families are notified and a plan in place for a seamless transition that includes communication between teachers in both classrooms. ___
+[Normal] GA PreK files are complete and with checklists.  ___
+[Normal] Child and Staff Files include checklists and are kept in a locked cabinet.  ___
+[Normal] Current version of DECAL Rules and Regulations are available for review by staff or parents. ___
+[Normal] Thank you for your dedication, talent, and heart in supporting our mission. 
+[Normal] Notes with supporting photos will accompany this report. 
+================================================================================
+FILE: Tyrone Fall_2025 with Summer Baseline _2025OverlayQA.docx
+================================================================================
+
+
+[TABLE START]
+  Row 0: Criterion | Yes        No
+  Row 1: State Ratios Maintained | Y
+  Row 2: State Group Sizes Maintained | Y
+  Row 3: Past Licensing Report - All cited items addressed within the timeline noted | Playground black plastic ground cover still present/seeping out
+  Row 4: The Center lacks outstanding complaints and/or substantiated investigations | No complaints
+  Row 5:  | 
+  Row 6:  | 
+  Row 7:  | 
+  Row 8: Classroom Ratios | Children
+  Row 9: Infant A                ratio 1:6        group size 12 | 2, 2
+  Row 10: Toddlers               ratio 1:8        group size 16 | 4
+  Row 11: Two-year-olds      ratio 1:10      group size 20 | 4, 6
+  Row 12: Three-year-olds    ratio 1:15      group size 30 | 10, 10
+  Row 13: Four-year-olds      ratio 1:18      group size 36 | 6, 6
+  Row 14: GA PreK classrooms  1:10        group size 20 | Hoping to be awarded next application cycle
+  Row 15: School-age            ratio 1:25      group size 50 | 61, 54
+[TABLE END]
+
+[Normal] Notes: On the day of my visit, a parent toured with two-year-old and will enroll.  1 infant mixed with a few toddlers.  There are several AS rooms in the primary building and one space in the second building, the lower level game room beside the gym with two bathrooms currently being used in that space. Many classrooms are not open and the one off of the front lobby needs a tremendous amount of work, particularly because it sits where all who come in can see it.  
+
+[TABLE START]
+  Row 0:  | Health & Safety / Playgrounds | Health & Safety / Playgrounds | Health & Safety / Playgrounds | Health & Safety / Playgrounds | Health & Safety / Playgrounds | Health & Safety / Playgrounds
+  Row 1:  | Criterion | Yes | Yes | No | No | Source of Evidence
+  Row 2:  | Safety |  |  |  |  | 
+  Row 3:  | Fire Drills – Monthly (1 nap time drill per year) | XX | XX |  |  | Documentation
+  Row 4:  | Tornado Drills – every six months per DECAL-recorded as being done monthly for a period, same with another area for drills required just every six months (photo in admin section). | XX | XX |  |  | Documentation
+  Row 5:  | Documentation of Pediatric First aid and CPR for Staff | XX | XX |  |  | Observation
+  Row 6:  | Fire extinguishers are serviced and tagged annually | XX | XX |  |  | Observation
+  Row 7:  | Emergency numbers accessible from phones-office phone sits on the floor behind the AD desk, this needs to be attended to. |  |  | X | X | Documentation
+  Row 8:  | Allergy lists are current in a notebook-month/year | XX | XX |  |  | Documentation
+  Row 9:  | Current allergy lists posted in classrooms/kitchen | In process | In process |  |  | Documentation and Observation
+  Row 10:  | First Aid Kit complete-please routinely check – headcounts being done – staff and management | XX | XX |  |  | Observation
+  Row 11:  | Medication / Topical Forms complete / Medication stored and dispensed properly |  |  | None being given | None being given | Documentation
+  Row 12:  | Classroom | Yes | Yes | No | No | 
+  Row 13:  | Infant bottles labeled and dated/ready to feed (tops too)-NO feeding of cereal as mixed into bottle-discussed/guidelines emailed to mgmt.. | X | X | X | X | Observation
+  Row 14:  | Microwaves not used to heat bottles-discussed | X | X | X | X | Observation
+  Row 15:  | SIDS policy followed | XX | XX |  |  | Observation
+  Row 16:  | Handwashing procedures followed | XX | XX |  |  | Observation
+  Row 17:  | Diaper-changing procedures followed | XX | XX |  |  | Observation
+  Row 18:  | Supervision by sight and sound at all times (I/Todd) | XX | XX |  |  | Observation
+  Row 19:  | Supervision of Preschoolers by sound at all times and by sight the majority of the time | XX | XX |  |  | Observation
+  Row 20:  | Universal precautions followed - gloves used for any contact with bodily fluids | XX | XX |  |  | Observation
+  Row 21:  | Pump soaps and paper towels are available | XX | XX |  |  | Observation
+  Row 22:  | Refrigerators clean/in good repair/thermometers | X | X |  |  | Observation
+  Row 23:  | Chemicals stored in locked/inaccessible cabinets-recommend storing cleaning supplies out of view in the lobby adult restroom. | XX | XX |  |  | Observation
+  Row 24:  | Sippy Cups returned to the kitchen for sanitizing | XX | XX |  |  | Observation
+  Row 25:  | Sleeping equipment is stored appropriately | XX | XX |  |  | Observation
+  Row 26:  | Staff purses/backpacks are stored and out of reach | XX | XX |  |  | Observation
+  Row 27:  | Bulletin Boards are decorated and current | Not enough | Not enough | In process | In process | Observation
+  Row 28:  | Print-rich environment – Current Lesson Plans | Fair-Poor | Fair-Poor | In process | In process | Observation
+  Row 29:  | The climate is calm, flexible, and cheerful-Infant/Todd (combo) room was a bit chaotic. | XX | XX |  |  | Observation
+  Row 30:  | Equipment and materials are in good supply-very low on most classroom equipment (photos) |  |  | XX | XX | Observation
+  Row 31:  | Process art at eye level | Fair | Fair | In process | In process | Observation
+  Row 32:  | Appropriate conversations and discipline practiced | XX | XX |  |  | Observation
+  Row 33: Sleeping/Naptime – label all cots and cribs w child name | Sleeping/Naptime – label all cots and cribs w child name | Sleeping/Naptime – label all cots and cribs w child name | Yes | No |  |  | 
+  Row 34: Crib mattresses in good repair – with firm, tight-fitting (no evidence) sheets that are waterproof and compliant. | Crib mattresses in good repair – with firm, tight-fitting (no evidence) sheets that are waterproof and compliant. | Crib mattresses in good repair – with firm, tight-fitting (no evidence) sheets that are waterproof and compliant. | XXX | X | Observation | Observation | Observation
+  Row 35: Crib sheets are changed daily                                    XX | Crib sheets are changed daily                                    XX | Crib sheets are changed daily                                    XX |  |  | Observation | Observation | Observation
+  Row 36: Infants are being placed on their backs in a crib       XX | Infants are being placed on their backs in a crib       XX | Infants are being placed on their backs in a crib       XX |  |  | Observation | Observation | Observation
+  Row 37: No pillows, toys, or blankets/clip on paci’s in crib, or with sleeping babies                                                                  XX | No pillows, toys, or blankets/clip on paci’s in crib, or with sleeping babies                                                                  XX | No pillows, toys, or blankets/clip on paci’s in crib, or with sleeping babies                                                                  XX |  |  | Observation | Observation | Observation
+  Row 38: Swaddling/wedges/positioning devices are not used unless physicians’ statements present time limitation                         XX | Swaddling/wedges/positioning devices are not used unless physicians’ statements present time limitation                         XX | Swaddling/wedges/positioning devices are not used unless physicians’ statements present time limitation                         XX | XX |  | Observation | Observation | Observation
+  Row 39: Infants do not sleep in equipment other than safety-approved crib                                                                     X | Infants do not sleep in equipment other than safety-approved crib                                                                     X | Infants do not sleep in equipment other than safety-approved crib                                                                     X |  | X | Observation | Observation | Observation
+  Row 40: Cribs, Cots, and mats used by the same child daily   X | Cribs, Cots, and mats used by the same child daily   X | Cribs, Cots, and mats used by the same child daily   X | X |  | Observation | Observation | Observation
+  Row 41: 24” corridor between each row of mats/cots and children are placed in a head-to-toe arrangement                                         X X | 24” corridor between each row of mats/cots and children are placed in a head-to-toe arrangement                                         X X | 24” corridor between each row of mats/cots and children are placed in a head-to-toe arrangement                                         X X |  |  | Observation | Observation | Observation
+  Row 42: Each cot/crib has sheet/light cover/laundered weekly      XX | Each cot/crib has sheet/light cover/laundered weekly      XX | Each cot/crib has sheet/light cover/laundered weekly      XX |  |  | Observation | Observation | Observation
+  Row 43: Kitchen / Dining Room – Vent over stove not working-milk and other items I typically see labeled w date was not dated-defer to RD, CACFP expert on staff. | Kitchen / Dining Room – Vent over stove not working-milk and other items I typically see labeled w date was not dated-defer to RD, CACFP expert on staff. | Kitchen / Dining Room – Vent over stove not working-milk and other items I typically see labeled w date was not dated-defer to RD, CACFP expert on staff. | Yes | No |  |  | 
+  Row 44: Kitchen sanitization policy followed | Kitchen sanitization policy followed | Kitchen sanitization policy followed | XX |  | Observation | Observation | Observation
+  Row 45: Space is tidy and with ventilation – use of gloves | Space is tidy and with ventilation – use of gloves | Space is tidy and with ventilation – use of gloves | Fair | Please clean | Deep clean | Observation | Observation | Observation
+  Row 46: Food labeled and stored properly free of dust/off floor-unopened canned goods on floor (Photo), shortage of storage space. | Food labeled and stored properly free of dust/off floor-unopened canned goods on floor (Photo), shortage of storage space. | Food labeled and stored properly free of dust/off floor-unopened canned goods on floor (Photo), shortage of storage space. | X | X | Observation | Observation | Observation
+  Row 47: Refrigerator and freezer temps correct- thermometers | Refrigerator and freezer temps correct- thermometers | Refrigerator and freezer temps correct- thermometers | X | Need | Observation | Observation | Observation
+  Row 48: Menus posted w requirements/allergy list current | Menus posted w requirements/allergy list current | Menus posted w requirements/allergy list current | X | In process | Observation | Observation | Observation
+  Row 49: Trash containers covered-some need lids or they weren’t on | Trash containers covered-some need lids or they weren’t on | Trash containers covered-some need lids or they weren’t on | XX |  | Observation | Observation | Observation
+  Row 50: The door closed and locked when children present | The door closed and locked when children present | The door closed and locked when children present | X | Door was open | Observation | Observation | Observation
+  Row 51: Family-style dining practiced-food kept warm-no foil being used, cook who is very caring says she tries to get the food to the kids as soon as she makes it, no covering being used, I noted the use of tin foil. | Family-style dining practiced-food kept warm-no foil being used, cook who is very caring says she tries to get the food to the kids as soon as she makes it, no covering being used, I noted the use of tin foil. | Family-style dining practiced-food kept warm-no foil being used, cook who is very caring says she tries to get the food to the kids as soon as she makes it, no covering being used, I noted the use of tin foil. | X | X | Observation | Observation | Observation
+  Row 52: The laundry room is clean, tidy and locked at all times-inside of the doors (photos) need attention. | The laundry room is clean, tidy and locked at all times-inside of the doors (photos) need attention. | The laundry room is clean, tidy and locked at all times-inside of the doors (photos) need attention. | XX |  | Observation | Observation | Observation
+  Row 53: Playgrounds | Playgrounds | Playgrounds | Yes | No |  |  | 
+  Row 54: Playgrounds maintained/tidy – some ok, some good, other areas need attention re: licensing and in an effort not to get cited at the next state visit (photos and notes in documents report) | Playgrounds maintained/tidy – some ok, some good, other areas need attention re: licensing and in an effort not to get cited at the next state visit (photos and notes in documents report) | Playgrounds maintained/tidy – some ok, some good, other areas need attention re: licensing and in an effort not to get cited at the next state visit (photos and notes in documents report) | X | X | Observation | Observation | Observation
+  Row 55: Grass/mulch maintained on all playgrounds-dead bush at front, side of front lot has a large pile of debris that should be hauled away. Landscapers should be monitoring and clearing away leaves from the season that fall on the ground for a clean look. New rubber mulch on playground is nice, still allows for plastic groundcover to seep out in a variety of places (previously cited by Licensing). | Grass/mulch maintained on all playgrounds-dead bush at front, side of front lot has a large pile of debris that should be hauled away. Landscapers should be monitoring and clearing away leaves from the season that fall on the ground for a clean look. New rubber mulch on playground is nice, still allows for plastic groundcover to seep out in a variety of places (previously cited by Licensing). | Grass/mulch maintained on all playgrounds-dead bush at front, side of front lot has a large pile of debris that should be hauled away. Landscapers should be monitoring and clearing away leaves from the season that fall on the ground for a clean look. New rubber mulch on playground is nice, still allows for plastic groundcover to seep out in a variety of places (previously cited by Licensing). | X Fair |  | Observation | Observation | Observation
+  Row 56: The proper fall zone is maintained | The proper fall zone is maintained | The proper fall zone is maintained | XX |  | Observation | Observation | Observation
+  Row 57: Toys and equipment maintained/in good repair-broken base of slide waiting to be replaced (safety issue), paint was very sloppy by previous owner, the older equipment would benefit from a full refresh/paint job. | Toys and equipment maintained/in good repair-broken base of slide waiting to be replaced (safety issue), paint was very sloppy by previous owner, the older equipment would benefit from a full refresh/paint job. | Toys and equipment maintained/in good repair-broken base of slide waiting to be replaced (safety issue), paint was very sloppy by previous owner, the older equipment would benefit from a full refresh/paint job. |  |  | Observation | Observation | Observation
+  Row 58: Teachers appropriately supervise children | Teachers appropriately supervise children | Teachers appropriately supervise children | XX |  | Observation | Observation | Observation
+  Row 59: Exterior gates are locked and securely fastened | Exterior gates are locked and securely fastened | Exterior gates are locked and securely fastened | XX |  | Observation | Observation | Observation
+  Row 60: All interior gates are locked with carabiner | All interior gates are locked with carabiner | All interior gates are locked with carabiner |  | XX | Observation | Observation | Observation
+  Row 61: Children use appropriate playgrounds at all times | Children use appropriate playgrounds at all times | Children use appropriate playgrounds at all times | XX |  | Observation | Observation | Observation
+  Row 62: No entrapment hazards | No entrapment hazards | No entrapment hazards | XX |  | Observation | Observation | Observation
+  Row 63: Fencing in good repair-dumpster fence is leaning considerably (photo), curb appeal… | Fencing in good repair-dumpster fence is leaning considerably (photo), curb appeal… | Fencing in good repair-dumpster fence is leaning considerably (photo), curb appeal… | X | X | Observation | Observation | Observation
+  Row 64: No evidence of tripping hazards-railroad ties are tall as noted by Licensing, some areas have the end of a railroad tie higher than the neighboring piece so it presents a trip hazard (photos). | No evidence of tripping hazards-railroad ties are tall as noted by Licensing, some areas have the end of a railroad tie higher than the neighboring piece so it presents a trip hazard (photos). | No evidence of tripping hazards-railroad ties are tall as noted by Licensing, some areas have the end of a railroad tie higher than the neighboring piece so it presents a trip hazard (photos). | X |  | Observation | Observation | Observation
+  Row 65: Picnic tables, sensory tables, and water fountains are cleaned and sanitized | Picnic tables, sensory tables, and water fountains are cleaned and sanitized | Picnic tables, sensory tables, and water fountains are cleaned and sanitized | X | Please clean | Observation | Observation | Observation
+  Row 66: At least one shade structure – Licensing wants to see at least one for each playground. Currently once charming shade structure on site. | At least one shade structure – Licensing wants to see at least one for each playground. Currently once charming shade structure on site. | At least one shade structure – Licensing wants to see at least one for each playground. Currently once charming shade structure on site. | X |  | Observation | Observation | Observation
+  Row 67: Mulch/groundcover depth is adequate with resilient surface beneath equipment and maintained.-improved. Thank you! | Mulch/groundcover depth is adequate with resilient surface beneath equipment and maintained.-improved. Thank you! | Mulch/groundcover depth is adequate with resilient surface beneath equipment and maintained.-improved. Thank you! | FairX |  |  |  | 
+  Row 68: No evidence of rust on the play equipment | No evidence of rust on the play equipment | No evidence of rust on the play equipment | XX |  | Observation | Observation | Observation
+[TABLE END]
+
+[Normal] Notes: Some areas need more groundcover (photos), fencing needs repair in one spot, interior gates missing carabiner. 
+
+[TABLE START]
+  Row 0:  |  | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit. | VAN/Buses– low tire pressure on one van, door locks not working on grey van, all seats need a deep clean. Remove loose change, mount/secure all fire extinguishers, remove anything that could be a projectile in time of collision. Transportation checklist must be completed in full (staff/vehicle Tag#) (photos). Low tire pressure on one bus along with several indicators on dash requiring attention. Sent to corporate on the afternoon of my visit.
+  Row 1: Properly maintained - clean/paint, decals, tires, and exterior body in good condition, mechanically sound-One bus not yet Chroma wrapped yet being used on a daily basis. The other two vehicles are “Chroma wrapped” vans. | Properly maintained - clean/paint, decals, tires, and exterior body in good condition, mechanically sound-One bus not yet Chroma wrapped yet being used on a daily basis. The other two vehicles are “Chroma wrapped” vans. | Properly maintained - clean/paint, decals, tires, and exterior body in good condition, mechanically sound-One bus not yet Chroma wrapped yet being used on a daily basis. The other two vehicles are “Chroma wrapped” vans. | X | X | X | X | Observation | Observation
+  Row 2: Transportation plans on bus – in building and one on van itself | Transportation plans on bus – in building and one on van itself | Transportation plans on bus – in building and one on van itself | XX | XX |  |  | Documentation and Observation | Documentation and Observation
+  Row 3: All seatbelts are in working condition | All seatbelts are in working condition | All seatbelts are in working condition | XX | XX |  |  | Observation | Observation
+  Row 4: Current vehicle inspection on file/reg sticker on plate | Current vehicle inspection on file/reg sticker on plate | Current vehicle inspection on file/reg sticker on plate | XX | XX |  |  | Documentation and Observation | Documentation and Observation
+  Row 5: Seats are securely screwed into the floor | Seats are securely screwed into the floor | Seats are securely screwed into the floor | XX | XX |  |  | Observation | Observation
+  Row 6: No evident trash – minor, do deep clean please | No evident trash – minor, do deep clean please | No evident trash – minor, do deep clean please | X | X | Clean | Clean | Observation | Observation
+  Row 7: No loose equipment – fire extinguisher not bolted down. One item not secure, unsure what it is, photo. | No loose equipment – fire extinguisher not bolted down. One item not secure, unsure what it is, photo. | No loose equipment – fire extinguisher not bolted down. One item not secure, unsure what it is, photo. | X | X |  |  | Observation | Observation
+  Row 8: Seat covers are intact, no tears, cuts, etc.  – intact but absolutely filthy, plan to have professionally cleaned ASAP! | Seat covers are intact, no tears, cuts, etc.  – intact but absolutely filthy, plan to have professionally cleaned ASAP! | Seat covers are intact, no tears, cuts, etc.  – intact but absolutely filthy, plan to have professionally cleaned ASAP! | XX | XX |  |  | Observation | Observation
+  Row 9: Fire extinguisher available and maintained | Fire extinguisher available and maintained | Fire extinguisher available and maintained | XX | XX |  |  | Documentation and Observation | Documentation and Observation
+  Row 10: First Aid Kit complete - *see below for documentation list. Please plan to routinely check stock of all kits.I included the required items list in my resources ahead of the report. | First Aid Kit complete - *see below for documentation list. Please plan to routinely check stock of all kits.I included the required items list in my resources ahead of the report. | First Aid Kit complete - *see below for documentation list. Please plan to routinely check stock of all kits.I included the required items list in my resources ahead of the report. | X | X |  |  | Observation | Observation
+  Row 11: Copy of CDL, Insurance, CPR /First aid cards in notebook/notebook maintained | Copy of CDL, Insurance, CPR /First aid cards in notebook/notebook maintained | Copy of CDL, Insurance, CPR /First aid cards in notebook/notebook maintained | XX | XX |  |  | Documentation and Observation | Documentation and Observation
+  Row 12: Transportation log complete/second check signatures- be sure all fields are complete-vehicle Tag # and staff on vehicle (photos) Excellent documentation. | Transportation log complete/second check signatures- be sure all fields are complete-vehicle Tag # and staff on vehicle (photos) Excellent documentation. | Transportation log complete/second check signatures- be sure all fields are complete-vehicle Tag # and staff on vehicle (photos) Excellent documentation. | XX | XX |  |  | Documentation and Observation | Documentation and Observation
+  Row 13: Posted Notices: Signage-In process, sent posted notices doc. | Posted Notices: Signage-In process, sent posted notices doc. | Posted Notices: Signage-In process, sent posted notices doc. | Yes | Yes | No | No |  | 
+  Row 14: Current License | Current License | Current License |  |  |  |  | Observation | Observation
+  Row 15: Current communicable disease chart | Current communicable disease chart | Current communicable disease chart |  |  |  |  | Observation | Observation
+  Row 16: Statement allowing parents access when a child is present | Statement allowing parents access when a child is present | Statement allowing parents access when a child is present |  |  |  |  | Observation | Observation
+  Row 17: Names of people responsible for administration | Names of people responsible for administration | Names of people responsible for administration |  |  |  |  | Observation | Observation
+  Row 18: Dated current week's menu | Dated current week's menu | Dated current week's menu |  |  |  |  | Observation | Observation
+  Row 19: Severe weather, fire, and other emergency plans | Severe weather, fire, and other emergency plans | Severe weather, fire, and other emergency plans |  |  |  |  | Observation | Observation
+  Row 20: Require visitors to check in with staff when entering | Require visitors to check in with staff when entering | Require visitors to check in with staff when entering |  |  |  |  | Observation | Observation
+  Row 21: Right of parents to review most recent license report | Right of parents to review most recent license report | Right of parents to review most recent license report |  |  |  |  | Observation | Observation
+  Row 22: Notice: “Visitors check in” notification/sign-in sheet | Notice: “Visitors check in” notification/sign-in sheet | Notice: “Visitors check in” notification/sign-in sheet |  |  |  |  | Observation | Observation
+  Row 23: Current R’s & Regs are easily accessible-be sure and print out and sit on counter or side table in a binder with proper label. | Current R’s & Regs are easily accessible-be sure and print out and sit on counter or side table in a binder with proper label. | Current R’s & Regs are easily accessible-be sure and print out and sit on counter or side table in a binder with proper label. |  |  |  |  |  | 
+  Row 24: First Aid Kit Checklist – please routinely check | First Aid Kit Checklist – please routinely check | First Aid Kit Checklist – please routinely check | Yes | Yes | No | No |  | 
+  Row 25: Scissors - Tweezers | Scissors - Tweezers | Scissors - Tweezers |  |  |  |  | Observation | Observation
+  Row 26: Gauze Pads | Gauze Pads | Gauze Pads |  |  |  |  | Observation | Observation
+  Row 27: Adhesive Tape | Adhesive Tape | Adhesive Tape |  |  |  |  | Observation | Observation
+  Row 28: Thermometer | Thermometer | Thermometer |  |  |  |  | Observation | Observation
+  Row 29: Band-Aids – assorted sizes | Band-Aids – assorted sizes | Band-Aids – assorted sizes |  |  |  |  | Observation | Observation
+  Row 30: Insect Sting Preparation | Insect Sting Preparation | Insect Sting Preparation |  |  |  |  | Observation | Observation
+  Row 31: Antibacterial Ointment | Antibacterial Ointment | Antibacterial Ointment |  |  |  |  | Observation | Observation
+  Row 32: Antiseptic Cleaning Solution | Antiseptic Cleaning Solution | Antiseptic Cleaning Solution |  |  |  |  | Observation | Observation
+  Row 33: Rubber Gloves – Cold Pack | Rubber Gloves – Cold Pack | Rubber Gloves – Cold Pack |  |  |  |  | Observation | Observation
+  Row 34: Triangular Bandage (or bandana) | Triangular Bandage (or bandana) | Triangular Bandage (or bandana) |  |  |  |  | Observation | Observation
+  Row 35: First Aid Manual/Face Mask/Protective Eye Wear | First Aid Manual/Face Mask/Protective Eye Wear | First Aid Manual/Face Mask/Protective Eye Wear |  |  |  |  | Observation | Observation
+  Row 36:  | Maintenance/Bldg/Image/Curb Appeal | Maintenance/Bldg/Image/Curb Appeal | Maintenance/Bldg/Image/Curb Appeal | Yes | Yes | No | No | Source of Evidence | Source of Evidence | Source of Evidence
+  Row 37:  | Floors are clean | Floors are clean | Floors are clean | XX | XX |  |  | Observation | Observation | Observation
+  Row 38:  | Air vents clean – clean ASAP!!!!! | Air vents clean – clean ASAP!!!!! | Air vents clean – clean ASAP!!!!! | X | X | X | X | Observation | Observation | Observation
+  Row 39:  | Countertops/window sills – free from dust | Countertops/window sills – free from dust | Countertops/window sills – free from dust | XX | XX |  |  | Observation | Observation | Observation
+  Row 40:  | Housekeeping/open/closing checklists – one room only, no evidence of it being done, use ours, sent to mgmt.. Again, they are posted, but as it was Monday, not sure they are being used, the rooms could use some work throughout, windows and doors especially are dirty, some with old tape, etc. Recommend deep clean for every space in the program to get it holiday ready as we turn the calendar to 2026. | Housekeeping/open/closing checklists – one room only, no evidence of it being done, use ours, sent to mgmt.. Again, they are posted, but as it was Monday, not sure they are being used, the rooms could use some work throughout, windows and doors especially are dirty, some with old tape, etc. Recommend deep clean for every space in the program to get it holiday ready as we turn the calendar to 2026. | Housekeeping/open/closing checklists – one room only, no evidence of it being done, use ours, sent to mgmt.. Again, they are posted, but as it was Monday, not sure they are being used, the rooms could use some work throughout, windows and doors especially are dirty, some with old tape, etc. Recommend deep clean for every space in the program to get it holiday ready as we turn the calendar to 2026. |  |  | X | X | Observation | Observation | Observation
+  Row 41:  | Walls are cleaned and maintained - no chipping and/or graffiti – just painted, gym not yet done. Ceiling of gym could use a fresh coat too. | Walls are cleaned and maintained - no chipping and/or graffiti – just painted, gym not yet done. Ceiling of gym could use a fresh coat too. | Walls are cleaned and maintained - no chipping and/or graffiti – just painted, gym not yet done. Ceiling of gym could use a fresh coat too. | XX | XX |  |  | Observation | Observation | Observation
+  Row 42:  | Area rugs are clean and in good repair/no trip hazard-nice to see some bright new large area rugs, some are still dirty, faded and could use a replacement. Recommend full review of all classrooms. Every room matters. | Area rugs are clean and in good repair/no trip hazard-nice to see some bright new large area rugs, some are still dirty, faded and could use a replacement. Recommend full review of all classrooms. Every room matters. | Area rugs are clean and in good repair/no trip hazard-nice to see some bright new large area rugs, some are still dirty, faded and could use a replacement. Recommend full review of all classrooms. Every room matters. | Most clean, not all | Most clean, not all |  |  | Observation | Observation | Observation
+  Row 43:  | Institutional air freshening systems are available and maintained | Institutional air freshening systems are available and maintained | Institutional air freshening systems are available and maintained | X | X | Not yet | Not yet | Observation | Observation | Observation
+  Row 44:  | All bathroom exhaust fans are clean and operational | All bathroom exhaust fans are clean and operational | All bathroom exhaust fans are clean and operational | X | X | X | X | Observation | Observation | Observation
+  Row 45:  | Bathrooms – clean and odor-free - no discolored or missing tiles – photos- remove toilet brushes, etc. clean vents…Some bathrooms are dirty, some toilets very dirty, some bathrooms have a urine odor, others have ceiling tiles needing attention, etc. Recommend full canvassing of all to create a game plan for cleaning and repair as needed. | Bathrooms – clean and odor-free - no discolored or missing tiles – photos- remove toilet brushes, etc. clean vents…Some bathrooms are dirty, some toilets very dirty, some bathrooms have a urine odor, others have ceiling tiles needing attention, etc. Recommend full canvassing of all to create a game plan for cleaning and repair as needed. | Bathrooms – clean and odor-free - no discolored or missing tiles – photos- remove toilet brushes, etc. clean vents…Some bathrooms are dirty, some toilets very dirty, some bathrooms have a urine odor, others have ceiling tiles needing attention, etc. Recommend full canvassing of all to create a game plan for cleaning and repair as needed. | Some ok | Some ok | Deep clean all | Deep clean all | Observation | Observation | Observation
+  Row 46:  | Bathrooms stocked with proper supplies | Bathrooms stocked with proper supplies | Bathrooms stocked with proper supplies | XX | XX |  |  | Observation | Observation | Observation
+  Row 47:  | Exterior (parking lot, building itself, signage, landscaping, decor, dumpster area) free from litter/debris and well maintained (curb appeal) – photos. | Exterior (parking lot, building itself, signage, landscaping, decor, dumpster area) free from litter/debris and well maintained (curb appeal) – photos. | Exterior (parking lot, building itself, signage, landscaping, decor, dumpster area) free from litter/debris and well maintained (curb appeal) – photos. | Some ok, some not. | Some ok, some not. | Note below | Note below | Observation | Observation | Observation
+  Row 48:  | Quality Rated Signage-great sign!!! | Quality Rated Signage-great sign!!! | Quality Rated Signage-great sign!!! | XX | XX |  |  | Observation | Observation | Observation
+[TABLE END]
+
+[Normal]     Notes: Good, room for improvement- nice start as we transition to new branding. Still in process of ongoing improvement, hopeful for considerable change in 2026 for a strong launch to marketing the summer camp program which is well known in the community. 
+
+[TABLE START]
+  Row 0: Curb Appeal | Yes | No | 
+  Row 1: Dumpster doors (where applicable) closed |  | XX | Observation
+  Row 2: Exterior maintained /in good repair, and free from litter/debris | X | X | Observation
+  Row 3: Lawns and landscaping are maintained-front has new mulch – lovely, but inconsistent with another groundcover. Mostly-remove dead bush and pile of branches on the (left) side of the front facing lot. | XX |  | Observation
+  Row 4: Parking lot maintained/in good repair | XX |  | Observation
+  Row 5: Building/Office Management |  |  | 
+  Row 6: The lobby and front desk are clean and organized-still in process but much improved, furniture still coming in and to be assembled and put into place. |  | In process | Observation | Observation
+  Row 7: Required notebooks maintained – use our checklists, sign, date, update all immunizations, CBC’s, etc. Use child file checklists and staff file checklists. Recommend single immunization notebook. |  | X | Observation
+  Row 8: Staff and children’s files (non-Ga PreK) complete with checklists – see note above. | Mostly |  | Documentation
+  Row 9: All staff and child files are stored in a locked file cabinet inaccessible to anyone other than management | XX |  | Observation
+  Row 10: Closets are clean/uncluttered | Mostly Ok. |  | Observation
+  Row 11: Closets meet fire code regulations | XX |  | Observation
+  Row 12: Closets are locked and inaccessible to children | XX |  | Observation
+  Row 13: Glass doors/windows are not obstructed-windows and doors with glass all need cleaning. Please clean all doors that need it, review all windows to ensure they are clean where dirty-depending on the angle of the sun, some look really bad and doesn’t show well. | XX |  | Observation
+[TABLE END]
+
+[Normal] Notes: Most classrooms need storage cabinets/units to properly place brooms, chemicals, toilet brushes... Some Swiffer brooms are sitting out, please be sure they are stored, other cleaning brooms are nicely secured on the wall, out of reach of the children.
+
+[TABLE START]
+  Row 0: Lobby / School / Staff | Yes | No | 
+  Row 1: Staff is available at the front desk at all times | XX |  | Observation
+  Row 2: The lobby and front desk are attractive and organized | Still in process | In process | Observation
+  Row 3: Appropriate music playing in the lobby and classrooms-please play music in the lobby (adds tremendous charm, evoking a lovely environment, and in the classrooms but so as not to disrupt learning through lesson planning. |  | XX | Observation
+  Row 4: Dress code followed, and management in business casual-mgmt had Chroma Tees  Only one staff member (kitchen) had the Chroma shirt on. |  | In process | Observation
+  Row 5: Director's office is clean and professional in appearance | In process | In process | Observation
+  Row 6: Adult restrooms are pleasant, clean, tidy, and inviting-remove/store out of view, cleaning supplies sitting on the open shelf beneath the sink. Do a thorough cleaning of the restroom, same as all throughout the school (as needed on a case-by-case basis). Thank you. |  | Please clean | Observation
+  Row 7: Access routes are safe and clean | XX |  | Observation
+  Row 8:  |  |  | 
+[TABLE END]
+
+[Normal] Notes: Supporting photos with comments on those requiring a brief explanation will accompany this report.
+[Normal] Warm Regards,
+[Normal] Laura Newman
+[Normal] Chroma Early Learning Academy
+[Normal] Quality Assurance and Compliance Officer | Corporate
+[Normal] Fall visit notes appear in GREEN throughout checklist for a side-by-side CQI effort. 

@@ -1,0 +1,302 @@
+{
+    "version": "2026.1",
+    "name": "Per-Classroom Observations",
+    "description": "Classroom-specific checklist items to be repeated for each room",
+    "classroom_types": [
+        {
+            "key": "infant_a",
+            "name": "Infant A Room",
+            "ratio": "1:6",
+            "group_size": 12
+        },
+        {
+            "key": "infant_b",
+            "name": "Infant B Room",
+            "ratio": "1:6",
+            "group_size": 12
+        },
+        {
+            "key": "toddler",
+            "name": "Toddler Room",
+            "ratio": "1:8",
+            "group_size": 16
+        },
+        {
+            "key": "twos",
+            "name": "Two-Year-Olds Room",
+            "ratio": "1:10",
+            "group_size": 20
+        },
+        {
+            "key": "threes",
+            "name": "Three-Year-Olds Room",
+            "ratio": "1:15",
+            "group_size": 30
+        },
+        {
+            "key": "fours",
+            "name": "Four-Year-Olds Room",
+            "ratio": "1:18",
+            "group_size": 36
+        },
+        {
+            "key": "ga_prek",
+            "name": "GA Pre-K Room",
+            "ratio": "1:10",
+            "group_size": 20
+        },
+        {
+            "key": "school_age",
+            "name": "School-Age Room",
+            "ratio": "1:25",
+            "group_size": 50
+        }
+    ],
+    "observation_items": [
+        {
+            "key": "ratio_maintained",
+            "label": "Ratio is being maintained",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "enrollment_count",
+            "label": "Current enrollment / children present",
+            "type": "enrollment",
+            "fields": [
+                "enrolled",
+                "present"
+            ]
+        },
+        {
+            "key": "supervision",
+            "label": "Supervision by sight and sound at all times",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "schedule_posted",
+            "label": "Daily schedule is posted and being followed",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "lesson_plans",
+            "label": "Current lesson plans are posted",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "bulletin_boards",
+            "label": "Bulletin boards are decorated and current",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "learning_centers",
+            "label": "Learning centers are obvious by materials and signage",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "shelves_organized",
+            "label": "Shelves organized with labels as visual aid",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "print_rich",
+            "label": "Print-rich environment present",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "process_art",
+            "label": "Process art at child's eye-level",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "photos_children",
+            "label": "Photos of children (and/or with families) present",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "climate",
+            "label": "The climate is calm, flexible, and cheerful",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "conversations",
+            "label": "Appropriate conversations and discipline practiced",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "equipment_materials",
+            "label": "Equipment and materials are in good supply and well-maintained",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "handwashing",
+            "label": "Handwashing procedures followed",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "staff_belongings",
+            "label": "Staff belongings and hazardous materials are stored/out of reach",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "sleeping_equipment",
+            "label": "Sleeping equipment stored appropriately",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "allergy_list",
+            "label": "Allergy list current and posted",
+            "type": "rating_notes",
+            "evidence": "documentation"
+        }
+    ],
+    "infant_only_items": [
+        {
+            "key": "bottles_labeled",
+            "label": "Infant bottles labeled (tops too), dated/ready-to-feed",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "feeding_engagement",
+            "label": "Staff engage with infants while feeding",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "refrigerator_clean",
+            "label": "Refrigerator is clean with working thermometer (40°F)",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "diapering_procedures",
+            "label": "Diapering procedures followed correctly",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "universal_precautions",
+            "label": "Universal precautions followed - gloves used",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "cribs_labeled",
+            "label": "Cribs labeled and sheets changed daily",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "back_sleeping",
+            "label": "Infants placed on backs to sleep",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "no_items_crib",
+            "label": "No pillows, toys, blankets in cribs",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "crib_only_sleep",
+            "label": "Infants only sleep in safety-approved cribs",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "no_swaddling",
+            "label": "No swaddling/positioning devices without physician statement",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "music_playing",
+            "label": "Appropriate music playing in classroom",
+            "type": "rating_notes",
+            "evidence": "observation"
+        }
+    ],
+    "toddler_items": [
+        {
+            "key": "refrigerator_clean",
+            "label": "Refrigerator is clean with working thermometer",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "diapering_procedures",
+            "label": "Diapering/toileting procedures followed",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "universal_precautions",
+            "label": "Universal precautions followed - gloves used",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "cots_assigned",
+            "label": "Cots used by same child daily and in good repair",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "cot_spacing",
+            "label": "24\" corridor between cots, head-to-toe arrangement",
+            "type": "rating_notes",
+            "evidence": "observation"
+        }
+    ],
+    "preschool_items": [
+        {
+            "key": "cots_assigned",
+            "label": "Cots/mats used by same child daily and in good repair",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "cot_spacing",
+            "label": "24\" corridor between cots, head-to-toe arrangement",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "handwashing_chart",
+            "label": "Handwashing chart posted by sinks",
+            "type": "rating_notes",
+            "evidence": "observation"
+        }
+    ],
+    "school_age_items": [
+        {
+            "key": "age_appropriate_materials",
+            "label": "Materials encourage reasoning and critical thinking",
+            "type": "rating_notes",
+            "evidence": "observation"
+        },
+        {
+            "key": "homework_area",
+            "label": "Quiet area available for homework",
+            "type": "rating_notes",
+            "evidence": "observation"
+        }
+    ]
+}
