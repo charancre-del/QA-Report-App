@@ -415,84 +415,91 @@
 
         initAutosave: function () {
             // Simple autosave every 60 seconds
-            // Auto-save logic placeholder
-        }, 60000);
-},
-
-    // --- Google Drive Picker ---
-
-    loadGooglePicker: function () {
-        $.getScript('https://apis.google.com/js/api.js', function () {
-            gapi.load('picker', {
-                'callback': function () {
-                    // Picker API loaded
-                    // We also need client library for auth if we need to get a token?
-                    // Actually, for Picker we need an OAuth token.
-                    // We can use gapi.client to get it.
+            const self = this;
+            setInterval(function () {
+                if (self.$wizard.data('report-id')) {
+                    // Silent save-ish
+                    // For now just console log to avoid disrupting user
+                    // console.log('Autosaving draft...');
+                    // self.submitToRestApi('draft'); 
                 }
-            });
+            }, 60000);
+        },
 
-            gapi.load('client', function () {
-                gapi.client.init({
-                    'clientId': cqaFrontend.googleClientId,
-                    'scope': 'https://www.googleapis.com/auth/drive.file'
+        // --- Google Drive Picker ---
+
+        loadGooglePicker: function () {
+            $.getScript('https://apis.google.com/js/api.js', function () {
+                gapi.load('picker', {
+                    'callback': function () {
+                        // Picker API loaded
+                        // We also need client library for auth if we need to get a token?
+                        // Actually, for Picker we need an OAuth token.
+                        // We can use gapi.client to get it.
+                    }
+                });
+
+                gapi.load('client', function () {
+                    gapi.client.init({
+                        'clientId': cqaFrontend.googleClientId,
+                        'scope': 'https://www.googleapis.com/auth/drive.file'
+                    });
                 });
             });
-        });
-    },
+        },
 
-handleDriveClick: function (e) {
-    e.preventDefault();
+        handleDriveClick: function (e) {
+            e.preventDefault();
 
-    // Check if we have an access token
-    const token = gapi.client.getToken();
-    if (token) {
-        this.createPicker(token.access_token);
-    } else {
-        // Request auth
-        gapi.auth2.getAuthInstance().signIn().then(function () {
-            const newToken = gapi.client.getToken();
-            CQA.createPicker(newToken.access_token);
-        });
-    }
-},
+            // Check if we have an access token
+            const token = gapi.client.getToken();
+            if (token) {
+                this.createPicker(token.access_token);
+            } else {
+                // Request auth
+                gapi.auth2.getAuthInstance().signIn().then(function () {
+                    const newToken = gapi.client.getToken();
+                    CQA.createPicker(newToken.access_token);
+                });
+            }
+        },
 
-createPicker: function (oauthToken) {
-    if (this.pickerApiLoaded && oauthToken) {
-        const picker = new google.picker.PickerBuilder()
-            .addView(google.picker.ViewId.DOCS)
-            .addView(google.picker.ViewId.PHOTOS)
-            .setOAuthToken(oauthToken)
-            .setDeveloperKey(cqaFrontend.developerKey)
-            .setCallback(this.pickerCallback.bind(this))
-            .build();
-        picker.setVisible(true);
-    }
-},
+        createPicker: function (oauthToken) {
+            if (this.pickerApiLoaded && oauthToken) {
+                const picker = new google.picker.PickerBuilder()
+                    .addView(google.picker.ViewId.DOCS)
+                    .addView(google.picker.ViewId.PHOTOS)
+                    .setOAuthToken(oauthToken)
+                    .setDeveloperKey(cqaFrontend.developerKey)
+                    .setCallback(this.pickerCallback.bind(this))
+                    .build();
+                picker.setVisible(true);
+            }
+        },
 
-pickerCallback: function (data) {
-    if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-        const doc = data[google.picker.Response.DOCUMENTS][0];
-        const fileId = doc[google.picker.Document.ID];
-        const url = doc[google.picker.Document.URL];
-        const name = doc[google.picker.Document.NAME];
-        const icon = doc[google.picker.Document.ICON_URL];
+        pickerCallback: function (data) {
+            if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+                const doc = data[google.picker.Response.DOCUMENTS][0];
+                const fileId = doc[google.picker.Document.ID];
+                const url = doc[google.picker.Document.URL];
+                const name = doc[google.picker.Document.NAME];
+                const icon = doc[google.picker.Document.ICON_URL];
 
-        // Add to gallery
-        const html = `
+                // Add to gallery
+                const html = `
                     <div class="cqa-photo-thumb drive-file">
                         <img src="${icon}" alt="${name}" style="object-fit: contain; padding: 10px;">
                         <input type="hidden" name="drive_files[]" value="${fileId}">
                         <div class="photo-caption">${name}</div>
                     </div>
                 `;
-        $('#cqa-photo-gallery').append(html);
-    }
-}
+                $('#cqa-photo-gallery').append(html);
+            }
+        }
     };
 
-$(document).ready(function () {
-    CQA.init();
-});
+    $(document).ready(function () {
+        CQA.init();
+    });
 
-}) (jQuery);
+})(jQuery);
