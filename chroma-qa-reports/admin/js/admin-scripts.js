@@ -188,6 +188,77 @@
                 $badge.addClass('cqa-badge-warning');
             }
         });
+
+        // Initialize Settings Page
+        if ($('.cqa-settings-form').length > 0) {
+            CQA.settings.init();
+        }
     });
+
+    /**
+     * Settings Page Logic
+     */
+    CQA.settings = {
+        init: function () {
+            this.cacheDOM();
+            this.bindEvents();
+
+            if (cqaAdmin.googleClientId && cqaAdmin.developerKey) {
+                this.loadGooglePicker();
+            }
+        },
+
+        cacheDOM: function () {
+            this.$driveBtn = $('#cqa-drive-picker-btn');
+            this.$driveInput = $('#cqa_drive_root_folder');
+        },
+
+        bindEvents: function () {
+            this.$driveBtn.on('click', this.handleDriveClick.bind(this));
+        },
+
+        loadGooglePicker: function () {
+            $.getScript('https://apis.google.com/js/api.js', function () {
+                gapi.load('picker', { 'callback': function () { } });
+                gapi.load('client', function () {
+                    gapi.client.init({
+                        'clientId': cqaAdmin.googleClientId,
+                        'scope': 'https://www.googleapis.com/auth/drive.file'
+                    });
+                });
+            });
+        },
+
+        handleDriveClick: function (e) {
+            e.preventDefault();
+            const token = gapi.client.getToken();
+            if (token) {
+                this.createPicker(token.access_token);
+            } else {
+                gapi.auth2.getAuthInstance().signIn().then(() => {
+                    const newToken = gapi.client.getToken();
+                    this.createPicker(newToken.access_token);
+                });
+            }
+        },
+
+        createPicker: function (oauthToken) {
+            const picker = new google.picker.PickerBuilder()
+                .addView(google.picker.ViewId.FOLDERS)
+                .setOAuthToken(oauthToken)
+                .setDeveloperKey(cqaAdmin.developerKey)
+                .setCallback(this.pickerCallback.bind(this))
+                .build();
+            picker.setVisible(true);
+        },
+
+        pickerCallback: function (data) {
+            if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+                const doc = data[google.picker.Response.DOCUMENTS][0];
+                const folderId = doc[google.picker.Document.ID];
+                this.$driveInput.val(folderId);
+            }
+        }
+    };
 
 })(jQuery);

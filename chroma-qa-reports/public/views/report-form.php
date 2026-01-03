@@ -116,6 +116,11 @@ $school = $school_id ? School::find( $school_id ) : null;
                     <button type="button" class="cqa-btn" onclick="document.getElementById('cqa-camera-input').click()">
                         📸 Take Photo
                     </button>
+                    <?php if ( get_option( 'cqa_google_client_id' ) && get_option( 'cqa_google_developer_key' ) ) : ?>
+                    <button type="button" class="cqa-btn cqa-drive-picker-btn" id="cqa-drive-picker-btn">
+                        <span class="dashicons dashicons-google"></span> Drive
+                    </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

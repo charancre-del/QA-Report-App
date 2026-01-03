@@ -142,6 +142,12 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                                 <p class="description">
                                     <?php esc_html_e( 'The ID of the Google Drive folder where school folders will be created.', 'chroma-qa-reports' ); ?>
                                 </p>
+                                <?php if ( ! empty( $google_client_id ) && ! empty( $google_client_secret ) ) : ?>
+                                    <button type="button" class="button button-secondary" id="cqa-drive-picker-btn">
+                                        <span class="dashicons dashicons-google"></span>
+                                        <?php esc_html_e( 'Select Folder', 'chroma-qa-reports' ); ?>
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     </table>

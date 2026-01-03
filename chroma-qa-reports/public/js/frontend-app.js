@@ -39,8 +39,10 @@
         },
 
         bindEvents: function () {
-            this.$nextBtn.on('click', this.nextStep.bind(this));
-            this.$prevBtn.on('click', this.prevStep.bind(this));
+            // Navigation with delegation
+            $(document).on('click', '.cqa-wizard-next', this.nextStep.bind(this));
+            $(document).on('click', '.cqa-wizard-prev', this.prevStep.bind(this));
+
             this.$schoolSelect.on('change', this.handleSchoolChange.bind(this));
             this.$saveDraftBtn.on('click', this.saveDraft.bind(this));
             this.$form.on('submit', this.handleSubmit.bind(this));

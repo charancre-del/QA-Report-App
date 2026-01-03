@@ -168,10 +168,12 @@ class Admin_Menu {
         );
 
         wp_localize_script( 'cqa-admin-scripts', 'cqaAdmin', [
-            'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-            'restUrl'   => rest_url( 'cqa/v1/' ),
-            'nonce'     => wp_create_nonce( 'wp_rest' ),
-            'strings'   => [
+            'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+            'restUrl'        => rest_url( 'cqa/v1/' ),
+            'nonce'          => wp_create_nonce( 'wp_rest' ),
+            'googleClientId' => get_option( 'cqa_google_client_id' ),
+            'developerKey'   => get_option( 'cqa_google_developer_key' ),
+            'strings'        => [
                 'confirm_delete' => __( 'Are you sure you want to delete this?', 'chroma-qa-reports' ),
                 'saving'         => __( 'Saving...', 'chroma-qa-reports' ),
                 'saved'          => __( 'Saved!', 'chroma-qa-reports' ),
