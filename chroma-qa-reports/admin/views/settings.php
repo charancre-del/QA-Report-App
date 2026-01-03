@@ -63,6 +63,39 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                                        value="<?php echo esc_attr( $google_client_secret ); ?>" class="regular-text">
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row">
+                                <label for="cqa_sso_domain"><?php esc_html_e( 'Allowed Domain (SSO)', 'chroma-qa-reports' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" id="cqa_sso_domain" name="cqa_sso_domain" 
+                                       value="<?php echo esc_attr( get_option( 'cqa_sso_domain', 'chromaela.com' ) ); ?>" class="regular-text" placeholder="chromaela.com">
+                                <p class="description">
+                                    <?php esc_html_e( 'Only allow Google Sign-In from this email domain (leave empty to disable auto-registration).', 'chroma-qa-reports' ); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <label for="cqa_sso_default_role"><?php esc_html_e( 'Default Role (SSO)', 'chroma-qa-reports' ); ?></label>
+                            </th>
+                            <td>
+                                <select id="cqa_sso_default_role" name="cqa_sso_default_role">
+                                    <?php
+                                    $current_role = get_option( 'cqa_sso_default_role', 'cqa_qa_officer' );
+                                    $roles = \ChromaQA\Auth\User_Roles::get_roles();
+                                    foreach ( $roles as $key => $label ) : 
+                                    ?>
+                                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $current_role, $key ); ?>>
+                                            <?php echo esc_html( $label ); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <p class="description">
+                                    <?php esc_html_e( 'Role assigned to new users created via Google SSO.', 'chroma-qa-reports' ); ?>
+                                </p>
+                            </td>
+                        </tr>
                     </table>
 
                     <div class="cqa-oauth-status">

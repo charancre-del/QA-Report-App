@@ -333,6 +333,8 @@ class Admin_Menu {
         $fields = [
             'google_client_id',
             'google_client_secret',
+            'sso_domain',
+            'sso_default_role',
             'gemini_api_key',
             'drive_root_folder',
             'company_name',

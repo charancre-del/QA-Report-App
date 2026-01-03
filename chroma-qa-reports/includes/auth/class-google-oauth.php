@@ -234,4 +234,67 @@ class Google_OAuth {
         delete_user_meta( $user_id, 'cqa_google_refresh_token' );
         delete_user_meta( $user_id, 'cqa_google_token_expires' );
     }
+    /**
+     * Handle OAuth login callback.
+     *
+     * @param string $code Authorization code.
+     * @return int|WP_Error User ID on success, WP_Error on failure.
+     */
+    public static function handle_login( $code ) {
+        // Exchange code for tokens
+        $tokens = self::exchange_code( $code );
+        if ( is_wp_error( $tokens ) ) {
+            return $tokens;
+        }
+
+        // Get user info
+        $user_info = self::get_user_info( $tokens['access_token'] );
+        if ( is_wp_error( $user_info ) ) {
+            return $user_info;
+        }
+
+        $email = $user_info['email'];
+        $user = get_user_by( 'email', $email );
+
+        // If user doesn't exist, check domain and create
+        if ( ! $user ) {
+            $allowed_domain = get_option( 'cqa_sso_domain', '' );
+            
+            // If domain restriction is set, verify it
+            if ( ! empty( $allowed_domain ) ) {
+                $email_domain = substr( strrchr( $email, "@" ), 1 );
+                if ( strcasecmp( $email_domain, $allowed_domain ) !== 0 ) {
+                    return new \WP_Error( 'invalid_domain', sprintf( __( 'Only emails from %s are allowed.', 'chroma-qa-reports' ), $allowed_domain ) );
+                }
+            } else {
+                // If no domain set, prevent public registration for security
+                // unless explicitly allowed (could add another setting, but safe default is block)
+                 return new \WP_Error( 'registration_disabled', __( 'Public registration is disabled. Please contact administrator.', 'chroma-qa-reports' ) );
+            }
+
+            // Create new user
+            $userdata = [
+                'user_login' => $email,
+                'user_email' => $email,
+                'user_pass'  => wp_generate_password(),
+                'first_name' => $user_info['given_name'] ?? '',
+                'last_name'  => $user_info['family_name'] ?? '',
+                'role'       => get_option( 'cqa_sso_default_role', 'cqa_qa_officer' ),
+            ];
+
+            $user_id = wp_insert_user( $userdata );
+            if ( is_wp_error( $user_id ) ) {
+                return $user_id;
+            }
+            $user = get_user_by( 'id', $user_id );
+        }
+
+        // Store tokens for this user (Drive access)
+        self::store_tokens( $user->ID, $tokens );
+
+        // Log user in
+        wp_set_auth_cookie( $user->ID, true );
+        
+        return $user->ID;
+    }
 }

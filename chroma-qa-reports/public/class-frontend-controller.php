@@ -27,6 +27,10 @@ class Frontend_Controller {
         // AJAX handlers
         add_action( 'wp_ajax_cqa_frontend_login', [ self::class, 'ajax_login' ] );
         add_action( 'wp_ajax_nopriv_cqa_frontend_login', [ self::class, 'ajax_login' ] );
+        
+        // OAuth Callback
+        add_action( 'wp_ajax_cqa_oauth_callback', [ self::class, 'oauth_callback' ] );
+        add_action( 'wp_ajax_nopriv_cqa_oauth_callback', [ self::class, 'oauth_callback' ] );
 
         // Exclude from sitemaps (WordPress core and popular plugins)
         add_filter( 'wp_sitemaps_add_provider', [ self::class, 'exclude_from_sitemap' ], 10, 2 );
@@ -249,6 +253,45 @@ class Frontend_Controller {
                 'avatar' => get_avatar_url( $user->ID ),
             ],
         ]);
+    }
+
+    /**
+     * OAuth callback handler.
+     */
+    public static function oauth_callback() {
+        if ( ! isset( $_GET['code'] ) ) {
+            wp_redirect( home_url( '/qa-reports/login/?error=missing_code' ) );
+            exit;
+        }
+
+        // Check state for CSRF
+        if ( ! isset( $_GET['state'] ) || ! wp_verify_nonce( $_GET['state'], 'cqa_oauth_state' ) ) {
+            wp_redirect( home_url( '/qa-reports/login/?error=invalid_state' ) );
+            exit;
+        }
+
+        if ( class_exists( 'ChromaQA\Auth\Google_OAuth' ) ) {
+            // Include class file if not autoloaded yet (just safety check)
+            if ( ! class_exists( 'ChromaQA\Auth\Google_OAuth' ) ) {
+                require_once CQA_PLUGIN_DIR . 'includes/auth/class-google-oauth.php';
+            }
+
+            $user_id = \ChromaQA\Auth\Google_OAuth::handle_login( $_GET['code'] );
+
+            if ( is_wp_error( $user_id ) ) {
+                $error_code = $user_id->get_error_code();
+                $error_msg = urlencode( $user_id->get_error_message() );
+                wp_redirect( home_url( "/qa-reports/login/?error={$error_code}&message={$error_msg}" ) );
+                exit;
+            }
+
+            // Success redirect
+            wp_redirect( home_url( '/qa-reports/' ) );
+            exit;
+        }
+
+        wp_redirect( home_url( '/qa-reports/login/?error=oauth_unavailable' ) );
+        exit;
     }
 
     /**
