@@ -222,6 +222,15 @@ class Admin_Menu {
                 true
             );
 
+            // Item-level photo uploader
+            wp_enqueue_script(
+                'cqa-item-photo-uploader',
+                CQA_PLUGIN_URL . 'admin/js/item-photo-uploader.js',
+                [ 'jquery', 'cqa-admin-scripts' ],
+                CQA_VERSION,
+                true
+            );
+
             // Localize with admin URL for all scripts
             wp_localize_script( 'cqa-report-wizard', 'cqaAdmin', [
                 'ajaxUrl'   => admin_url( 'admin-ajax.php' ),

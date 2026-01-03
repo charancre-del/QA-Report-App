@@ -25,6 +25,7 @@ class Photo {
     public $id;
     public $report_id;
     public $section_key;
+    public $item_key;
     public $drive_file_id;
     public $filename;
     public $caption;
@@ -113,6 +114,7 @@ class Photo {
         $photo->id = (int) $row['id'];
         $photo->report_id = (int) $row['report_id'];
         $photo->section_key = $row['section_key'];
+        $photo->item_key = $row['item_key'] ?? null;
         $photo->drive_file_id = $row['drive_file_id'];
         $photo->filename = $row['filename'];
         $photo->caption = $row['caption'];
@@ -120,6 +122,29 @@ class Photo {
         $photo->sort_order = (int) $row['sort_order'];
         $photo->created_at = $row['created_at'];
         return $photo;
+    }
+
+    /**
+     * Get photos for a specific checklist item.
+     *
+     * @param int    $report_id Report ID.
+     * @param string $item_key  Checklist item key.
+     * @return Photo[]
+     */
+    public static function get_by_item( $report_id, $item_key ) {
+        global $wpdb;
+        $table = self::get_table_name();
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$table} WHERE report_id = %d AND item_key = %s ORDER BY sort_order",
+                $report_id,
+                $item_key
+            ),
+            ARRAY_A
+        );
+
+        return array_map( [ self::class, 'from_row' ], $rows );
     }
 
     /**
@@ -134,6 +159,7 @@ class Photo {
         $data = [
             'report_id'     => $this->report_id,
             'section_key'   => $this->section_key,
+            'item_key'      => $this->item_key,
             'drive_file_id' => $this->drive_file_id,
             'filename'      => $this->filename,
             'caption'       => $this->caption,
@@ -141,7 +167,7 @@ class Photo {
             'sort_order'    => $this->sort_order ?: 0,
         ];
 
-        $format = [ '%d', '%s', '%s', '%s', '%s', '%d', '%d' ];
+        $format = [ '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d' ];
 
         if ( $this->id ) {
             $result = $wpdb->update( $table, $data, [ 'id' => $this->id ], $format, [ '%d' ] );

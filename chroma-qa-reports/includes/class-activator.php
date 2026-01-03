@@ -98,6 +98,7 @@ class Activator {
             id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             report_id BIGINT(20) UNSIGNED NOT NULL,
             section_key VARCHAR(100) DEFAULT '',
+            item_key VARCHAR(100) DEFAULT '',
             drive_file_id VARCHAR(100) NOT NULL,
             filename VARCHAR(255) DEFAULT '',
             caption TEXT DEFAULT '',
@@ -106,7 +107,8 @@ class Activator {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             KEY report_id (report_id),
-            KEY section_key (section_key)
+            KEY section_key (section_key),
+            KEY item_key (item_key)
         ) $charset_collate;";
 
         // AI Summaries table
