@@ -19,6 +19,15 @@ if ( is_user_logged_in() ) {
             <p>Sign in to continue</p>
         </div>
 
+        <?php if ( ! empty( $_GET['error'] ) ) : ?>
+            <div class="cqa-notice cqa-notice-error">
+                <p>
+                    <strong><?php echo esc_html( ucfirst( str_replace( '_', ' ', $_GET['error'] ) ) ); ?>:</strong>
+                    <?php echo isset( $_GET['message'] ) ? esc_html( urldecode( $_GET['message'] ) ) : 'An error occurred during login.'; ?>
+                </p>
+            </div>
+        <?php endif; ?>
+
         <?php 
         $auth_url = \ChromaQA\Auth\Google_OAuth::is_configured() ? \ChromaQA\Auth\Google_OAuth::get_auth_url() : '#';
         if ( \ChromaQA\Auth\Google_OAuth::is_configured() ) : 

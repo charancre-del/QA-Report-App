@@ -360,7 +360,14 @@ class Admin_Menu {
 
         foreach ( $fields as $field ) {
             if ( isset( $_POST[ "cqa_{$field}" ] ) ) {
-                update_option( "cqa_{$field}", sanitize_text_field( $_POST[ "cqa_{$field}" ] ) );
+                $value = sanitize_text_field( $_POST[ "cqa_{$field}" ] );
+                
+                // Special handling for domain
+                if ( $field === 'sso_domain' ) {
+                    $value = preg_replace( '#^https?://(?:www\.)?#i', '', $value );
+                }
+                
+                update_option( "cqa_{$field}", $value );
             }
         }
 

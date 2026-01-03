@@ -262,7 +262,10 @@ class Google_OAuth {
             
             // If domain restriction is set, verify it
             if ( ! empty( $allowed_domain ) ) {
-                $email_domain = substr( strrchr( $email, "@" ), 1 );
+                // Normalize allowed domain (remove protocol and www)
+                $allowed_domain = strtolower( preg_replace( '#^https?://(?:www\.)?#i', '', $allowed_domain ) );
+                $email_domain = strtolower( substr( strrchr( $email, "@" ), 1 ) );
+                
                 if ( strcasecmp( $email_domain, $allowed_domain ) !== 0 ) {
                     return new \WP_Error( 'invalid_domain', sprintf( __( 'Only emails from %s are allowed.', 'chroma-qa-reports' ), $allowed_domain ) );
                 }

@@ -30,10 +30,10 @@
             this.$form = $('#cqa-report-form');
             this.$steps = $('.cqa-wizard-step');
             this.$panels = $('.cqa-wizard-panel');
-            this.$prevBtn = $('#cqa-prev-btn');
-            this.$nextBtn = $('#cqa-next-btn');
-            this.$submitBtn = $('#cqa-submit-btn');
-            this.$saveDraftBtn = $('#cqa-save-draft-btn');
+            this.$prevBtn = $('.cqa-wizard-prev');
+            this.$nextBtn = $('.cqa-wizard-next');
+            this.$submitBtn = $('#cqa-submit-report');
+            this.$saveDraftBtn = $('#cqa-save-draft');
             this.$schoolSelect = $('#cqa-school-select');
             this.$driveBtn = $('.cqa-drive-picker-btn'); // Add class to your button HTML
         },
@@ -102,6 +102,16 @@
                 $(`.cqa-wizard-panel[data-step="${this.currentStep}"]`).addClass('active');
                 this.updateButtons();
                 window.scrollTo(0, 0);
+
+                // Load checklist if entering step 2
+                if (this.currentStep === 2) {
+                    this.loadChecklist();
+                }
+
+                // Update review if entering final step
+                if (this.currentStep === 4) {
+                    this.updateReview();
+                }
             }
         },
 
@@ -136,6 +146,112 @@
             }
 
             return isValid;
+        },
+
+        loadChecklist: function () {
+            const self = this;
+            const reportType = $('#cqa-report-type').val() || 'tier1';
+            const $container = $('#cqa-checklist-container');
+
+            $container.html('<div class="cqa-loading">Loading checklist...</div>');
+
+            $.ajax({
+                url: cqaFrontend.restUrl + 'checklists/' + reportType,
+                method: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                }
+            }).done(function (checklist) {
+                self.checklist = checklist;
+                self.renderChecklist(checklist);
+            }).fail(function () {
+                $container.html('<div class="cqa-error">Failed to load checklist. Please try again.</div>');
+            });
+        },
+
+        renderChecklist: function (checklist) {
+            const self = this;
+            let html = '';
+
+            checklist.sections.forEach(function (section) {
+                const tierBadge = section.tier === 2 ? '<span class="cqa-tier-badge">Tier 2</span>' : '';
+
+                html += `
+                    <div class="cqa-checklist-section">
+                        <div class="cqa-checklist-section-header">
+                            <h3>${tierBadge} ${section.name}</h3>
+                            <span class="dashicons dashicons-arrow-down-alt2"></span>
+                        </div>
+                        <div class="cqa-checklist-section-body">
+                            ${section.description ? `<p class="cqa-section-desc">${section.description}</p>` : ''}
+                            <div class="cqa-section-items">
+                `;
+
+                section.items.forEach(function (item) {
+                    html += self.renderChecklistItem(section.key, item);
+                });
+
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $('#cqa-checklist-container').html(html);
+        },
+
+        renderChecklistItem: function (sectionKey, item) {
+            // Check for existing values if we are editing (needs implementation for storage check)
+            // For now, simple render
+            const name = `responses[${sectionKey}][${item.key}]`;
+
+            return `
+                <div class="cqa-checklist-item" data-section="${sectionKey}" data-item="${item.key}">
+                    <div class="cqa-item-header">
+                        <span class="cqa-item-label">${item.label}</span>
+                    </div>
+                    <div class="cqa-item-ratings">
+                        <button type="button" class="cqa-item-rating-btn" data-value="yes">✓ Yes</button>
+                        <button type="button" class="cqa-item-rating-btn" data-value="sometimes">~ Sometimes</button>
+                        <button type="button" class="cqa-item-rating-btn" data-value="no">✗ No</button>
+                        <button type="button" class="cqa-item-rating-btn selected" data-value="na">— N/A</button>
+                        <input type="hidden" name="${name}[rating]" value="na">
+                    </div>
+                    <div class="cqa-item-notes">
+                        <textarea name="${name}[notes]" placeholder="Add notes..."></textarea>
+                    </div>
+                </div>
+            `;
+        },
+
+        updateReview: function () {
+            // Count stats
+            let total = 0, yes = 0, no = 0, sometimes = 0;
+            $('.cqa-item-ratings input[type="hidden"]').each(function () {
+                const val = $(this).val();
+                if (val && val !== 'na') {
+                    total++;
+                    if (val === 'yes') yes++;
+                    else if (val === 'no') no++;
+                    else if (val === 'sometimes') sometimes++;
+                }
+            });
+
+            const html = `
+                <div class="cqa-review-stats">
+                    <p><strong>School:</strong> ${$('#cqa-school-select option:selected').text()}</p>
+                    <p><strong>Date:</strong> ${$('#cqa-inspection-date').val()}</p>
+                    <p><strong>Checklist Items:</strong> ${total} Rated</p>
+                    <ul>
+                        <li>✅ Yes: ${yes}</li>
+                        <li>⚠️ Sometimes: ${sometimes}</li>
+                        <li>✗ No: ${no}</li>
+                    </ul>
+                    <p><strong>Photos:</strong> ${$('#cqa-photo-gallery .cqa-photo-thumb').length}</p>
+                </div>
+            `;
+            $('#cqa-review-summary').html(html);
         },
 
         handleSchoolChange: function (e) {
