@@ -1,0 +1,755 @@
+/**
+ * Front-End Styles
+ * 
+ * Public-facing QA Report interface
+ *
+ * @package ChromaQAReports
+ */
+
+/* CSS Variables */
+:root {
+    --cqa-primary: #4f46e5;
+    --cqa-primary-dark: #4338ca;
+    --cqa-success: #10b981;
+    --cqa-warning: #f59e0b;
+    --cqa-danger: #ef4444;
+    --cqa-gray-50: #f9fafb;
+    --cqa-gray-100: #f3f4f6;
+    --cqa-gray-200: #e5e7eb;
+    --cqa-gray-300: #d1d5db;
+    --cqa-gray-500: #6b7280;
+    --cqa-gray-700: #374151;
+    --cqa-gray-900: #111827;
+    --cqa-radius: 12px;
+    --cqa-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --cqa-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset */
+.cqa-frontend * {
+    box-sizing: border-box;
+}
+
+/* Base */
+.cqa-frontend {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cqa-gray-50);
+    color: var(--cqa-gray-900);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.cqa-header {
+    background: linear-gradient(135deg, var(--cqa-primary), var(--cqa-primary-dark));
+    color: white;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.cqa-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.cqa-logo-icon {
+    font-size: 28px;
+}
+
+.cqa-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.cqa-nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.cqa-nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.cqa-nav-primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.cqa-user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cqa-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.cqa-user-name {
+    font-size: 14px;
+}
+
+.cqa-logout {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* Main */
+.cqa-main {
+    flex: 1;
+    padding: 24px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Footer */
+.cqa-footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--cqa-gray-500);
+    font-size: 13px;
+    border-top: 1px solid var(--cqa-gray-200);
+}
+
+/* Buttons */
+.cqa-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid var(--cqa-gray-300);
+    background: white;
+    color: var(--cqa-gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.cqa-btn:hover {
+    background: var(--cqa-gray-50);
+    border-color: var(--cqa-gray-400);
+}
+
+.cqa-btn-primary {
+    background: var(--cqa-primary);
+    border-color: var(--cqa-primary);
+    color: white;
+}
+
+.cqa-btn-primary:hover {
+    background: var(--cqa-primary-dark);
+}
+
+.cqa-btn-block {
+    width: 100%;
+}
+
+.cqa-btn-sm {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+/* Cards */
+.cqa-card {
+    background: white;
+    border-radius: var(--cqa-radius);
+    box-shadow: var(--cqa-shadow);
+    padding: 24px;
+}
+
+/* Login Page */
+.cqa-login-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.cqa-login-card {
+    background: white;
+    border-radius: var(--cqa-radius);
+    box-shadow: var(--cqa-shadow-lg);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.cqa-login-header {
+    background: linear-gradient(135deg, var(--cqa-primary), var(--cqa-primary-dark));
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.cqa-login-logo {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.cqa-login-header h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+}
+
+.cqa-login-header p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+.cqa-login-form {
+    padding: 30px;
+}
+
+.cqa-form-group {
+    margin-bottom: 20px;
+}
+
+.cqa-form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cqa-gray-700);
+    margin-bottom: 6px;
+}
+
+.cqa-form-group input[type="text"],
+.cqa-form-group input[type="password"],
+.cqa-form-group input[type="email"],
+.cqa-form-group input[type="date"],
+.cqa-form-group select,
+.cqa-form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid var(--cqa-gray-300);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.cqa-form-group input:focus,
+.cqa-form-group select:focus,
+.cqa-form-group textarea:focus {
+    border-color: var(--cqa-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.cqa-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.cqa-error {
+    background: #fef2f2;
+    color: var(--cqa-danger);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.cqa-login-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--cqa-gray-200);
+    text-align: center;
+    font-size: 13px;
+    color: var(--cqa-gray-500);
+}
+
+/* Dashboard */
+.cqa-dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cqa-dashboard-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.cqa-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.cqa-stat-card {
+    background: white;
+    border-radius: var(--cqa-radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-stat-icon {
+    font-size: 36px;
+}
+
+.cqa-stat-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cqa-primary);
+}
+
+.cqa-stat-label {
+    font-size: 13px;
+    color: var(--cqa-gray-500);
+}
+
+.cqa-section {
+    margin-bottom: 32px;
+}
+
+.cqa-section h2 {
+    font-size: 20px;
+    margin: 0 0 16px;
+}
+
+/* Report Cards */
+.cqa-reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cqa-report-card {
+    background: white;
+    border-radius: var(--cqa-radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-report-info {
+    flex: 1;
+}
+
+.cqa-report-info h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+}
+
+.cqa-report-meta {
+    margin: 0;
+    font-size: 13px;
+    color: var(--cqa-gray-500);
+}
+
+.cqa-report-status {
+    display: flex;
+    gap: 8px;
+}
+
+.cqa-report-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Badges */
+.cqa-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 20px;
+    text-transform: capitalize;
+}
+
+.cqa-badge-draft {
+    background: var(--cqa-gray-200);
+    color: var(--cqa-gray-700);
+}
+
+.cqa-badge-submitted {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.cqa-badge-approved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.cqa-badge-exceeds {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.cqa-badge-meets {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.cqa-badge-needs_improvement {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Schools Grid */
+.cqa-schools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.cqa-school-card {
+    background: white;
+    border-radius: var(--cqa-radius);
+    padding: 20px;
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-school-card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.cqa-school-card p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--cqa-gray-500);
+}
+
+/* Wizard */
+.cqa-wizard-progress {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 20px;
+    background: white;
+    border-radius: var(--cqa-radius);
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cqa-gray-400);
+}
+
+.cqa-wizard-step.active {
+    color: var(--cqa-primary);
+}
+
+.cqa-wizard-step.completed {
+    color: var(--cqa-success);
+}
+
+.cqa-step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: currentColor;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cqa-wizard-step.active .cqa-step-number {
+    background: var(--cqa-primary);
+}
+
+.cqa-wizard-panel {
+    display: none;
+    background: white;
+    border-radius: var(--cqa-radius);
+    padding: 32px;
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-wizard-panel.active {
+    display: block;
+}
+
+.cqa-wizard-panel h2 {
+    margin: 0 0 24px;
+    font-size: 24px;
+}
+
+.cqa-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--cqa-gray-200);
+}
+
+/* Photo Upload */
+.cqa-photo-upload-area {
+    border: 2px dashed var(--cqa-gray-300);
+    border-radius: var(--cqa-radius);
+    padding: 40px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.cqa-photo-upload-area.dragover {
+    border-color: var(--cqa-primary);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.cqa-dropzone-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.cqa-upload-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.cqa-photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cqa-photo-thumb {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cqa-photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Rating Buttons */
+.cqa-rating-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.cqa-rating-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 16px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 2px solid var(--cqa-gray-200);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cqa-rating-btn:hover {
+    border-color: var(--cqa-gray-400);
+}
+
+.cqa-rating-btn.selected {
+    border-width: 3px;
+}
+
+.cqa-rating-exceeds.selected {
+    border-color: var(--cqa-success);
+    background: #d1fae5;
+}
+
+.cqa-rating-meets.selected {
+    border-color: var(--cqa-warning);
+    background: #fef3c7;
+}
+
+.cqa-rating-needs.selected {
+    border-color: var(--cqa-danger);
+    background: #fee2e2;
+}
+
+/* Checklist */
+.cqa-checklist-section {
+    margin-bottom: 24px;
+    border: 1px solid var(--cqa-gray-200);
+    border-radius: var(--cqa-radius);
+    overflow: hidden;
+}
+
+.cqa-checklist-section-header {
+    background: var(--cqa-gray-50);
+    padding: 16px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cqa-checklist-section-body {
+    padding: 16px 20px;
+}
+
+.cqa-checklist-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cqa-gray-100);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.cqa-checklist-item:last-child {
+    border-bottom: none;
+}
+
+.cqa-item-label {
+    flex: 1;
+    font-size: 14px;
+}
+
+.cqa-item-ratings {
+    display: flex;
+    gap: 4px;
+}
+
+.cqa-item-rating-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--cqa-gray-300);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.cqa-item-rating-btn:hover {
+    border-color: var(--cqa-gray-400);
+}
+
+.cqa-item-rating-btn.selected {
+    color: white;
+    border-color: transparent;
+}
+
+.cqa-item-rating-btn.rating-yes.selected {
+    background: var(--cqa-success);
+}
+
+.cqa-item-rating-btn.rating-sometimes.selected {
+    background: var(--cqa-warning);
+}
+
+.cqa-item-rating-btn.rating-no.selected {
+    background: var(--cqa-danger);
+}
+
+.cqa-item-rating-btn.rating-na.selected {
+    background: var(--cqa-gray-500);
+}
+
+/* Loading */
+.cqa-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--cqa-gray-500);
+}
+
+/* Empty State */
+.cqa-empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--cqa-gray-500);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .cqa-header-inner {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 12px 0;
+        gap: 12px;
+    }
+
+    .cqa-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cqa-user-menu {
+        order: 2;
+    }
+
+    .cqa-wizard-progress {
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .cqa-step-label {
+        display: none;
+    }
+
+    .cqa-dashboard-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .cqa-report-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cqa-form-actions {
+        flex-direction: column;
+    }
+
+    .cqa-rating-buttons {
+        flex-direction: column;
+    }
+}

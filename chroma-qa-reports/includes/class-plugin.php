@@ -115,6 +115,14 @@ class Plugin {
         if ( file_exists( CQA_PLUGIN_DIR . 'includes/utils/class-location.php' ) ) {
             require_once CQA_PLUGIN_DIR . 'includes/utils/class-location.php';
         }
+        if ( file_exists( CQA_PLUGIN_DIR . 'includes/utils/class-photo-comparison.php' ) ) {
+            require_once CQA_PLUGIN_DIR . 'includes/utils/class-photo-comparison.php';
+        }
+
+        // Frontend
+        if ( file_exists( CQA_PLUGIN_DIR . 'public/class-frontend-controller.php' ) ) {
+            require_once CQA_PLUGIN_DIR . 'public/class-frontend-controller.php';
+        }
 
         // Admin
         require_once CQA_PLUGIN_DIR . 'admin/class-admin-menu.php';
@@ -193,6 +201,11 @@ class Plugin {
         }
         if ( class_exists( 'ChromaQA\\AI\\Comparative_Insights' ) ) {
             AI\Comparative_Insights::init();
+        }
+
+        // Frontend
+        if ( class_exists( 'ChromaQA\\Frontend\\Frontend_Controller' ) ) {
+            Frontend\Frontend_Controller::init();
         }
     }
 

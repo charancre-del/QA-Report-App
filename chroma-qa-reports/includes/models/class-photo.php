@@ -26,6 +26,7 @@ class Photo {
     public $report_id;
     public $section_key;
     public $item_key;
+    public $location_tag;
     public $drive_file_id;
     public $filename;
     public $caption;
