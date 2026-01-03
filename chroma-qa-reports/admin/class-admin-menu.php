@@ -365,6 +365,7 @@ class Admin_Menu {
                 // Special handling for domain
                 if ( $field === 'sso_domain' ) {
                     $value = preg_replace( '#^https?://(?:www\.)?#i', '', $value );
+                    $value = rtrim( $value, '/' );
                 }
                 
                 update_option( "cqa_{$field}", $value );

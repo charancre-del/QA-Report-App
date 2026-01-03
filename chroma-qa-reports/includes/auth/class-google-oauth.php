@@ -262,8 +262,9 @@ class Google_OAuth {
             
             // If domain restriction is set, verify it
             if ( ! empty( $allowed_domain ) ) {
-                // Normalize allowed domain (remove protocol and www)
+                // Normalize allowed domain (remove protocol, www, and trailing slash)
                 $allowed_domain = strtolower( preg_replace( '#^https?://(?:www\.)?#i', '', $allowed_domain ) );
+                $allowed_domain = rtrim( $allowed_domain, '/' );
                 $email_domain = strtolower( substr( strrchr( $email, "@" ), 1 ) );
                 
                 if ( strcasecmp( $email_domain, $allowed_domain ) !== 0 ) {
