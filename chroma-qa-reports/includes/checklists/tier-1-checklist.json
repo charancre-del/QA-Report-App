@@ -1,0 +1,826 @@
+{
+    "version": "2026.1",
+    "name": "QA and Compliance Checklist",
+    "description": "Tier 1 Standard QA Inspection Checklist",
+    "sections": [
+        {
+            "key": "state_compliance",
+            "name": "State Compliance",
+            "items": [
+                {
+                    "key": "state_ratios",
+                    "label": "State Ratios Maintained",
+                    "type": "boolean"
+                },
+                {
+                    "key": "group_sizes",
+                    "label": "State Group Sizes Maintained",
+                    "type": "boolean"
+                },
+                {
+                    "key": "past_licensing",
+                    "label": "Past Licensing Report - All cited items addressed within the timeline noted",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "no_complaints",
+                    "label": "Lacks outstanding complaints/substantiated investigations",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "classroom_ratios",
+            "name": "Classroom Ratios",
+            "description": "Record current enrollment for each age group",
+            "items": [
+                {
+                    "key": "infant_a",
+                    "label": "Infant A (ratio 1:6, group size 12)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "toddler",
+                    "label": "Toddler (ratio 1:8, group size 16)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "twos",
+                    "label": "Two-year-olds (ratio 1:10, group size 20)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "threes",
+                    "label": "Three-year-olds (ratio 1:15, group size 30)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "fours",
+                    "label": "Four-year-olds (ratio 1:18, group size 36)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "ga_prek",
+                    "label": "GA Pre-K (ratio 1:10, group size 20)",
+                    "type": "enrollment"
+                },
+                {
+                    "key": "school_age",
+                    "label": "School-age (ratio 1:25, group size 50)",
+                    "type": "enrollment"
+                }
+            ]
+        },
+        {
+            "key": "health_safety",
+            "name": "Health & Safety",
+            "items": [
+                {
+                    "key": "fire_drills",
+                    "label": "Fire Drills – Monthly (1 nap time drill per year)",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "tornado_drills",
+                    "label": "Tornado Drills – Every six months",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "first_aid_cpr",
+                    "label": "Documentation of Pediatric First aid and CPR for Staff",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "fire_extinguishers",
+                    "label": "Fire extinguishers serviced and tagged annually",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "emergency_numbers",
+                    "label": "Emergency numbers near phones",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "allergy_lists",
+                    "label": "Allergy lists current using month/year and posted in classrooms/kitchen",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "medication_forms",
+                    "label": "Medication / Topical Forms complete / Medication stored and dispensed properly",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                }
+            ]
+        },
+        {
+            "key": "classrooms",
+            "name": "Classrooms",
+            "items": [
+                {
+                    "key": "bottles_labeled",
+                    "label": "Infant bottles labeled (tops too), dated/ready-to-feed, and staff engage while feeding",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "refrigerators",
+                    "label": "Refrigerators in Infant and Toddler rooms are clean and with working thermometers (fridge 40°F, freezer 0°F)",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "handwashing_diapering",
+                    "label": "Handwashing/diapering procedures followed",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "supervision",
+                    "label": "Supervision by sight and sound at all times (I/Todd) - preschoolers, the majority of the time",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "universal_precautions",
+                    "label": "Universal precautions followed - gloves used for any contact with bodily fluids",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "shelves_organized",
+                    "label": "Shelves organized with labels as visual aid to support emerging independence",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "sleeping_equipment",
+                    "label": "Sleeping equipment stored appropriately",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "staff_belongings",
+                    "label": "Staff belongings and hazardous (cleaning) materials are stored/out of reach",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "bulletin_boards",
+                    "label": "Bulletin Boards decorated and current",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "print_rich",
+                    "label": "Print-rich environment, current lesson plans posted",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "learning_centers",
+                    "label": "Learning centers are obvious by materials and signage",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "schedules_posted",
+                    "label": "Schedules are posted and being followed",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "climate",
+                    "label": "The climate is calm, flexible, and cheerful",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "equipment_materials",
+                    "label": "Equipment and materials are in good supply and well-maintained",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "photos_children",
+                    "label": "Photos of the children (and/or with families) present in classrooms",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "process_art",
+                    "label": "Process art at eye-level & handwashing chart posted by sinks",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "conversations_discipline",
+                    "label": "Appropriate conversations and discipline practiced",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "sleep_nap",
+            "name": "Sleep/Nap",
+            "items": [
+                {
+                    "key": "crib_mattresses",
+                    "label": "Crib mattresses in good repair with firm, tight-fitting sheets",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "cribs_labeled",
+                    "label": "Cribs labeled and sheets changed daily as evident from laundry schedule",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "back_sleeping",
+                    "label": "Infants are being placed on their backs in a crib",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_items_crib",
+                    "label": "No pillows, toys, blankets/clip-on paci's in cribs - cribs not used as storage",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_swaddling",
+                    "label": "Swaddling/positioning devices not being used without physicians' statements",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "crib_only_sleep",
+                    "label": "Infants do not sleep in equipment other than a safety-approved crib",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "assigned_cots",
+                    "label": "Cribs, Cots, and mats used by the same child daily and in good repair",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "corridor_spacing",
+                    "label": "24\" corridor between each row of mats/cots-children in head-to-toe arrangement",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "weekly_laundry",
+                    "label": "Each cot/crib has sheet/light cover/laundered weekly",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "kitchen_laundry",
+            "name": "Kitchen/Laundry",
+            "items": [
+                {
+                    "key": "kitchen_clean",
+                    "label": "Kitchen is tidy, clean, and gloves are being used by kitchen staff",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "food_storage",
+                    "label": "Food is labeled and stored properly, free of dust and off the floor",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "fridge_temps",
+                    "label": "Refrigerator and freezers are clean and with working thermometers",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "menu_posted",
+                    "label": "Current menu and allergy list (month and year) posted",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "trash_covered",
+                    "label": "Trash cans covered; door is closed to kitchen",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "food_warm",
+                    "label": "Once prepared, the food is kept warm until serving using foil",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "laundry_room",
+                    "label": "The laundry room is clean, tidy, and locked",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "playgrounds",
+            "name": "Playgrounds",
+            "items": [
+                {
+                    "key": "maintained_tidy",
+                    "label": "Playgrounds maintained/tidy",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "grass_mulch",
+                    "label": "Grass/mulch maintained",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "fall_zone",
+                    "label": "The proper fall zone is maintained",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "equipment_condition",
+                    "label": "Toys and equipment maintained with no evidence of rust/mildew/sharp edges",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "teacher_supervision",
+                    "label": "Teachers appropriately supervise children",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "exterior_gates",
+                    "label": "Exterior gates securely fastened",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "interior_gates",
+                    "label": "Interior gates locked with carabiner",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_entrapment",
+                    "label": "No entrapment hazards",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "fencing",
+                    "label": "Fencing in good repair",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_tripping",
+                    "label": "No evidence of tripping hazards",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "picnic_tables",
+                    "label": "Picnic tables are clean",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "shade_structure",
+                    "label": "At least one shade structure",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "tree_hazards",
+                    "label": "No large roots as trip hazards, no low-hanging branches or protruding through fence",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "vehicles",
+            "name": "Vehicles (Bus/Van)",
+            "items": [
+                {
+                    "key": "properly_maintained",
+                    "label": "Properly maintained - clean/paint, decals, reg sticker on plate, tires, exterior in good condition, mechanically sound",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "transportation_plans",
+                    "label": "Transportation plans and logs properly documented",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "seatbelts",
+                    "label": "Seatbelts in working condition",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "seats_secured",
+                    "label": "Seats securely screwed into the floor",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_trash",
+                    "label": "No trash, or loose equipment (potential projectiles)",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "seat_covers",
+                    "label": "Seat covers intact (no tears, cuts, etc.)",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "fire_extinguisher",
+                    "label": "Fire extinguisher maintained and secure",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "first_aid_kit",
+                    "label": "First Aid Kit complete",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "insurance_docs",
+                    "label": "Copy of Insurance, annual vehicle inspection, and required staff training in notebook",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                }
+            ]
+        },
+        {
+            "key": "posted_notices",
+            "name": "Posted Notices/Signage",
+            "items": [
+                {
+                    "key": "current_license",
+                    "label": "Current License",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "consumer_safety",
+                    "label": "Consumer Product Safety Poster",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "no_smoking",
+                    "label": "No smoking sign",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "liability_notice",
+                    "label": "Copy of \"No liability insurance poster\" only if center does NOT carry liability insurance",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "disease_chart",
+                    "label": "Current communicable disease chart",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "parent_access",
+                    "label": "Statement allowing parents access when a child is present",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "management_names",
+                    "label": "Names of management responsible for administration",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "weekly_menu",
+                    "label": "Dated current week's menu for meals and snacks",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "emergency_plans",
+                    "label": "Severe weather, fire, and other emergency plans",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "visitor_check_in",
+                    "label": "Require visitors to check in with staff when entering",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "license_review",
+                    "label": "Right of parents to review most recent license report",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "visitor_sign_in",
+                    "label": "Notice: \"Visitors check in\" notification/sign-in sheet",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "rules_regs",
+                    "label": "Current Rules & Regs in a binder and accessible",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "first_aid_kit",
+            "name": "First Aid Kit Checklist",
+            "items": [
+                {
+                    "key": "scissors_tweezers",
+                    "label": "Scissors - Tweezers",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "gauze_pads",
+                    "label": "Gauze Pads",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "adhesive_tape",
+                    "label": "Adhesive Tape",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "thermometer",
+                    "label": "Thermometer",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "bandaids",
+                    "label": "Band-Aids – assorted sizes",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "insect_sting",
+                    "label": "Insect Sting Preparation",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "antibacterial",
+                    "label": "Antibacterial Ointment",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "antiseptic",
+                    "label": "Antiseptic Cleaning Solution",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "gloves_cold_pack",
+                    "label": "Rubber Gloves – Cold Pack",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "triangular_bandage",
+                    "label": "Triangular Bandage (or bandana)",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "manual_mask_eyewear",
+                    "label": "First Aid Manual/Face Mask/Protective Eyewear",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "building_maintenance",
+            "name": "Building/Image/Curb Appeal/Maintenance",
+            "items": [
+                {
+                    "key": "floors_vents",
+                    "label": "Floors and vents are clean",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "countertops",
+                    "label": "Countertops/window sills are free from dust",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "checklists_used",
+                    "label": "Staff post, and are using opening/closing checklists",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "walls_clean",
+                    "label": "Walls clean and maintained - no chipping and/or graffiti",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "area_rugs",
+                    "label": "Area rugs throughout are clean with no trip hazards",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "furniture",
+                    "label": "Furniture is clean and in good repair",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "exhaust_fans",
+                    "label": "All bathroom exhaust fans are dust-free and operational",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "bathrooms_clean",
+                    "label": "Bathrooms – clean and odor-free",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "bathrooms_stocked",
+                    "label": "Bathrooms stocked with proper supplies",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "quality_rated",
+                    "label": "Quality Rated Signage",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "dumpster",
+                    "label": "Dumpster doors closed – flag and Chroma signage intact",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "exterior_maintained",
+                    "label": "Exterior maintained and free from litter/debris, at entry, building looks inviting",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "landscaping",
+                    "label": "Landscaping shows well across entire perimeter of building",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "parking_lot",
+                    "label": "Parking lot well maintained",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        },
+        {
+            "key": "lobby_office_staff",
+            "name": "Lobby/Office/Staff",
+            "items": [
+                {
+                    "key": "staff_front_desk",
+                    "label": "Staff available at the front desk at all times",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "lobby_organized",
+                    "label": "Lobby and front desk are attractive and organized",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "music_playing",
+                    "label": "Appropriate music playing in lobby and at least, also in the infant classroom",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "dress_code",
+                    "label": "Dress code followed, and management in business casual",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "director_office",
+                    "label": "Director's office clean, uncluttered, and professional in appearance",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "adult_restroom",
+                    "label": "Adult restroom is clean, tidy, and inviting for parents/staff",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "security_wifi",
+                    "label": "Security system, wi-fi, and Procare operational",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "notebooks_maintained",
+                    "label": "Required notebooks maintained – checklists, signed where required, dates, immunizations, CBC, training, etc.",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "staff_child_files",
+                    "label": "Staff and child files complete with checklists",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "files_locked",
+                    "label": "All staff and child files are stored in a locked file cabinet",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                },
+                {
+                    "key": "ga_prek_files",
+                    "label": "GA PreK Files uses its own checklist and complete",
+                    "type": "rating_notes",
+                    "evidence": "documentation"
+                },
+                {
+                    "key": "closets_organized",
+                    "label": "Closets/storage cabinets are clean/well organized/uncluttered, and locked",
+                    "type": "rating_notes",
+                    "evidence": "observation"
+                }
+            ]
+        }
+    ],
+    "overall_rating": {
+        "options": [
+            {
+                "key": "exceeds",
+                "label": "Exceeds",
+                "description": "Exceptional compliance and quality"
+            },
+            {
+                "key": "meets",
+                "label": "Meets",
+                "description": "Satisfactory compliance"
+            },
+            {
+                "key": "needs_improvement",
+                "label": "Needs Improvement",
+                "description": "Action required"
+            }
+        ]
+    }
+}

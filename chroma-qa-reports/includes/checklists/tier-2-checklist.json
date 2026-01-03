@@ -1,0 +1,412 @@
+{
+    "version": "2026.1",
+    "name": "Level II Tier QA & Compliance Checklist",
+    "description": "Continuous Quality Improvement (CQI) Add-on for milestone schools",
+    "extends": "tier-1",
+    "introduction": "Congratulations! Your program has reached an exciting milestone and will now be reviewed with a Continuous Quality Improvement (CQI) checklist. This achievement reflects your hard work, passion, and commitment to excellence.",
+    "rating_legend": {
+        "yes": "Yes / Consistently",
+        "sometimes": "Sometimes / Needs Work",
+        "no": "No / Not Yet in Place"
+    },
+    "sections": [
+        {
+            "key": "physical_environment",
+            "name": "Physical Environment: Health & Safety",
+            "description": "Protecting children and staff from harm while supporting their health and well-being in a secure space to play, learn and grow.",
+            "items": [
+                {
+                    "key": "environment_clean",
+                    "label": "Environment is clean, safe, and well-maintained including all restrooms, and the exterior of the building",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "ground_cover",
+                    "label": "Ground cover is adequate, fencing in good repair, toys and equipment in good supply and free of rust/mildew",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "carabiners_in_place",
+                    "label": "Carabiners in place on fencing, no evidence of tripping hazards and at least one shade structure",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "mulch_depth",
+                    "label": "Wood mulch is at least 9\" deep, and shredded/recycled rubber where used is at least 6\" deep and maintained",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "playground_equipment",
+                    "label": "Playgrounds include a variety of equipment with no rust, no sharp edges",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "vents_clean",
+                    "label": "Air vents, rugs, windows, and floors are clean/dust-free",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "emergency_procedures",
+                    "label": "Emergency procedures are posted and practiced regularly to include required drill logs",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "security_operational",
+                    "label": "Secure entry system, wi-fi and video monitoring are operational",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "first_aid_complete",
+                    "label": "First-Aid kits are complete with no expired products",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "menus_posted",
+                    "label": "Menus are current and posted",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "laundry_clean",
+                    "label": "The laundry room is clean, organized, odor-free, and locked",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "routines_followed",
+                    "label": "Handwashing, diapering and sanitation routines are consistently followed",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "vehicle_maintained",
+                    "label": "The bus/van(s) are properly maintained, clean, mechanically sound, with fire extinguisher and first-aid kit",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "kitchen_requirements",
+                    "label": "The kitchen is clean, reflects state requirements and with the door closed",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "safe_sleep",
+                    "label": "Safe sleep practices across all areas in the infant room are followed",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "allergy_visible",
+                    "label": "Allergy lists are visible and updated monthly with cover sheet for confidentiality",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "vehicle_inspection",
+                    "label": "Vehicles are current on all requirements to include the annual mechanical inspection",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "bottles_labeled",
+                    "label": "Infant bottles are properly labeled",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "belongings_stored",
+                    "label": "Staff belongings are stored out of reach in all classrooms",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "cribs_maintained",
+                    "label": "All cribs and infant equipment are clean and well maintained",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "crib_spacing",
+                    "label": "Infants don't sleep in equipment other than safety-approved cribs spaced with 36\" corridor and head-to-toe arrangement",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "transport_log",
+                    "label": "Transportation log book and verifiable training for those who drive the bus is in place",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "relationships_interactions",
+            "name": "Relationships and Interactions",
+            "description": "Helping children feel safe, valued and connected, building trust and supporting healthy learning and development.",
+            "items": [
+                {
+                    "key": "warm_responsive",
+                    "label": "Caregivers are warm, responsive, and nurturing",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "respectful_communication",
+                    "label": "Staff communication is respectful and sensitive",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "calm_climate",
+                    "label": "The classroom/organizational climate is calm, flexible, and cheerful, representing cohesive teams",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "positive_guidance",
+                    "label": "Positive guidance supports behavior",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "curriculum_teaching",
+            "name": "Curriculum, Learning, and Teaching Practices",
+            "description": "Guiding what children learn, how they are taught and ways staff support growth to build skills for school and life.",
+            "items": [
+                {
+                    "key": "balanced_activities",
+                    "label": "Balance of child-initiated and teacher-guided activities is provided with ongoing close supervision",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "bulletin_current",
+                    "label": "Bulletin boards are current and reflect the monthly theme",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "exploration_play",
+                    "label": "Children have opportunities for exploration, play, and problem-solving",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "dual_language",
+                    "label": "Supports are available for dual language learners with one staff on site able to communicate as needed",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "individualized_plans",
+                    "label": "Lesson plans are individualized using observation and assessment",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "specialty_classes",
+                    "label": "Families have an opportunity to participate (for a fee) in specialty classes",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "classroom_environment",
+            "name": "Classroom Environment",
+            "description": "Safe, welcoming, and well-organized where children explore, learn, and build positive relationships with caregivers and peers.",
+            "items": [
+                {
+                    "key": "organized_inviting",
+                    "label": "Classrooms are organized, inviting and clutter-free",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "learning_centers_stocked",
+                    "label": "Learning centers (blocks, dramatic play, literacy/language, arts, science, sensory, music, cultural) are well stocked and in good condition",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "anti_bias_books",
+                    "label": "Anti-bias books and culturally diverse dolls are present in at least some classrooms",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "school_age_materials",
+                    "label": "School-age classroom has materials unique to the age group, encouraging reasoning and critical thinking",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "process_art",
+                    "label": "Children's process-art work is at child's eye-level, displayed throughout reflective of Chroma's theme-based learning",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "staff_bios",
+                    "label": "Staff bios with photos are posted to encourage connection and trust",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "labeled_shelves",
+                    "label": "Classroom shelves labeled with photos reflecting a print-rich environment supporting literacy and independence",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "decorated_doors",
+                    "label": "Classroom doors are creatively decorated that uniquely showcase the age group",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "seasonal_displays",
+                    "label": "Special displays are based on events and seasons of the calendar",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "quiet_spaces",
+                    "label": "Comfortable and inviting quiet spaces are available for children who need downtime",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "child_assessment",
+            "name": "Child Assessment & Individualization",
+            "description": "Practices help teachers understand individual strengths, needs, and progress to support learning for all.",
+            "items": [
+                {
+                    "key": "ongoing_observation",
+                    "label": "Ongoing observation and documentation of child progress occurs with child portfolios",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "developmental_screenings",
+                    "label": "Developmental screenings are completed with family input (Ages & Stages Questionnaire)",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "assessments_guide",
+                    "label": "Assessments guide adaptations to learning experiences where needed and possible according to staffing",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "family_conferences",
+                    "label": "Family conferences are available to all who want",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "professionalism",
+            "name": "Professionalism",
+            "description": "Conduct, behavior, and attitude reflect respect, competence, and integrity fostering collaboration and excellence.",
+            "items": [
+                {
+                    "key": "learning_styles",
+                    "label": "Interactions support all learning styles with consistent boundaries but positive behavior reinforcement",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "dress_code",
+                    "label": "All staff adhere to the Chroma dress code",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "low_turnover",
+                    "label": "Program has low staff turnover",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "checklists_daily",
+                    "label": "Opening and Closing checklists are being used daily",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "staff_meetings",
+                    "label": "Management plans and delivers staff meetings at least every month/quarter",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "family_community",
+            "name": "Family & Community Engagement",
+            "description": "Established and maintained collaborative relationships that support learning.",
+            "items": [
+                {
+                    "key": "orientation",
+                    "label": "Orientation for new families includes a personal meeting with follow up communication, setting tone for success",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "parent_surveys",
+                    "label": "Parent Surveys are offered to families at least annually for anonymous feedback",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "two_way_communication",
+                    "label": "The program provides regular, two-way communication with families through Procare",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "family_involvement",
+                    "label": "Families have opportunities for involvement (events, volunteering, etc.)",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "culture_respected",
+                    "label": "Family culture, language, and values are respected",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "community_resources",
+                    "label": "Program connects families with community resources (electronically/print) as needed or requested",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "equity_inclusion",
+            "name": "Equity, Inclusion & Diversity",
+            "description": "Policies and procedures ensure every child feels valued, respected, and supported—laying the foundation for lifelong learning and belonging.",
+            "items": [
+                {
+                    "key": "inclusive_practices",
+                    "label": "Program practices are inclusive for children of all abilities with supports as available for those in need",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "diverse_materials",
+                    "label": "Learning centers represent diverse cultures, languages, ability/non-traditional gender roles/family structures",
+                    "type": "rating_notes"
+                }
+            ]
+        },
+        {
+            "key": "leadership_files",
+            "name": "Leadership/Lobby/Office/Hallways and Files",
+            "description": "Management effectively guides staff, children, and families with the Chroma vision where everyone can thrive, including outstanding recordkeeping.",
+            "items": [
+                {
+                    "key": "lobby_professional",
+                    "label": "The lobby, office, hallways, and front desk are tidy, inviting, professional, and reflective of Chroma branding",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "posted_notices",
+                    "label": "Required posted notices are in place",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "newsletters",
+                    "label": "Management creates and distributes monthly newsletters to families also posted on Parent Information Boards",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "lobby_music",
+                    "label": "Music is softly, but noticeably playing in the lobby",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "transition_plan",
+                    "label": "Prior to classroom transition, families are notified and plan in place for seamless transition",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "ga_prek_complete",
+                    "label": "GA PreK files are complete and with checklists",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "files_locked",
+                    "label": "Child and Staff Files include checklists and are kept in a locked cabinet",
+                    "type": "rating_notes"
+                },
+                {
+                    "key": "decal_rules",
+                    "label": "Current version of DECAL Rules and Regulations are available for review by staff or parents",
+                    "type": "rating_notes"
+                }
+            ]
+        }
+    ]
+}

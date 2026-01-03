@@ -1,0 +1,479 @@
+/**
+ * Chroma QA Reports - Mobile Styles
+ *
+ * Optimized layout for tablet field use
+ *
+ * @package ChromaQAReports
+ */
+
+/* ===================================
+   Offline Indicator
+   =================================== */
+.cqa-offline-indicator {
+    position: fixed;
+    top: 32px;
+    /* Below WP admin bar */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cqa-offline-indicator.online {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.cqa-offline-indicator.offline {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.cqa-offline-indicator .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* ===================================
+   Sync Badge
+   =================================== */
+.cqa-sync-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cqa-sync-badge .dashicons {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===================================
+   Voice to Text
+   =================================== */
+.cqa-notes-wrapper {
+    position: relative;
+}
+
+.cqa-mic-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--cqa-gray-100);
+    color: var(--cqa-gray-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.cqa-mic-btn:hover {
+    background: var(--cqa-primary);
+    color: white;
+}
+
+.cqa-mic-btn.recording {
+    background: #ef4444;
+    color: white;
+    animation: pulse-recording 1s infinite;
+}
+
+@keyframes pulse-recording {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+}
+
+.cqa-voice-indicator {
+    position: absolute;
+    right: 50px;
+    top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #ef4444;
+}
+
+.cqa-voice-indicator .pulse {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse-dot 1s infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+/* ===================================
+   Location Verification
+   =================================== */
+.cqa-location-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--cqa-radius-sm);
+    margin-bottom: 16px;
+}
+
+.cqa-location-status.verified {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.cqa-location-status.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.cqa-location-status.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ===================================
+   Mobile-First Styles
+   =================================== */
+@media (max-width: 1024px) {
+
+    /* Single column layout */
+    .cqa-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Full width wizard */
+    .cqa-wizard-container {
+        flex-direction: column;
+    }
+
+    .cqa-wizard-nav {
+        width: 100%;
+        max-width: none;
+        overflow-x: auto;
+    }
+
+    .cqa-wizard-nav ul {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .cqa-wizard-nav li {
+        flex-shrink: 0;
+    }
+
+    .cqa-wizard-content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 782px) {
+
+    /* Hide admin menu on mobile */
+    #adminmenumain {
+        display: none;
+    }
+
+    #wpcontent {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    /* Larger touch targets */
+    .cqa-wrap .button,
+    .cqa-wrap input[type="submit"] {
+        min-height: 44px;
+        padding: 10px 20px !important;
+        font-size: 16px !important;
+    }
+
+    /* Larger form inputs */
+    .cqa-wrap input[type="text"],
+    .cqa-wrap input[type="email"],
+    .cqa-wrap input[type="date"],
+    .cqa-wrap select,
+    .cqa-wrap textarea {
+        min-height: 44px;
+        font-size: 16px !important;
+        padding: 12px !important;
+    }
+
+    /* Rating options - larger touch area */
+    .rating-option {
+        min-height: 48px;
+    }
+
+    .rating-option span {
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+
+    /* Checklist items */
+    .cqa-checklist-item {
+        padding: 20px 16px;
+    }
+
+    .item-label {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+
+    /* Photo grid - 2 columns on mobile */
+    .cqa-photo-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    /* Camera capture button prominent */
+    #camera-capture-btn {
+        width: 100%;
+        margin: 10px 0;
+        min-height: 54px;
+        font-size: 18px !important;
+    }
+
+    /* Sticky bottom nav for wizard */
+    .cqa-wizard-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 16px;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        display: flex;
+        gap: 12px;
+    }
+
+    .cqa-wizard-footer .button {
+        flex: 1;
+    }
+
+    /* Padding at bottom to account for footer */
+    .cqa-wizard-content {
+        padding-bottom: 80px;
+    }
+
+    /* Section nav - horizontal scroll */
+    #section-nav-list {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        gap: 8px;
+        padding-bottom: 10px;
+    }
+
+    #section-nav-list a {
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        white-space: nowrap;
+        padding: 10px 16px;
+        border-radius: 20px;
+        background: var(--cqa-gray-100);
+    }
+
+    #section-nav-list a.active {
+        background: var(--cqa-primary);
+        color: white;
+    }
+
+    /* Keyboard help modal */
+    .cqa-keyboard-help {
+        display: none;
+        /* Hide on touch devices */
+    }
+
+    /* Flag counter */
+    .cqa-flag-counter {
+        position: fixed;
+        top: auto;
+        bottom: 80px;
+        right: 16px;
+        background: #fbbf24;
+        color: #78350f;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 99;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 783px) and (max-width: 1024px) {
+
+    /* 2-column rating for tablets */
+    .item-rating {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .rating-option {
+        justify-content: center;
+    }
+}
+
+/* ===================================
+   Swipe Gestures Support (CSS hints)
+   =================================== */
+.cqa-wizard-content {
+    touch-action: pan-y pinch-zoom;
+}
+
+.cqa-checklist-sections {
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+}
+
+/* ===================================
+   Keyboard Focus (for accessibility)
+   =================================== */
+.cqa-checklist-item.keyboard-focus {
+    outline: 3px solid var(--cqa-primary);
+    outline-offset: 2px;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.cqa-checklist-item.flagged {
+    border-left: 4px solid #fbbf24;
+    background: #fffbeb;
+}
+
+.cqa-checklist-item.flagged .flag-btn {
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.cqa-checklist-item.rating-set {
+    animation: flash-success 0.3s ease;
+}
+
+@keyframes flash-success {
+
+    0%,
+    100% {
+        background: transparent;
+    }
+
+    50% {
+        background: rgba(16, 185, 129, 0.1);
+    }
+}
+
+/* ===================================
+   PWA Install Prompt
+   =================================== */
+.cqa-install-prompt {
+    position: fixed;
+    bottom: 100px;
+    left: 16px;
+    right: 16px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cqa-install-prompt .icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--cqa-primary), var(--cqa-primary-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.cqa-install-prompt .content {
+    flex: 1;
+}
+
+.cqa-install-prompt .content h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+}
+
+.cqa-install-prompt .content p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--cqa-gray-500);
+}
+
+.cqa-install-prompt .actions {
+    display: flex;
+    gap: 8px;
+}
+
+.cqa-install-prompt .install-btn {
+    background: var(--cqa-primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cqa-install-prompt .dismiss-btn {
+    background: transparent;
+    border: none;
+    padding: 10px;
+    color: var(--cqa-gray-400);
+    cursor: pointer;
+}
