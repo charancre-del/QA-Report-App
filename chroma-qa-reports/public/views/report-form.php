@@ -13,7 +13,7 @@ use ChromaQA\Checklists\Classroom_Checklist;
 $report_id = get_query_var( 'cqa_report_id' );
 $school_id = isset( $_GET['school_id'] ) ? intval( $_GET['school_id'] ) : 0;
 $report = null;
-$schools = School::get_all();
+$schools = School::all();
 
 if ( $report_id ) {
     $report = Report::find( $report_id );
