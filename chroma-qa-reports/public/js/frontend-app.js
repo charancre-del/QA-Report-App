@@ -685,6 +685,14 @@
                 // Add status manually if needed
                 formData.status = status;
 
+                // Force School ID from select if missing (Safety check)
+                const schoolIdVal = $('#cqa-school-select').val();
+                if ((!formData.school_id || formData.school_id == 0) && schoolIdVal) {
+                    formData.school_id = schoolIdVal;
+                }
+
+                console.log('Submitting Report Payload:', formData); // DEBUG for User
+
                 // Specifically format checklist responses
                 // The form has inputs like: name="responses[section][item][rating]"
                 // This needs to be parsed or sent as is if the PHP side expects that structure.

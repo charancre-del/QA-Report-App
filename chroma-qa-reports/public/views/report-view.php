@@ -140,7 +140,7 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
 
     <div class="cqa-report-actions">
         <a href="<?php echo home_url( '/qa-reports/' ); ?>" class="cqa-btn">← Back to Dashboard</a>
-        <a href="<?php echo admin_url( 'admin.php?page=chroma-qa-reports-view&id=' . $report_id . '&action=pdf' ); ?>" class="cqa-btn cqa-btn-primary" target="_blank">
+        <a href="<?php echo esc_url( rest_url( 'cqa/v1/reports/' . $report_id . '/pdf?_wpnonce=' . wp_create_nonce( 'wp_rest' ) ) ); ?>" class="cqa-btn cqa-btn-primary" target="_blank">
             📄 Download PDF
         </a>
     </div>
