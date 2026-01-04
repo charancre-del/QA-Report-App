@@ -8,8 +8,13 @@
 
     const CQA = {
         init: function () {
-            // Check if we're on the wizard page
-            if (this.$wizard.length) {
+            // Initialize login form if present (login page doesn't need wizard features)
+            if ($('#cqa-login-form').length) {
+                this.initLogin();
+            }
+
+            // Check if we're on the wizard page before initializing wizard features
+            if ($('#cqa-report-wizard').length) {
                 this.cacheDOM();
                 this.bindEvents();
                 this.initWizard();
@@ -25,11 +30,6 @@
                 if (cqaFrontend.googleClientId && cqaFrontend.developerKey) {
                     this.loadGooglePicker();
                 }
-            }
-
-            // Initialize login form if present
-            if ($('#cqa-login-form').length) {
-                this.initLogin();
             }
         },
 
