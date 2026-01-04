@@ -481,6 +481,27 @@ class PDF_Generator {
                                 <?php endif; ?>
                             </td>
                         </tr>
+                        <?php 
+                        // Item Photos
+                        $item_photos = array_filter( $report->get_photos(), function( $p ) use ( $section, $item ) {
+                            return $p->section_key === ( $section['key'] . '|' . $item['key'] );
+                        });
+                        
+                        if ( ! empty( $item_photos ) ) : 
+                        ?>
+                        <tr>
+                            <td colspan="<?php echo $previous_report ? 5 : 3; ?>" style="padding: 10px; background-color: #f9fafb;">
+                                <strong>📷 Evidence:</strong><br>
+                                <div style="margin-top:5px;">
+                                    <?php foreach ( $item_photos as $photo ) : ?>
+                                        <div style="display:inline-block; margin-right:10px; width: 120px; vertical-align:top;">
+                                            <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" style="width:100%; border:1px solid #ccc; border-radius:4px;">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -495,7 +516,9 @@ class PDF_Generator {
             <div class="section photo-section">
                 <h2>Photo Documentation</h2>
                 <div class="photo-grid">
-                    <?php foreach ( $photos as $photo ) : ?>
+                    <?php foreach ( $photos as $photo ) : 
+                        if ( strpos( $photo->section_key, '|' ) !== false ) continue; // Skip item photos
+                    ?>
                         <div class="photo-item">
                             <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" alt="">
                             <?php if ( $photo->caption ) : ?>

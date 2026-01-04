@@ -465,7 +465,7 @@
                     <div class="cqa-item-notes" style="width: 100%; margin-top: 12px;">
                         <textarea name="${name}[notes]" placeholder="Add notes..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-height: 60px;"></textarea>
                         <div style="margin-top: 8px;">
-                            <input type="file" id="${photoInputId}" class="cqa-item-photo-input" accept="image/*" multiple style="display: none;">
+                            <input type="file" id="${photoInputId}" class="cqa-item-photo-input" data-section="${sectionKey}" data-item="${item.key}" accept="image/*" multiple style="display: none;">
                             <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}').click();" style="font-size: 12px;">📷 Attach Photo</button>
                             <span style="font-size: 12px; color: #6b7280; margin-left: 8px;">Optional evidence</span>
                         </div>
@@ -567,12 +567,9 @@
 
                 // File input (Per Item) - Delegated
                 $(document).on('change', '.cqa-item-photo-input', function (e) {
-                    CQA.handleFiles(this.files);
-                    // Optional: Visual feedback on the button?
-                    $(this).next('button').text('✅ Added');
-                    setTimeout(() => {
-                        $(this).next('button').text('📷 Attach Photo');
-                    }, 2000);
+                    const section = $(this).data('section');
+                    const item = $(this).data('item');
+                    CQA.handleItemFiles(this, this.files, section, item);
                 });
             },
 
@@ -594,6 +591,35 @@
                         });
                     }
                 });
+            },
+
+            handleItemFiles: function (inputElement, files, sectionKey, itemKey) {
+                const self = this;
+                const $container = $(inputElement).closest('.cqa-item-notes');
+
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        self.compressImage(file, function (compressedDataUrl) {
+                            // Add hidden input with structured name
+                            const inputName = `item_photos[${sectionKey}][${itemKey}][]`;
+
+                            // Visual feedback
+                            const html = `
+                                <div style="display:inline-block; margin: 4px; position:relative;">
+                                    <img src="${compressedDataUrl}" style="height:40px; border-radius:4px; border:1px solid #ccc;">
+                                    <input type="hidden" name="${inputName}" value="${compressedDataUrl}">
+                                </div>
+                             `;
+                            $container.append(html);
+                        });
+                    }
+                });
+
+                // Reset button text briefly
+                $(inputElement).next('button').text('✅ Added');
+                setTimeout(() => {
+                    $(inputElement).next('button').text('📷 Attach Photo');
+                }, 2000);
             },
 
             compressImage: function (file, callback) {

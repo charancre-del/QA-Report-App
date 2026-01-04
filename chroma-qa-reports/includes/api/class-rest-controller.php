@@ -564,6 +564,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        // Nuclear Option: Disable all error reporting for PDF generation
+        error_reporting(0);
+        @ini_set('display_errors', 0);
+
         $pdf_generator = new \ChromaQA\Export\PDF_Generator();
         $pdf_path = $pdf_generator->generate( $report );
 
@@ -687,6 +691,72 @@ class REST_Controller {
                 $photo->filename = $filename;
                 $photo->section_key = 'general'; 
                 $photo->save();
+            }
+        }
+
+        // Handle Item-Specific Photos
+        $item_photos = $request->get_param( 'item_photos' );
+        if ( ! empty( $item_photos ) && is_array( $item_photos ) ) {
+            foreach ( $item_photos as $section_key => $items ) {
+                foreach ( $items as $item_key => $photos ) {
+                    if ( ! is_array( $photos ) ) continue;
+                    
+                    foreach ( $photos as $i => $data_url ) {
+                         if ( ! is_string( $data_url ) ) continue;
+                         // Process Item Photo (Reuse logic - simpler to refactor but duplicating for safety now)
+                         // ... (Duplicate processing logic for speed, or extract method? Extracting is better but risky mid-flight. I will duplicate strictly for the item context)
+                         
+                            if ( ! preg_match( '/^data:image\/(\w+);base64,/', $data_url, $type ) ) continue;
+                            $data = substr( $data_url, strpos( $data_url, ',' ) + 1 );
+                            $ext = strtolower( $type[1] );
+                            if ( ! in_array( $ext, [ 'jpg', 'jpeg', 'gif', 'png' ] ) ) continue;
+                            $decoded_data = base64_decode( $data );
+                            if ( $decoded_data === false ) continue;
+                            
+                            $filename = 'report-' . $report_id . '-' . $section_key . '-' . $item_key . '-' . time() . '-' . $i . '.' . $ext;
+                            $drive_file_id = '';
+                            $tmp_file = sys_get_temp_dir() . '/' . $filename;
+                            
+                            if ( \get_option( 'cqa_google_client_id' ) ) {
+                                \file_put_contents( $tmp_file, $decoded_data );
+                                $drive_result = Google_Drive::upload_file( $tmp_file, $filename, $folder_id );
+                                if ( ! \is_wp_error( $drive_result ) && isset( $drive_result['id'] ) ) {
+                                    $drive_file_id = $drive_result['id'];
+                                }
+                            }
+                            
+                            if ( empty( $drive_file_id ) ) {
+                                $upload = \wp_upload_bits( $filename, null, $decoded_data );
+                                if ( ! $upload['error'] ) {
+                                     // Create attachment...
+                                    $file_path = $upload['file'];
+                                    $file_name = basename( $file_path );
+                                    $file_type = \wp_check_filetype( $file_name, null );
+                                    $attachment = [
+                                        'post_mime_type' => $file_type['type'],
+                                        'post_title'     => \sanitize_file_name( pathinfo( $file_name, PATHINFO_FILENAME ) ),
+                                        'post_content'   => '',
+                                        'post_status'    => 'inherit',
+                                    ];
+                                    $attach_id = \wp_insert_attachment( $attachment, $file_path );
+                                    $attach_data = \wp_generate_attachment_metadata( $attach_id, $file_path );
+                                    \wp_update_attachment_metadata( $attach_id, $attach_data );
+                                    $drive_file_id = 'wp_' . $attach_id;
+                                }
+                            }
+                            
+                            if ( file_exists( $tmp_file ) ) unlink( $tmp_file );
+
+                            if ( $drive_file_id ) {
+                                $photo = new Photo();
+                                $photo->report_id = $report_id;
+                                $photo->drive_file_id = $drive_file_id;
+                                $photo->filename = $filename;
+                                $photo->section_key = $section_key . '|' . $item_key; 
+                                $photo->save();
+                            }
+                    }
+                }
             }
         }
     }
