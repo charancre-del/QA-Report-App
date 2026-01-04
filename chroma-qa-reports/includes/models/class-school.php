@@ -90,6 +90,20 @@ class School {
     public $updated_at;
 
     /**
+     * Days since last approved report (dynamic).
+     *
+     * @var int|null
+     */
+    public $days_since_last_report;
+
+    /**
+     * Date of last approved report (dynamic).
+     *
+     * @var string|null
+     */
+    public $last_inspection_date;
+
+    /**
      * Get the full table name with prefix.
      *
      * @return string
@@ -111,7 +125,7 @@ class School {
         
         $row = $wpdb->get_row(
             $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         if ( ! $row ) {
@@ -156,7 +170,7 @@ class School {
         }
 
         $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
-        $orderby = sanitize_sql_orderby( "{$args['orderby']} {$args['order']}" );
+        $orderby = \sanitize_sql_orderby( "{$args['orderby']} {$args['order']}" );
 
         $sql = "SELECT * FROM {$table} {$where_clause} ORDER BY {$orderby} LIMIT %d OFFSET %d";
         $values[] = $args['limit'];
@@ -164,7 +178,7 @@ class School {
 
         $rows = $wpdb->get_results(
             $wpdb->prepare( $sql, $values ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return array_map( [ self::class, 'from_row' ], $rows );
@@ -237,7 +251,7 @@ class School {
             'acquired_date'    => $this->acquired_date,
             'status'           => $this->status ?: 'active',
             'drive_folder_id'  => $this->drive_folder_id,
-            'classroom_config' => wp_json_encode( $this->classroom_config ?: [] ),
+            'classroom_config' => \wp_json_encode( $this->classroom_config ?: [] ),
         ];
 
         $format = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];
@@ -324,7 +338,7 @@ class School {
             LIMIT 5
         ";
         
-        $rows = $wpdb->get_results( $wpdb->prepare( $sql, $days_threshold ), ARRAY_A );
+        $rows = $wpdb->get_results( $wpdb->prepare( $sql, $days_threshold ), \ARRAY_A );
         
         return array_map( function($row) {
             $school = self::from_row($row);
@@ -358,7 +372,7 @@ class School {
             GROUP BY r.overall_rating
         ";
         
-        $results = $wpdb->get_results( $sql, ARRAY_A );
+        $results = $wpdb->get_results( $sql, \ARRAY_A );
         
         $stats = [
             'exceeds' => 0,

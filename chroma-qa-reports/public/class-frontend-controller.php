@@ -126,8 +126,6 @@ class Frontend_Controller {
         );
         add_rewrite_rule( 
             '^qa-reports/schools/edit/([0-9]+)/?$', 
-        add_rewrite_rule( 
-            '^qa-reports/schools/edit/([0-9]+)/?$', 
             'index.php?cqa_page=school-form&cqa_action=edit&cqa_school_id=$matches[1]', 
             'top' 
         );

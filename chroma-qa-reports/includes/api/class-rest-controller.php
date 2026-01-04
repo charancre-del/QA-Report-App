@@ -474,8 +474,7 @@ class REST_Controller {
         return new WP_REST_Response( $result, 200 );
     }
 
-        return new WP_REST_Response( $result, 200 );
-    }
+
 
     // ===== SETTINGS ENDPOINTS =====
 
