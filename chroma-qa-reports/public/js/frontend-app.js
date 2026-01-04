@@ -130,6 +130,122 @@
 
                 // Show first panel
                 $(`.cqa-wizard-panel[data-step="${this.currentStep}"]`).addClass('active');
+
+                // Check for imported data
+                this.checkImportedData();
+                this.checkDuplicateAction();
+            },
+
+            checkDuplicateAction: function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('action') === 'duplicate' && urlParams.get('id')) {
+                    const id = urlParams.get('id');
+
+                    // Fetch report data
+                    $.ajax({
+                        url: cqaFrontend.restUrl + 'reports/' + id,
+                        method: 'GET',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                        }
+                    }).done((response) => {
+                        // Transform response to match wizard expectation
+                        // The 'response' object has school_id, inspection_date, etc.
+                        // We need to fetch responses separately or use include_details=true if backend supports it.
+                        // The REST controller 'get_report' supports 'include_details' implicitly or we need to check.
+                        // Looking at class-rest-controller.php: prepare_report_response( $report, true ) is called for get_report.
+                        // So response includes 'responses' and 'closing_notes'.
+
+                        const data = {
+                            school_name: response.school ? response.school.name : '', // Wizard expects school name or we set ID
+                            inspection_date: new Date().toISOString().split('T')[0], // Reset date for new report
+                            report_type: response.report_type,
+                            closing_notes: response.closing_notes,
+                            responses: {}
+                        };
+
+                        // Transform responses structure if needed
+                        if (response.responses) {
+                            // API returns grouped by section. 
+                            // Wizard populateWizard expects { section: { item: { rating: ... } } }
+                            data.responses = response.responses;
+                        }
+
+                        // Set School ID directly if possible
+                        if (response.school_id) {
+                            this.$schoolSelect.val(response.school_id).trigger('change');
+                        }
+
+                        // Populate
+                        this.populateWizard(data);
+                        alert('Report duplicated! Date has been reset to today.');
+                    }).fail((xhr) => {
+                        alert('Failed to load report for duplication.');
+                    });
+                }
+            },
+
+            checkImportedData: function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('action') === 'import') {
+                    const data = sessionStorage.getItem('cqa_imported_data');
+                    if (data) {
+                        try {
+                            const parsed = JSON.parse(data);
+                            // Delay slightly to ensure DOM is ready and listeners bound
+                            setTimeout(() => {
+                                this.populateWizard(parsed);
+                                sessionStorage.removeItem('cqa_imported_data');
+                                alert('Report data imported successfully! Please review all fields.');
+                            }, 500);
+                        } catch (e) {
+                            console.error('Import error', e);
+                        }
+                    }
+                }
+            },
+
+            populateWizard: function (data) {
+                // 1. Basic Info
+                if (data.school_name) {
+                    // Try to match school name in select
+                    const $option = this.$schoolSelect.find('option').filter(function () {
+                        return $(this).text().toLowerCase().includes(data.school_name.toLowerCase());
+                    });
+                    if ($option.length) {
+                        this.$schoolSelect.val($option.val()).trigger('change');
+                    }
+                }
+
+                if (data.inspection_date) {
+                    $('#inspection_date').val(data.inspection_date);
+                }
+
+                if (data.report_type) {
+                    // Map AI return values to exact values if slightly off
+                    let type = data.report_type.toLowerCase();
+                    if (type.includes('tier 2') || type.includes('tier1_tier2')) type = 'tier1_tier2';
+                    else if (type.includes('tier 1') || type.includes('tier1')) type = 'tier1';
+                    else if (type.includes('new') || type.includes('acquisition')) type = 'new_acquisition';
+
+                    $(`input[name="report_type"][value="${type}"]`).prop('checked', true);
+                }
+
+                // 2. Responses (requires checklist to be loaded, but we are on step 1)
+                // We'll store responses in a temporary variable and apply them when step 2 loads
+                // OR we just force load step 2 if we are confident.
+                // Better: Store in the form data so when we go to step 2, we can pre-fill.
+                // Since step 2 generates HTML dynamically, we need to wait until nextStep is called.
+
+                if (data.responses) {
+                    this.importedResponses = data.responses;
+                    // Hook into loadChecklist or nextStep to apply these
+                    // We'll modify loadChecklist key
+                }
+
+                if (data.closing_notes) {
+                    $('#closing_notes').val(data.closing_notes); // Step 3
+                }
             },
 
             updateButtons: function () {
@@ -176,7 +292,6 @@
                         this.loadChecklist();
                         // Auto-create draft if not exists to enable autosave
                         if (!this.$wizard.data('report-id')) {
-                            console.log('Auto-creating draft...');
                             this.submitToRestApi('draft', true);
                         }
                     }
@@ -339,7 +454,6 @@
                 const schoolId = $(e.target).val();
                 // Removed auto-reload to prevent losing other form data
                 // School ID is captured by form submission
-                console.log('School selected:', schoolId);
             },
 
             handleOverallRating: function (e) {
@@ -620,6 +734,37 @@
                         }
                     }).fail(function () {
                         alert('Report saved, but responses failed to save.');
+                        this.refreshProgress();
+
+                        // Apply imported responses if any
+                        if (this.importedResponses) {
+                            $.each(this.importedResponses, (sectionKey, items) => {
+                                $.each(items, (itemKey, response) => {
+                                    // Rating
+                                    if (response.rating) {
+                                        let rating = response.rating.toLowerCase();
+                                        if (rating === 'yes') rating = 'yes';
+                                        else if (rating === 'no') rating = 'no';
+                                        else if (rating === 'sometimes') rating = 'sometimes';
+                                        else if (rating === 'na' || rating === 'n/a') rating = 'na';
+
+                                        const $input = $(`input[name="responses[${sectionKey}][${itemKey}][rating]"][value="${rating}"]`);
+                                        if ($input.length) {
+                                            $input.prop('checked', true);
+                                            // Trigger visual update
+                                            $input.closest('.cqa-rating-group').find('.cqa-item-rating-btn').removeClass('active');
+                                            $input.closest('.cqa-item-rating-btn').addClass('active');
+                                        }
+                                    }
+                                    // Notes
+                                    if (response.notes) {
+                                        $(`textarea[name="responses[${sectionKey}][${itemKey}][notes]"]`).val(response.notes);
+                                    }
+                                });
+                            });
+                            this.importedResponses = null; // Clear
+                            this.refreshProgress();
+                        }
                         deferred.reject();
                     });
 

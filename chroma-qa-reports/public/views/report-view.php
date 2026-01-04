@@ -71,10 +71,71 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
         </div>
     <?php endif; ?>
 
+<?php
+    use ChromaQA\Models\Checklist_Response;
+    use ChromaQA\Checklists\Checklist_Manager;
+
+    $responses = Checklist_Response::get_by_report_grouped( $report_id );
+    $checklist = Checklist_Manager::get_checklist_for_type( $report->report_type );
+    ?>
+
     <div class="cqa-section">
         <h2>📋 Checklist Results</h2>
-        <!-- Checklist results would be loaded here -->
-        <p class="cqa-placeholder">Checklist results display coming soon...</p>
+        
+        <div class="cqa-checklist-results">
+            <?php foreach ( $checklist['sections'] as $section ) : ?>
+                <?php 
+                $section_responses = $responses[ $section['key'] ] ?? [];
+                if ( empty( $section_responses ) ) continue;
+                ?>
+                <div class="cqa-checklist-section-result">
+                    <h3><?php echo esc_html( $section['name'] ); ?></h3>
+                    
+                    <div class="cqa-checklist-items">
+                        <?php foreach ( $section['items'] as $item ) : ?>
+                            <?php 
+                            if ( ! isset( $section_responses[ $item['key'] ] ) ) continue;
+                            $response = $section_responses[ $item['key'] ];
+                            
+                            // Get photos for this item (from the $photos collection we already loaded)
+                            $item_photos = array_filter( $photos, function($photo) use ($section, $item) {
+                                return $photo->section_key === $section['key'] && $photo->item_key === $item['key'];
+                            });
+                            ?>
+                            <div class="cqa-result-item rating-<?php echo esc_attr( $response->rating ); ?>">
+                                <div class="cqa-result-header">
+                                    <span class="cqa-result-rating">
+                                        <?php if ( $response->rating === 'yes' ) : ?>✓ Yes
+                                        <?php elseif ( $response->rating === 'sometimes' ) : ?>~ Sometimes
+                                        <?php elseif ( $response->rating === 'no' ) : ?>✗ No
+                                        <?php else : ?>— N/A<?php endif; ?>
+                                    </span>
+                                    <span class="cqa-result-label"><?php echo esc_html( $item['label'] ); ?></span>
+                                </div>
+                                
+                                <?php if ( ! empty( $response->notes ) ) : ?>
+                                    <div class="cqa-result-notes">
+                                        <?php echo nl2br( esc_html( $response->notes ) ); ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ( ! empty( $item_photos ) ) : ?>
+                                    <div class="cqa-result-photos">
+                                        <?php foreach ( $item_photos as $photo ) : ?>
+                                            <div class="cqa-result-photo">
+                                                <a href="<?php echo esc_url( $photo->file_url ); ?>" target="_blank">
+                                                    <img src="<?php echo esc_url( $photo->thumbnail_url ?: $photo->file_url ); ?>" alt="Evidence">
+                                                </a>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 
     <div class="cqa-report-actions">

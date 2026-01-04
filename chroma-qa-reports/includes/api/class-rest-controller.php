@@ -145,6 +145,20 @@ class REST_Controller {
             'callback'            => [ $this, 'get_school_reports' ],
             'permission_callback' => [ $this, 'check_read_permission' ],
         ] );
+
+        // Settings
+        register_rest_route( self::NAMESPACE, '/settings', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_settings' ],
+                'permission_callback' => [ $this, 'check_manage_options_permission' ],
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'update_settings' ],
+                'permission_callback' => [ $this, 'check_manage_options_permission' ],
+            ],
+        ] );
     }
 
     // ===== PERMISSION CALLBACKS =====
@@ -184,6 +198,10 @@ class REST_Controller {
 
     public function check_ai_permission() {
         return current_user_can( 'cqa_use_ai_features' );
+    }
+
+    public function check_manage_options_permission() {
+        return current_user_can( 'manage_options' ); // Super Admin only
     }
 
     // ===== SCHOOLS ENDPOINTS =====
@@ -454,6 +472,44 @@ class REST_Controller {
         }
 
         return new WP_REST_Response( $result, 200 );
+    }
+
+        return new WP_REST_Response( $result, 200 );
+    }
+
+    // ===== SETTINGS ENDPOINTS =====
+
+    public function get_settings( WP_REST_Request $request ) {
+        $settings = [
+            'google_client_id'     => get_option( 'cqa_google_client_id' ),
+            'google_client_secret' => get_option( 'cqa_google_client_secret' ),
+            'google_developer_key' => get_option( 'cqa_google_developer_key' ),
+            'gemini_api_key'       => get_option( 'cqa_gemini_api_key' ),
+            'enable_ai'            => get_option( 'cqa_enable_ai', 'yes' ),
+        ];
+        return new WP_REST_Response( $settings, 200 );
+    }
+
+    public function update_settings( WP_REST_Request $request ) {
+        $params = $request->get_params();
+
+        if ( isset( $params['google_client_id'] ) ) {
+            update_option( 'cqa_google_client_id', sanitize_text_field( $params['google_client_id'] ) );
+        }
+        if ( isset( $params['google_client_secret'] ) ) {
+            update_option( 'cqa_google_client_secret', sanitize_text_field( $params['google_client_secret'] ) );
+        }
+        if ( isset( $params['google_developer_key'] ) ) {
+            update_option( 'cqa_google_developer_key', sanitize_text_field( $params['google_developer_key'] ) );
+        }
+        if ( isset( $params['gemini_api_key'] ) ) {
+            update_option( 'cqa_gemini_api_key', sanitize_text_field( $params['gemini_api_key'] ) );
+        }
+        if ( isset( $params['enable_ai'] ) ) {
+            update_option( 'cqa_enable_ai', sanitize_text_field( $params['enable_ai'] ) );
+        }
+
+        return new WP_REST_Response( [ 'success' => true ], 200 );
     }
 
     public function generate_report_pdf( WP_REST_Request $request ) {

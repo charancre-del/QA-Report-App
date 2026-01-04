@@ -113,6 +113,44 @@ class Frontend_Controller {
             'index.php?cqa_page=oauth_callback', 
             'top' 
         );
+        // School Management Routes
+        add_rewrite_rule( 
+            '^qa-reports/schools/?$', 
+            'index.php?cqa_page=schools-list', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/schools/new/?$', 
+            'index.php?cqa_page=school-form&cqa_action=new', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/schools/edit/([0-9]+)/?$', 
+        add_rewrite_rule( 
+            '^qa-reports/schools/edit/([0-9]+)/?$', 
+            'index.php?cqa_page=school-form&cqa_action=edit&cqa_school_id=$matches[1]', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/settings/?$', 
+            'index.php?cqa_page=settings', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/import/?$', 
+            'index.php?cqa_page=import', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/reports/?$', 
+            'index.php?cqa_page=reports-list', 
+            'top' 
+        );
+        add_rewrite_rule( 
+            '^qa-reports/analytics/?$', 
+            'index.php?cqa_page=analytics', 
+            'top' 
+        );
     }
 
     /**
@@ -121,6 +159,8 @@ class Frontend_Controller {
     public static function add_query_vars( $vars ) {
         $vars[] = 'cqa_page';
         $vars[] = 'cqa_report_id';
+        $vars[] = 'cqa_action';
+        $vars[] = 'cqa_school_id';
         return $vars;
     }
 
@@ -181,6 +221,27 @@ class Frontend_Controller {
             case 'oauth_callback':
                 self::oauth_callback();
                 break;
+            case 'schools-list':
+                self::load_template( 'schools-list' );
+                break;
+            case 'school-form':
+                self::load_template( 'school-form' );
+                break;
+            case 'settings':
+                self::load_template( 'settings' );
+                break;
+            case 'import':
+                self::load_template( 'import' );
+                break;
+            case 'reports-list':
+                self::load_template( 'reports-list' );
+                break;
+            case 'analytics':
+                if ( get_query_var( 'cqa_page' ) === 'analytics' ) { // Ensure script is enqueued
+                     // Already handled in loop or script enqueue logic if we check cqa_page
+                }
+                self::load_template( 'analytics' );
+                break;
             default:
                 include CQA_PLUGIN_DIR . 'public/views/404.php';
         }
@@ -198,6 +259,18 @@ class Frontend_Controller {
             [],
             CQA_VERSION
         );
+
+        // Enqueue Chart.js for dashboard or analytics
+        $cqa_page = get_query_var( 'cqa_page' );
+        if ( $cqa_page === 'dashboard' || $cqa_page === 'analytics' ) {
+            wp_enqueue_script(
+                'chart-js',
+                'https://cdn.jsdelivr.net/npm/chart.js',
+                [],
+                '3.9.1',
+                true
+            );
+        }
 
         wp_enqueue_script(
             'cqa-frontend',

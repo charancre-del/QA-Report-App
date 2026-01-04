@@ -299,4 +299,77 @@ class School {
         
         return $wpdb->get_col( "SELECT DISTINCT region FROM {$table} WHERE region != '' ORDER BY region" );
     }
+
+    /**
+     * Get overdue schools (no approved report in X days).
+     *
+     * @param int $days_threshold Days threshold (default 90).
+     * @return array Array of schools with days_since_last_report.
+     */
+    public static function get_overdue_schools( $days_threshold = 90 ) {
+        global $wpdb;
+        $schools_table = self::get_table_name();
+        $reports_table = Report::get_table_name();
+        
+        $sql = "
+            SELECT s.*, 
+            DATEDIFF(NOW(), MAX(r.inspection_date)) as days_since_last_report,
+            MAX(r.inspection_date) as last_inspection_date
+            FROM {$schools_table} s
+            LEFT JOIN {$reports_table} r ON s.id = r.school_id AND r.status = 'approved'
+            WHERE s.status = 'active'
+            GROUP BY s.id
+            HAVING days_since_last_report > %d OR days_since_last_report IS NULL
+            ORDER BY days_since_last_report DESC
+            LIMIT 5
+        ";
+        
+        $rows = $wpdb->get_results( $wpdb->prepare( $sql, $days_threshold ), ARRAY_A );
+        
+        return array_map( function($row) {
+            $school = self::from_row($row);
+            $school->days_since_last_report = $row['days_since_last_report'];
+            $school->last_inspection_date = $row['last_inspection_date'];
+            return $school;
+        }, $rows );
+    }
+
+    /**
+     * Get compliance statistics for dashboard charts.
+     *
+     * @return array
+     */
+    public static function get_compliance_stats() {
+        global $wpdb;
+        $reports_table = Report::get_table_name();
+        
+        // Get counts of latest approved report ratings
+        // We need a complex query to get only the LATEST report for each school
+        $sql = "
+            SELECT r.overall_rating, COUNT(*) as count
+            FROM {$reports_table} r
+            INNER JOIN (
+                SELECT school_id, MAX(inspection_date) as latest_date
+                FROM {$reports_table}
+                WHERE status = 'approved'
+                GROUP BY school_id
+            ) latest ON r.school_id = latest.school_id AND r.inspection_date = latest.latest_date
+            WHERE r.status = 'approved' AND r.overall_rating != 'pending'
+            GROUP BY r.overall_rating
+        ";
+        
+        $results = $wpdb->get_results( $sql, ARRAY_A );
+        
+        $stats = [
+            'exceeds' => 0,
+            'meets' => 0,
+            'needs_improvement' => 0
+        ];
+        
+        foreach ( $results as $row ) {
+            $stats[$row['overall_rating']] = (int) $row['count'];
+        }
+        
+        return $stats;
+    }
 }
