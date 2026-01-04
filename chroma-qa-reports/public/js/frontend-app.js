@@ -282,7 +282,7 @@
                         <button type="button" class="cqa-item-rating-btn rating-yes" data-value="yes" title="Yes">✓</button>
                         <button type="button" class="cqa-item-rating-btn rating-sometimes" data-value="sometimes" title="Sometimes">~</button>
                         <button type="button" class="cqa-item-rating-btn rating-no" data-value="no" title="No">✗</button>
-                        <button type="button" class="cqa-item-rating-btn rating-na selected" data-value="na" title="N/A">—</button>
+                        <button type="button" class="cqa-item-rating-btn rating-na selected" data-value="na" title="Not Applicable" style="min-width: 50px;">N/A</button>
                         <input type="hidden" name="${name}[rating]" value="na">
                     </div>
                     <div class="cqa-item-notes" style="width: 100%; margin-top: 12px;">
