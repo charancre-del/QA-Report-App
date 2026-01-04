@@ -85,6 +85,9 @@ $school = $school_id ? School::find( $school_id ) : null;
         </div>
 
         <div class="cqa-form-actions">
+            <button type="button" class="cqa-btn cqa-btn-secondary cqa-save-draft-btn">
+                💾 Save Draft
+            </button>
             <button type="button" class="cqa-btn cqa-btn-primary cqa-wizard-next">
                 Continue to Checklist →
             </button>
@@ -103,6 +106,7 @@ $school = $school_id ? School::find( $school_id ) : null;
 
         <div class="cqa-form-actions">
             <button type="button" class="cqa-btn cqa-wizard-prev">← Back</button>
+            <button type="button" class="cqa-btn cqa-btn-secondary cqa-save-draft-btn">💾 Save Draft</button>
             <button type="button" class="cqa-btn cqa-btn-primary cqa-wizard-next">Continue to Photos →</button>
         </div>
     </div>
@@ -139,6 +143,7 @@ $school = $school_id ? School::find( $school_id ) : null;
 
         <div class="cqa-form-actions">
             <button type="button" class="cqa-btn cqa-wizard-prev">← Back</button>
+             <button type="button" class="cqa-btn cqa-btn-secondary cqa-save-draft-btn">💾 Save Draft</button>
             <button type="button" class="cqa-btn cqa-btn-primary cqa-wizard-next">Continue to Review →</button>
         </div>
     </div>
@@ -180,7 +185,7 @@ $school = $school_id ? School::find( $school_id ) : null;
 
         <div class="cqa-form-actions">
             <button type="button" class="cqa-btn cqa-wizard-prev">← Back</button>
-            <button type="button" class="cqa-btn cqa-btn-secondary" id="cqa-save-draft">
+            <button type="button" class="cqa-btn cqa-btn-secondary cqa-save-draft-btn" id="cqa-save-draft">
                 💾 Save Draft
             </button>
             <button type="button" class="cqa-btn cqa-btn-primary" id="cqa-submit-report">

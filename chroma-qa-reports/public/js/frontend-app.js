@@ -98,8 +98,10 @@
                 $(document).on('click', '.cqa-wizard-next', this.nextStep.bind(this));
                 $(document).on('click', '.cqa-wizard-prev', this.prevStep.bind(this));
 
+                // Save Draft (Delegation for multiple buttons)
+                $(document).on('click', '.cqa-save-draft-btn', this.saveDraft.bind(this));
+
                 this.$schoolSelect.on('change', this.handleSchoolChange.bind(this));
-                this.$saveDraftBtn.on('click', this.saveDraft.bind(this));
                 this.$form.on('submit', this.handleSubmit.bind(this));
 
                 // Submit button - manually trigger form submit
