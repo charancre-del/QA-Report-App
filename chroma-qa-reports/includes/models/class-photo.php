@@ -56,7 +56,7 @@ class Photo {
         
         $row = $wpdb->get_row(
             $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return $row ? self::from_row( $row ) : null;
@@ -77,7 +77,7 @@ class Photo {
                 "SELECT * FROM {$table} WHERE report_id = %d ORDER BY section_key, sort_order",
                 $report_id
             ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return array_map( [ self::class, 'from_row' ], $rows );
@@ -143,7 +143,7 @@ class Photo {
                 $report_id,
                 $item_key
             ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return array_map( [ self::class, 'from_row' ], $rows );

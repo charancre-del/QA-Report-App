@@ -85,7 +85,7 @@ class Report {
         
         $row = $wpdb->get_row(
             $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return $row ? self::from_row( $row ) : null;
@@ -146,7 +146,7 @@ class Report {
 
         $rows = $wpdb->get_results(
             $wpdb->prepare( $sql, $values ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return array_map( [ self::class, 'from_row' ], $rows );
@@ -299,7 +299,7 @@ class Report {
 
         $row = $wpdb->get_row(
             $wpdb->prepare( "SELECT * FROM {$table} WHERE report_id = %d", $this->id ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         if ( ! $row ) {

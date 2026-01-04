@@ -27,7 +27,7 @@ class Photo_Analyzer {
      * @return array Analysis results.
      */
     public static function analyze( $image_url, $context = '' ) {
-        $api_key = get_option( 'cqa_gemini_api_key', '' );
+        $api_key = \get_option( 'cqa_gemini_api_key', '' );
         
         if ( empty( $api_key ) ) {
             return [ 'error' => 'Gemini API key not configured.' ];
@@ -62,14 +62,14 @@ class Photo_Analyzer {
             $mime = mime_content_type( $image_url );
         } else {
             // Fetch remote image
-            $response = wp_remote_get( $image_url );
+            $response = \wp_remote_get( $image_url );
             
-            if ( is_wp_error( $response ) ) {
+            if ( \is_wp_error( $response ) ) {
                 return $response;
             }
 
-            $content = wp_remote_retrieve_body( $response );
-            $content_type = wp_remote_retrieve_header( $response, 'content-type' );
+            $content = \wp_remote_retrieve_body( $response );
+            $content_type = \wp_remote_retrieve_header( $response, 'content-type' );
             $mime = explode( ';', $content_type )[0];
         }
 
@@ -169,17 +169,17 @@ PROMPT;
             ],
         ];
 
-        $response = wp_remote_post( $url, [
+        $response = \wp_remote_post( $url, [
             'headers' => [ 'Content-Type' => 'application/json' ],
-            'body'    => wp_json_encode( $body ),
+            'body'    => \wp_json_encode( $body ),
             'timeout' => 60,
         ] );
 
-        if ( is_wp_error( $response ) ) {
+        if ( \is_wp_error( $response ) ) {
             return [ 'error' => $response->get_error_message() ];
         }
 
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+        $body = json_decode( \wp_remote_retrieve_body( $response ), true );
 
         if ( isset( $body['error'] ) ) {
             return [ 'error' => $body['error']['message'] ?? 'API error' ];
@@ -232,7 +232,7 @@ PROMPT;
      * Register REST routes.
      */
     public static function register_routes() {
-        register_rest_route( 'cqa/v1', '/photos/analyze', [
+        \register_rest_route( 'cqa/v1', '/photos/analyze', [
             'methods'             => 'POST',
             'callback'            => function( $request ) {
                 $url = $request['url'] ?? '';
@@ -245,18 +245,18 @@ PROMPT;
                 return self::analyze( $url, $context );
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_create_reports' );
+                return \current_user_can( 'cqa_create_reports' );
             },
         ] );
 
-        register_rest_route( 'cqa/v1', '/photos/batch-analyze', [
+        \register_rest_route( 'cqa/v1', '/photos/batch-analyze', [
             'methods'             => 'POST',
             'callback'            => function( $request ) {
                 $photos = $request['photos'] ?? [];
                 return self::batch_analyze( $photos );
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_create_reports' );
+                return \current_user_can( 'cqa_create_reports' );
             },
         ] );
     }
@@ -265,6 +265,6 @@ PROMPT;
      * Initialize.
      */
     public static function init() {
-        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
     }
 }

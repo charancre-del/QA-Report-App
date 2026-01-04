@@ -27,14 +27,14 @@ class Approval_Workflow {
      * Initialize hooks.
      */
     public static function init() {
-        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
     }
 
     /**
      * Register REST routes for workflow.
      */
     public static function register_routes() {
-        register_rest_route( 'cqa/v1', '/reports/(?P<id>\d+)/workflow', [
+        \register_rest_route( 'cqa/v1', '/reports/(?P<id>\d+)/workflow', [
             'methods'             => 'POST',
             'callback'            => [ __CLASS__, 'handle_workflow_action' ],
             'permission_callback' => [ __CLASS__, 'check_permission' ],
@@ -45,7 +45,7 @@ class Approval_Workflow {
             ],
         ] );
 
-        register_rest_route( 'cqa/v1', '/reports/(?P<id>\d+)/comments', [
+        \register_rest_route( 'cqa/v1', '/reports/(?P<id>\d+)/comments', [
             'methods'             => 'GET',
             'callback'            => [ __CLASS__, 'get_comments' ],
             'permission_callback' => [ __CLASS__, 'check_view_permission' ],
@@ -67,13 +67,13 @@ class Approval_Workflow {
         switch ( $action ) {
             case 'submit':
                 // Author can submit
-                return $report->user_id == get_current_user_id() || current_user_can( 'cqa_edit_all_reports' );
+                return $report->user_id == \get_current_user_id() || \current_user_can( 'cqa_edit_all_reports' );
 
             case 'start_review':
             case 'approve':
             case 'request_revision':
                 // Regional Director or Super Admin
-                return current_user_can( 'cqa_edit_all_reports' );
+                return \current_user_can( 'cqa_edit_all_reports' );
 
             default:
                 return false;
@@ -84,7 +84,7 @@ class Approval_Workflow {
      * Check view permission.
      */
     public static function check_view_permission( $request ) {
-        return current_user_can( 'cqa_view_all_reports' );
+        return \current_user_can( 'cqa_view_all_reports' );
     }
 
     /**
@@ -123,7 +123,7 @@ class Approval_Workflow {
                 return new \WP_Error( 'invalid_action', 'Invalid workflow action', [ 'status' => 400 ] );
         }
 
-        if ( is_wp_error( $result ) ) {
+        if ( \is_wp_error( $result ) ) {
             return $result;
         }
 
@@ -247,10 +247,10 @@ class Approval_Workflow {
             $table,
             [
                 'report_id'  => $report_id,
-                'user_id'    => get_current_user_id(),
+                'user_id'    => \get_current_user_id(),
                 'action'     => $action,
                 'comment'    => $comment,
-                'created_at' => current_time( 'mysql' ),
+                'created_at' => \current_time( 'mysql' ),
             ],
             [ '%d', '%d', '%s', '%s', '%s' ]
         );
@@ -273,7 +273,7 @@ class Approval_Workflow {
              WHERE c.report_id = %d 
              ORDER BY c.created_at DESC",
             $report_id
-        ), ARRAY_A );
+        ), \ARRAY_A );
 
         return array_map( function( $row ) {
             return [

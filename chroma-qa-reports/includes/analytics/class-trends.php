@@ -181,7 +181,7 @@ class Trends {
             FROM {$table} 
             WHERE status = 'approved' 
             GROUP BY overall_rating
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         $distribution = [];
         foreach ( $ratings as $r ) {
@@ -196,7 +196,7 @@ class Trends {
             GROUP BY month
             ORDER BY month DESC
             LIMIT 12
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         // Common issues
         $issues = self::get_common_issues();
@@ -227,7 +227,7 @@ class Trends {
             GROUP BY section_key, item_key
             ORDER BY count DESC
             LIMIT %d
-        ", $limit ), ARRAY_A );
+        ", $limit ), \ARRAY_A );
 
         return $results;
     }
@@ -260,37 +260,37 @@ class Trends {
      * Register REST routes.
      */
     public static function register_routes() {
-        register_rest_route( 'cqa/v1', '/analytics/school/(?P<id>\d+)/trend', [
+        \register_rest_route( 'cqa/v1', '/analytics/school/(?P<id>\d+)/trend', [
             'methods'             => 'GET',
             'callback'            => function( $request ) {
                 return self::get_school_trend( $request['id'], $request['limit'] ?? 10 );
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_view_all_reports' );
+                return \current_user_can( 'cqa_view_all_reports' );
             },
         ] );
 
-        register_rest_route( 'cqa/v1', '/analytics/regional', [
+        \register_rest_route( 'cqa/v1', '/analytics/regional', [
             'methods'             => 'GET',
             'callback'            => function( $request ) {
                 return self::get_regional_comparison( $request['region'] ?? '' );
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_view_all_reports' );
+                return \current_user_can( 'cqa_view_all_reports' );
             },
         ] );
 
-        register_rest_route( 'cqa/v1', '/analytics/company', [
+        \register_rest_route( 'cqa/v1', '/analytics/company', [
             'methods'             => 'GET',
             'callback'            => function() {
                 return self::get_company_stats();
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_view_all_reports' );
+                return \current_user_can( 'cqa_view_all_reports' );
             },
         ] );
 
-        register_rest_route( 'cqa/v1', '/analytics/school/(?P<id>\d+)/export', [
+        \register_rest_route( 'cqa/v1', '/analytics/school/(?P<id>\d+)/export', [
             'methods'             => 'GET',
             'callback'            => function( $request ) {
                 $csv = self::export_csv( $request['id'] );
@@ -300,7 +300,7 @@ class Trends {
                 ] );
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_view_all_reports' );
+                return \current_user_can( 'cqa_view_all_reports' );
             },
         ] );
     }
@@ -309,6 +309,6 @@ class Trends {
      * Initialize.
      */
     public static function init() {
-        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
     }
 }

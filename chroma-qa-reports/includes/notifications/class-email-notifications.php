@@ -19,9 +19,9 @@ class Email_Notifications {
      * Initialize hooks.
      */
     public static function init() {
-        add_action( 'cqa_report_submitted', [ __CLASS__, 'on_report_submitted' ] );
-        add_action( 'cqa_report_approved', [ __CLASS__, 'on_report_approved' ] );
-        add_action( 'cqa_report_needs_revision', [ __CLASS__, 'on_needs_revision' ] );
+        \add_action( 'cqa_report_submitted', [ __CLASS__, 'on_report_submitted' ] );
+        \add_action( 'cqa_report_approved', [ __CLASS__, 'on_report_approved' ] );
+        \add_action( 'cqa_report_needs_revision', [ __CLASS__, 'on_needs_revision' ] );
     }
 
     /**
@@ -34,7 +34,7 @@ class Email_Notifications {
         if ( ! $report ) return;
 
         $school = $report->get_school();
-        $inspector = get_user_by( 'id', $report->user_id );
+        $inspector = \get_user_by( 'id', $report->user_id );
 
         // Notify Regional Director
         $regional_directors = self::get_regional_directors( $school->region ?? '' );
@@ -69,7 +69,7 @@ class Email_Notifications {
         if ( ! $report ) return;
 
         $school = $report->get_school();
-        $inspector = get_user_by( 'id', $report->user_id );
+        $inspector = \get_user_by( 'id', $report->user_id );
 
         // Notify the inspector
         if ( $inspector ) {
@@ -104,7 +104,7 @@ class Email_Notifications {
         if ( ! $report ) return;
 
         $school = $report->get_school();
-        $inspector = get_user_by( 'id', $report->user_id );
+        $inspector = \get_user_by( 'id', $report->user_id );
 
         if ( $inspector ) {
             self::send_email(
@@ -126,12 +126,12 @@ class Email_Notifications {
     private static function send_email( $to, $subject, $body, $attachment = '' ) {
         $headers = [
             'Content-Type: text/html; charset=UTF-8',
-            'From: Chroma QA Reports <noreply@' . parse_url( home_url(), PHP_URL_HOST ) . '>',
+            'From: Chroma QA Reports <noreply@' . parse_url( \home_url(), PHP_URL_HOST ) . '>',
         ];
 
         $attachments = $attachment ? [ $attachment ] : [];
 
-        wp_mail( $to, $subject, self::wrap_template( $body ), $headers, $attachments );
+        \wp_mail( $to, $subject, self::wrap_template( $body ), $headers, $attachments );
     }
 
     /**
@@ -141,7 +141,7 @@ class Email_Notifications {
      * @return string
      */
     private static function wrap_template( $content ) {
-        $company = get_option( 'cqa_company_name', 'Chroma Early Learning Academy' );
+        $company = \get_option( 'cqa_company_name', 'Chroma Early Learning Academy' );
         
         return '
         <!DOCTYPE html>
@@ -172,7 +172,7 @@ class Email_Notifications {
                 </div>
                 <div class="footer">
                     <p>This is an automated message from the QA Reports system.</p>
-                    <p>© ' . date( 'Y' ) . ' ' . esc_html( $company ) . '</p>
+                    <p>© ' . date( 'Y' ) . ' ' . \esc_html( $company ) . '</p>
                 </div>
             </div>
         </body>
@@ -260,7 +260,7 @@ class Email_Notifications {
      * Get regional directors for a region.
      */
     private static function get_regional_directors( $region ) {
-        $users = get_users( [
+        $users = \get_users( [
             'role'       => 'cqa_regional_director',
             'meta_key'   => 'cqa_region',
             'meta_value' => $region,
@@ -268,7 +268,7 @@ class Email_Notifications {
 
         // If no regional match, get all regional directors
         if ( empty( $users ) ) {
-            $users = get_users( [ 'role' => 'cqa_regional_director' ] );
+            $users = \get_users( [ 'role' => 'cqa_regional_director' ] );
         }
 
         return $users;
@@ -278,7 +278,7 @@ class Email_Notifications {
      * Get school managers.
      */
     private static function get_school_managers( $school_id ) {
-        return get_users( [
+        return \get_users( [
             'role'       => 'cqa_program_manager',
             'meta_key'   => 'cqa_school_id',
             'meta_value' => $school_id,

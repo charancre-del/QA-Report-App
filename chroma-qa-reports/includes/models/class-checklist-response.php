@@ -66,7 +66,7 @@ class Checklist_Response {
                 "SELECT * FROM {$table} WHERE report_id = %d ORDER BY section_key, item_key",
                 $report_id
             ),
-            ARRAY_A
+            \ARRAY_A
         );
 
         return array_map( [ self::class, 'from_row' ], $rows );

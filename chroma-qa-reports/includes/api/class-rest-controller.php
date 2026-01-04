@@ -35,7 +35,7 @@ class REST_Controller {
      */
     public function register_routes() {
         // Schools
-        register_rest_route( self::NAMESPACE, '/schools', [
+        \register_rest_route( self::NAMESPACE, '/schools', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_schools' ],
@@ -48,7 +48,7 @@ class REST_Controller {
             ],
         ] );
 
-        register_rest_route( self::NAMESPACE, '/schools/(?P<id>\d+)', [
+        \register_rest_route( self::NAMESPACE, '/schools/(?P<id>\d+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_school' ],
@@ -67,7 +67,7 @@ class REST_Controller {
         ] );
 
         // Reports
-        register_rest_route( self::NAMESPACE, '/reports', [
+        \register_rest_route( self::NAMESPACE, '/reports', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_reports' ],
@@ -80,7 +80,7 @@ class REST_Controller {
             ],
         ] );
 
-        register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)', [
+        \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_report' ],
@@ -99,7 +99,7 @@ class REST_Controller {
         ] );
 
         // Report responses
-        register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/responses', [
+        \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/responses', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_report_responses' ],
@@ -113,41 +113,41 @@ class REST_Controller {
         ] );
 
         // Report PDF
-        register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/pdf', [
+        \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/pdf', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'generate_report_pdf' ],
             'permission_callback' => [ $this, 'check_export_permission' ],
         ] );
 
         // AI endpoints
-        register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/generate-summary', [
+        \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/generate-summary', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'generate_ai_summary' ],
             'permission_callback' => [ $this, 'check_ai_permission' ],
         ] );
 
-        register_rest_route( self::NAMESPACE, '/ai/parse-document', [
+        \register_rest_route( self::NAMESPACE, '/ai/parse-document', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'parse_document' ],
             'permission_callback' => [ $this, 'check_ai_permission' ],
         ] );
 
         // Checklists
-        register_rest_route( self::NAMESPACE, '/checklists/(?P<type>[a-z0-9_]+)', [
+        \register_rest_route( self::NAMESPACE, '/checklists/(?P<type>[a-z0-9_]+)', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'get_checklist' ],
             'permission_callback' => [ $this, 'check_read_permission' ],
         ] );
 
         // Schools reports (for previous report selection)
-        register_rest_route( self::NAMESPACE, '/schools/(?P<id>\d+)/reports', [
+        \register_rest_route( self::NAMESPACE, '/schools/(?P<id>\d+)/reports', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'get_school_reports' ],
             'permission_callback' => [ $this, 'check_read_permission' ],
         ] );
 
         // Settings
-        register_rest_route( self::NAMESPACE, '/settings', [
+        \register_rest_route( self::NAMESPACE, '/settings', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_settings' ],
@@ -164,44 +164,44 @@ class REST_Controller {
     // ===== PERMISSION CALLBACKS =====
 
     public function check_read_permission() {
-        return current_user_can( 'cqa_view_own_reports' ) || current_user_can( 'cqa_view_all_reports' );
+        return \current_user_can( 'cqa_view_own_reports' ) || \current_user_can( 'cqa_view_all_reports' );
     }
 
     public function check_manage_schools_permission() {
-        return current_user_can( 'cqa_manage_schools' );
+        return \current_user_can( 'cqa_manage_schools' );
     }
 
     public function check_create_reports_permission() {
-        return current_user_can( 'cqa_create_reports' );
+        return \current_user_can( 'cqa_create_reports' );
     }
 
     public function check_edit_reports_permission( $request ) {
-        if ( current_user_can( 'cqa_edit_all_reports' ) ) {
+        if ( \current_user_can( 'cqa_edit_all_reports' ) ) {
             return true;
         }
 
-        if ( current_user_can( 'cqa_edit_own_reports' ) ) {
+        if ( \current_user_can( 'cqa_edit_own_reports' ) ) {
             $report = Report::find( $request['id'] );
-            return $report && $report->user_id === get_current_user_id();
+            return $report && $report->user_id === \get_current_user_id();
         }
 
         return false;
     }
 
     public function check_delete_reports_permission() {
-        return current_user_can( 'cqa_delete_reports' );
+        return \current_user_can( 'cqa_delete_reports' );
     }
 
     public function check_export_permission() {
-        return current_user_can( 'cqa_export_reports' );
+        return \current_user_can( 'cqa_export_reports' );
     }
 
     public function check_ai_permission() {
-        return current_user_can( 'cqa_use_ai_features' );
+        return \current_user_can( 'cqa_use_ai_features' );
     }
 
     public function check_manage_options_permission() {
-        return current_user_can( 'manage_options' ); // Super Admin only
+        return \current_user_can( 'manage_options' ); // Super Admin only
     }
 
     // ===== SCHOOLS ENDPOINTS =====
@@ -232,17 +232,17 @@ class REST_Controller {
 
     public function create_school( WP_REST_Request $request ) {
         $school = new School();
-        $school->name = sanitize_text_field( $request->get_param( 'name' ) );
-        $school->location = sanitize_text_field( $request->get_param( 'location' ) );
-        $school->region = sanitize_text_field( $request->get_param( 'region' ) );
-        $school->acquired_date = sanitize_text_field( $request->get_param( 'acquired_date' ) );
-        $school->status = sanitize_text_field( $request->get_param( 'status' ) ) ?: 'active';
+        $school->name = \sanitize_text_field( $request->get_param( 'name' ) );
+        $school->location = \sanitize_text_field( $request->get_param( 'location' ) );
+        $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
+        $school->acquired_date = \sanitize_text_field( $request->get_param( 'acquired_date' ) );
+        $school->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'active';
         $school->classroom_config = $request->get_param( 'classroom_config' ) ?: [];
 
         $result = $school->save();
 
         if ( ! $result ) {
-            return new WP_Error( 'create_failed', __( 'Failed to create school.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
+            return new WP_Error( 'create_failed', \__( 'Failed to create school.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
         }
 
         return new WP_REST_Response( $this->prepare_school_response( $school ), 201 );
@@ -256,16 +256,16 @@ class REST_Controller {
         }
 
         if ( $request->has_param( 'name' ) ) {
-            $school->name = sanitize_text_field( $request->get_param( 'name' ) );
+            $school->name = \sanitize_text_field( $request->get_param( 'name' ) );
         }
         if ( $request->has_param( 'location' ) ) {
-            $school->location = sanitize_text_field( $request->get_param( 'location' ) );
+            $school->location = \sanitize_text_field( $request->get_param( 'location' ) );
         }
         if ( $request->has_param( 'region' ) ) {
-            $school->region = sanitize_text_field( $request->get_param( 'region' ) );
+            $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
         }
         if ( $request->has_param( 'status' ) ) {
-            $school->status = sanitize_text_field( $request->get_param( 'status' ) );
+            $school->status = \sanitize_text_field( $request->get_param( 'status' ) );
         }
         if ( $request->has_param( 'classroom_config' ) ) {
             $school->classroom_config = $request->get_param( 'classroom_config' );
@@ -318,18 +318,18 @@ class REST_Controller {
     public function create_report( WP_REST_Request $request ) {
         $report = new Report();
         $report->school_id = intval( $request->get_param( 'school_id' ) );
-        $report->user_id = get_current_user_id();
-        $report->report_type = sanitize_text_field( $request->get_param( 'report_type' ) );
-        $report->inspection_date = sanitize_text_field( $request->get_param( 'inspection_date' ) );
+        $report->user_id = \get_current_user_id();
+        $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
+        $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         $report->previous_report_id = intval( $request->get_param( 'previous_report_id' ) ) ?: null;
-        $report->overall_rating = sanitize_text_field( $request->get_param( 'overall_rating' ) ) ?: 'pending';
-        $report->closing_notes = sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
-        $report->status = sanitize_text_field( $request->get_param( 'status' ) ) ?: 'draft';
+        $report->overall_rating = \sanitize_text_field( $request->get_param( 'overall_rating' ) ) ?: 'pending';
+        $report->closing_notes = \sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
+        $report->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'draft';
 
         $result = $report->save();
 
         if ( ! $result ) {
-            return new WP_Error( 'create_failed', __( 'Failed to create report.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
+            return new WP_Error( 'create_failed', \__( 'Failed to create report.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
         }
 
         // Process Photos (Uploads)
@@ -349,22 +349,22 @@ class REST_Controller {
         }
 
         if ( $request->has_param( 'report_type' ) ) {
-            $report->report_type = sanitize_text_field( $request->get_param( 'report_type' ) );
+            $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         }
         if ( $request->has_param( 'inspection_date' ) ) {
-            $report->inspection_date = sanitize_text_field( $request->get_param( 'inspection_date' ) );
+            $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         }
         if ( $request->has_param( 'previous_report_id' ) ) {
             $report->previous_report_id = intval( $request->get_param( 'previous_report_id' ) ) ?: null;
         }
         if ( $request->has_param( 'overall_rating' ) ) {
-            $report->overall_rating = sanitize_text_field( $request->get_param( 'overall_rating' ) );
+            $report->overall_rating = \sanitize_text_field( $request->get_param( 'overall_rating' ) );
         }
         if ( $request->has_param( 'closing_notes' ) ) {
-            $report->closing_notes = sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
+            $report->closing_notes = \sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
         }
         if ( $request->has_param( 'status' ) ) {
-            $report->status = sanitize_text_field( $request->get_param( 'status' ) );
+            $report->status = \sanitize_text_field( $request->get_param( 'status' ) );
         }
 
         $report->save();
@@ -400,7 +400,7 @@ class REST_Controller {
         $responses = $request->get_param( 'responses' );
 
         if ( ! is_array( $responses ) ) {
-            return new WP_Error( 'invalid_data', __( 'Invalid responses data.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+            return new WP_Error( 'invalid_data', \__( 'Invalid responses data.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
         }
 
         Checklist_Response::bulk_save( $report_id, $responses );
@@ -461,7 +461,7 @@ class REST_Controller {
         $files = $request->get_file_params();
         
         if ( empty( $files['document'] ) ) {
-            return new WP_Error( 'no_file', __( 'No document provided.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+            return new WP_Error( 'no_file', \__( 'No document provided.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
         }
 
         $parser = new \ChromaQA\AI\Document_Parser();
@@ -480,11 +480,11 @@ class REST_Controller {
 
     public function get_settings( WP_REST_Request $request ) {
         $settings = [
-            'google_client_id'     => get_option( 'cqa_google_client_id' ),
-            'google_client_secret' => get_option( 'cqa_google_client_secret' ),
-            'google_developer_key' => get_option( 'cqa_google_developer_key' ),
-            'gemini_api_key'       => get_option( 'cqa_gemini_api_key' ),
-            'enable_ai'            => get_option( 'cqa_enable_ai', 'yes' ),
+            'google_client_id'     => \get_option( 'cqa_google_client_id' ),
+            'google_client_secret' => \get_option( 'cqa_google_client_secret' ),
+            'google_developer_key' => \get_option( 'cqa_google_developer_key' ),
+            'gemini_api_key'       => \get_option( 'cqa_gemini_api_key' ),
+            'enable_ai'            => \get_option( 'cqa_enable_ai', 'yes' ),
         ];
         return new WP_REST_Response( $settings, 200 );
     }
@@ -493,19 +493,19 @@ class REST_Controller {
         $params = $request->get_params();
 
         if ( isset( $params['google_client_id'] ) ) {
-            update_option( 'cqa_google_client_id', sanitize_text_field( $params['google_client_id'] ) );
+            \update_option( 'cqa_google_client_id', \sanitize_text_field( $params['google_client_id'] ) );
         }
         if ( isset( $params['google_client_secret'] ) ) {
-            update_option( 'cqa_google_client_secret', sanitize_text_field( $params['google_client_secret'] ) );
+            \update_option( 'cqa_google_client_secret', \sanitize_text_field( $params['google_client_secret'] ) );
         }
         if ( isset( $params['google_developer_key'] ) ) {
-            update_option( 'cqa_google_developer_key', sanitize_text_field( $params['google_developer_key'] ) );
+            \update_option( 'cqa_google_developer_key', \sanitize_text_field( $params['google_developer_key'] ) );
         }
         if ( isset( $params['gemini_api_key'] ) ) {
-            update_option( 'cqa_gemini_api_key', sanitize_text_field( $params['gemini_api_key'] ) );
+            \update_option( 'cqa_gemini_api_key', \sanitize_text_field( $params['gemini_api_key'] ) );
         }
         if ( isset( $params['enable_ai'] ) ) {
-            update_option( 'cqa_enable_ai', sanitize_text_field( $params['enable_ai'] ) );
+            \update_option( 'cqa_enable_ai', \sanitize_text_field( $params['enable_ai'] ) );
         }
 
         return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -521,13 +521,13 @@ class REST_Controller {
         $pdf_generator = new \ChromaQA\Export\PDF_Generator();
         $pdf_path = $pdf_generator->generate( $report );
 
-        if ( is_wp_error( $pdf_path ) ) {
+        if ( \is_wp_error( $pdf_path ) ) {
             return $pdf_path;
         }
 
         // Stream the PDF
         header( 'Content-Type: application/pdf' );
-        header( 'Content-Disposition: inline; filename="' . sanitize_file_name( $report->get_school()->name . '-QA-Report.pdf' ) . '"' );
+        header( 'Content-Disposition: inline; filename="' . \sanitize_file_name( $report->get_school()->name . '-QA-Report.pdf' ) . '"' );
         readfile( $pdf_path );
         exit;
     }
@@ -583,33 +583,33 @@ class REST_Controller {
             $tmp_file = sys_get_temp_dir() . '/' . $filename;
             
             // 1. Try Google Drive Upload
-            if ( get_option( 'cqa_google_client_id' ) ) {
+            if ( \get_option( 'cqa_google_client_id' ) ) {
                 file_put_contents( $tmp_file, $decoded_data );
                 $drive_result = Google_Drive::upload_file( $tmp_file, $filename, $folder_id );
-                if ( ! is_wp_error( $drive_result ) && isset( $drive_result['id'] ) ) {
+                if ( ! \is_wp_error( $drive_result ) && isset( $drive_result['id'] ) ) {
                     $drive_file_id = $drive_result['id'];
                 }
             }
 
             // 2. Fallback to Local Media Library
             if ( empty( $drive_file_id ) ) {
-                $upload = wp_upload_bits( $filename, null, $decoded_data );
+                $upload = \wp_upload_bits( $filename, null, $decoded_data );
                 
                 if ( ! $upload['error'] ) {
                     $file_path = $upload['file'];
                     $file_name = basename( $file_path );
-                    $file_type = wp_check_filetype( $file_name, null );
+                    $file_type = \wp_check_filetype( $file_name, null );
                     
                     $attachment = [
                         'post_mime_type' => $file_type['type'],
-                        'post_title'     => sanitize_file_name( pathinfo( $file_name, PATHINFO_FILENAME ) ),
+                        'post_title'     => \sanitize_file_name( pathinfo( $file_name, PATHINFO_FILENAME ) ),
                         'post_content'   => '',
                         'post_status'    => 'inherit',
                     ];
                     
-                    $attach_id = wp_insert_attachment( $attachment, $file_path );
-                    $attach_data = wp_generate_attachment_metadata( $attach_id, $file_path );
-                    wp_update_attachment_metadata( $attach_id, $attach_data );
+                    $attach_id = \wp_insert_attachment( $attachment, $file_path );
+                    $attach_data = \wp_generate_attachment_metadata( $attach_id, $file_path );
+                    \wp_update_attachment_metadata( $attach_id, $attach_data );
                     
                     $drive_file_id = 'wp_' . $attach_id;
                 }

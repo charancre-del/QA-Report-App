@@ -25,15 +25,15 @@ class Reminders {
      */
     public static function init() {
         // Register cron event
-        add_action( 'cqa_daily_reminder_check', [ __CLASS__, 'check_due_dates' ] );
+        \add_action( 'cqa_daily_reminder_check', [ __CLASS__, 'check_due_dates' ] );
         
         // Schedule if not scheduled
-        if ( ! wp_next_scheduled( 'cqa_daily_reminder_check' ) ) {
-            wp_schedule_event( time(), 'daily', 'cqa_daily_reminder_check' );
+        if ( ! \wp_next_scheduled( 'cqa_daily_reminder_check' ) ) {
+            \wp_schedule_event( time(), 'daily', 'cqa_daily_reminder_check' );
         }
 
         // Dashboard widget
-        add_action( 'wp_dashboard_setup', [ __CLASS__, 'add_dashboard_widget' ] );
+        \add_action( 'wp_dashboard_setup', [ __CLASS__, 'add_dashboard_widget' ] );
     }
 
     /**
@@ -55,7 +55,7 @@ class Reminders {
      */
     public static function get_schools_due_for_visit( $days_threshold = 14 ) {
         $schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
-        $interval = get_option( 'cqa_visit_interval', self::DEFAULT_INTERVAL );
+        $interval = \get_option( 'cqa_visit_interval', self::DEFAULT_INTERVAL );
         $due_schools = [];
 
         foreach ( $schools as $school ) {
@@ -112,8 +112,8 @@ class Reminders {
         
         // Get QA officers and regional directors
         $recipients = array_merge(
-            get_users( [ 'role' => 'cqa_qa_officer' ] ),
-            get_users( [ 'role' => 'cqa_regional_director' ] )
+            \get_users( [ 'role' => 'cqa_qa_officer' ] ),
+            \get_users( [ 'role' => 'cqa_regional_director' ] )
         );
 
         if ( empty( $recipients ) ) return;
@@ -130,10 +130,10 @@ class Reminders {
 
         $headers = [
             'Content-Type: text/html; charset=UTF-8',
-            'From: Chroma QA Reports <noreply@' . parse_url( home_url(), PHP_URL_HOST ) . '>',
+            'From: Chroma QA Reports <noreply@' . parse_url( \home_url(), PHP_URL_HOST ) . '>',
         ];
 
-        wp_mail( $emails, $subject, $body, $headers );
+        \wp_mail( $emails, $subject, $body, $headers );
     }
 
     /**
@@ -141,7 +141,7 @@ class Reminders {
      */
     private static function get_reminder_template( $school_data ) {
         $school = $school_data['school'];
-        $create_url = admin_url( 'admin.php?page=chroma-qa-reports-create&school_id=' . $school->id );
+        $create_url = \admin_url( 'admin.php?page=chroma-qa-reports-create&school_id=' . $school->id );
         
         $status_color = $school_data['is_overdue'] ? '#fee2e2' : '#fef3c7';
         $status_text = $school_data['is_overdue'] 
@@ -158,17 +158,17 @@ class Reminders {
                     <h1 style="margin: 0;">QA Visit Reminder</h1>
                 </div>
                 <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb;">
-                    <h2>' . esc_html( $school->name ) . '</h2>
+                    <h2>' . \esc_html( $school->name ) . '</h2>
                     <div style="background: ' . $status_color . '; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: center;">
-                        <strong style="font-size: 18px;">' . esc_html( $status_text ) . '</strong>
+                        <strong style="font-size: 18px;">' . \esc_html( $status_text ) . '</strong>
                     </div>
                     <table style="width:100%; margin: 20px 0;">
-                        <tr><td><strong>Location:</strong></td><td>' . esc_html( $school->location ?? 'N/A' ) . '</td></tr>
-                        <tr><td><strong>Last Visit:</strong></td><td>' . ( $school_data['last_visit'] ? esc_html( date_i18n( 'F j, Y', strtotime( $school_data['last_visit'] ) ) ) : 'Never' ) . '</td></tr>
-                        <tr><td><strong>Last Rating:</strong></td><td>' . ( $school_data['last_rating'] ? esc_html( ucwords( str_replace( '_', ' ', $school_data['last_rating'] ) ) ) : 'N/A' ) . '</td></tr>
+                        <tr><td><strong>Location:</strong></td><td>' . \esc_html( $school->location ?? 'N/A' ) . '</td></tr>
+                        <tr><td><strong>Last Visit:</strong></td><td>' . ( $school_data['last_visit'] ? \esc_html( \date_i18n( 'F j, Y', strtotime( $school_data['last_visit'] ) ) ) : 'Never' ) . '</td></tr>
+                        <tr><td><strong>Last Rating:</strong></td><td>' . ( $school_data['last_rating'] ? \esc_html( ucwords( str_replace( '_', ' ', $school_data['last_rating'] ) ) ) : 'N/A' ) . '</td></tr>
                     </table>
                     <p style="text-align: center;">
-                        <a href="' . esc_url( $create_url ) . '" style="display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 6px;">Create QA Report</a>
+                        <a href="' . \esc_url( $create_url ) . '" style="display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 6px;">Create QA Report</a>
                     </p>
                 </div>
                 <div style="background: #f9fafb; padding: 15px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 8px 8px;">
@@ -183,9 +183,9 @@ class Reminders {
      * Add dashboard widget.
      */
     public static function add_dashboard_widget() {
-        if ( ! current_user_can( 'cqa_view_all_reports' ) ) return;
+        if ( ! \current_user_can( 'cqa_view_all_reports' ) ) return;
 
-        wp_add_dashboard_widget(
+        \wp_add_dashboard_widget(
             'cqa_due_visits',
             '📅 Upcoming QA Visits',
             [ __CLASS__, 'render_dashboard_widget' ]
@@ -245,6 +245,6 @@ class Reminders {
      * Unschedule cron on deactivation.
      */
     public static function deactivate() {
-        wp_clear_scheduled_hook( 'cqa_daily_reminder_check' );
+        \wp_clear_scheduled_hook( 'cqa_daily_reminder_check' );
     }
 }

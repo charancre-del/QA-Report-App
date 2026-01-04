@@ -115,7 +115,7 @@ class Location {
             return null;
         }
 
-        $api_key = get_option( 'cqa_google_maps_api_key', '' );
+        $api_key = \get_option( 'cqa_google_maps_api_key', '' );
         
         if ( empty( $api_key ) ) {
             // Try without API key (limited usage)
@@ -124,13 +124,13 @@ class Location {
             $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode( $address ) . '&key=' . $api_key;
         }
 
-        $response = wp_remote_get( $url );
+        $response = \wp_remote_get( $url );
         
-        if ( is_wp_error( $response ) ) {
+        if ( \is_wp_error( $response ) ) {
             return null;
         }
 
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+        $body = json_decode( \wp_remote_retrieve_body( $response ), true );
 
         if ( isset( $body['results'][0]['geometry']['location'] ) ) {
             return $body['results'][0]['geometry']['location'];
@@ -143,11 +143,11 @@ class Location {
      * Register REST endpoint for location verification.
      */
     public static function register_routes() {
-        register_rest_route( 'cqa/v1', '/location/verify', [
+        \register_rest_route( 'cqa/v1', '/location/verify', [
             'methods'             => 'POST',
             'callback'            => [ __CLASS__, 'handle_verify' ],
             'permission_callback' => function() {
-                return current_user_can( 'cqa_create_reports' );
+                return \current_user_can( 'cqa_create_reports' );
             },
             'args'                => [
                 'school_id' => [ 'type' => 'integer', 'required' => true ],
@@ -156,11 +156,11 @@ class Location {
             ],
         ] );
 
-        register_rest_route( 'cqa/v1', '/location/log-override', [
+        \register_rest_route( 'cqa/v1', '/location/log-override', [
             'methods'             => 'POST',
             'callback'            => [ __CLASS__, 'log_override' ],
             'permission_callback' => function() {
-                return current_user_can( 'cqa_create_reports' );
+                return \current_user_can( 'cqa_create_reports' );
             },
             'args'                => [
                 'school_id' => [ 'type' => 'integer', 'required' => true ],
@@ -187,17 +187,17 @@ class Location {
      */
     public static function log_override( $request ) {
         $log = [
-            'user_id'    => get_current_user_id(),
+            'user_id'    => \get_current_user_id(),
             'school_id'  => $request['school_id'],
-            'reason'     => sanitize_text_field( $request['reason'] ),
+            'reason'     => \sanitize_text_field( $request['reason'] ),
             'latitude'   => $request['latitude'] ?? null,
             'longitude'  => $request['longitude'] ?? null,
-            'timestamp'  => current_time( 'mysql' ),
+            'timestamp'  => \current_time( 'mysql' ),
             'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
         ];
 
         // Store in options or custom table
-        $overrides = get_option( 'cqa_location_overrides', [] );
+        $overrides = \get_option( 'cqa_location_overrides', [] );
         $overrides[] = $log;
         
         // Keep last 100 overrides
@@ -205,7 +205,7 @@ class Location {
             $overrides = array_slice( $overrides, -100 );
         }
         
-        update_option( 'cqa_location_overrides', $overrides );
+        \update_option( 'cqa_location_overrides', $overrides );
 
         return [
             'success' => true,
@@ -217,6 +217,6 @@ class Location {
      * Initialize hooks.
      */
     public static function init() {
-        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
     }
 }

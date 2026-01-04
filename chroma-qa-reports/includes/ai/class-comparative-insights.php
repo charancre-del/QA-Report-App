@@ -32,7 +32,7 @@ class Comparative_Insights {
         }
 
         // Use AI to analyze patterns
-        $api_key = get_option( 'cqa_gemini_api_key', '' );
+        $api_key = \get_option( 'cqa_gemini_api_key', '' );
         
         if ( $api_key ) {
             return self::ai_analyze( $api_key, $data );
@@ -63,7 +63,7 @@ class Comparative_Insights {
             WHERE r.status = 'approved'
             AND r.inspection_date > DATE_SUB(NOW(), INTERVAL 90 DAY)
             ORDER BY r.inspection_date DESC
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         // Common issues
         $issues = $wpdb->get_results( "
@@ -78,7 +78,7 @@ class Comparative_Insights {
             HAVING count >= 2
             ORDER BY count DESC
             LIMIT 20
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         // Best performers
         $best = $wpdb->get_results( "
@@ -91,7 +91,7 @@ class Comparative_Insights {
                 SELECT MAX(inspection_date) FROM {$reports_table} 
                 WHERE school_id = s.id AND status = 'approved'
             )
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         // Needs attention
         $needs_attention = $wpdb->get_results( "
@@ -104,7 +104,7 @@ class Comparative_Insights {
                 SELECT MAX(inspection_date) FROM {$reports_table} 
                 WHERE school_id = s.id AND status = 'approved'
             )
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         // Regional breakdown
         $by_region = $wpdb->get_results( "
@@ -114,7 +114,7 @@ class Comparative_Insights {
             WHERE r.status = 'approved'
             AND r.inspection_date > DATE_SUB(NOW(), INTERVAL 90 DAY)
             GROUP BY s.region, r.overall_rating
-        ", ARRAY_A );
+        ", \ARRAY_A );
 
         return [
             'reports'         => $reports,
@@ -307,13 +307,13 @@ PROMPT;
      * Register REST route.
      */
     public static function register_routes() {
-        register_rest_route( 'cqa/v1', '/insights/company', [
+        \register_rest_route( 'cqa/v1', '/insights/company', [
             'methods'             => 'GET',
             'callback'            => function() {
                 return self::generate();
             },
             'permission_callback' => function() {
-                return current_user_can( 'cqa_view_all_reports' );
+                return \current_user_can( 'cqa_view_all_reports' );
             },
         ] );
     }
@@ -322,6 +322,6 @@ PROMPT;
      * Initialize.
      */
     public static function init() {
-        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
     }
 }
