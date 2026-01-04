@@ -455,6 +455,53 @@
 
             // --- Data Persistence ---
 
+            generateAISummary: function (e) {
+                e.preventDefault();
+                const $btn = $(e.currentTarget);
+                const originalText = $btn.html();
+                const reportId = this.$wizard.data('report-id');
+
+                if (!reportId) {
+                    alert('Please save the report as a draft first before generating AI summary.');
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('🤖 Generating...');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/generate-summary',
+                    method: 'POST',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function (response) {
+                    // Display the summary in a dialog or section
+                    const summary = response.executive_summary || 'Summary generated successfully!';
+                    const $summaryArea = $('#cqa-ai-summary');
+
+                    // Create a nice summary display
+                    const summaryHTML = `
+                        <div class="cqa-summary-result" style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 16px;">
+                            <h4 style="margin: 0 0 12px; color: #4f46e5;">🤖 AI Executive Summary</h4>
+                            <div style="line-height: 1.6; color: #374151;">${summary}</div>
+                            ${response.suggested_rating ? `
+                                <div style="margin-top: 12px; padding: 8px; background: white; border-radius: 6px; border-left: 3px solid #4f46e5;">
+                                    <strong>Suggested Rating:</strong> ${response.suggested_rating.replace('_', ' ').toUpperCase()}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+
+                    $summaryArea.find('.cqa-summary-result').remove();
+                    $summaryArea.append(summaryHTML);
+
+                    $btn.prop('disabled', false).html(originalText + ' ✓');
+                }).fail(function (xhr) {
+                    const error = xhr.responseJSON?.message || 'Failed to generate summary. Please try again.';
+                    alert('Error: ' + error);
+                    $btn.prop('disabled', false).html(originalText);
+                });
+            },
             saveDraft: function (e) {
                 e.preventDefault();
                 const $btn = $(e.currentTarget);
