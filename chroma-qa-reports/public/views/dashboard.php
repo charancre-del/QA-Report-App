@@ -95,7 +95,10 @@ $my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => d
                         ?>
                             <div class="cqa-report-card">
                                 <div class="cqa-report-info">
-                                    <h3><?php echo esc_html( $school ? $school->name : 'Unknown School' ); ?></h3>
+                                    <h3>
+                                        <?php echo esc_html( $school ? $school->name : 'Unknown School' ); ?> 
+                                        <span style="font-size:0.8em; color:#888;">(#<?php echo esc_html( $report->school_id ); ?>)</span>
+                                    </h3>
                                     <p class="cqa-report-meta">
                                         <?php echo esc_html( ucfirst( str_replace( '_', ' ', $report->report_type ) ) ); ?>
                                         • <?php echo esc_html( date( 'M j, Y', strtotime( $report->inspection_date ) ) ); ?>
