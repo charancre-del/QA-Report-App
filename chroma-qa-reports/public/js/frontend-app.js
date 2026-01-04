@@ -711,7 +711,8 @@
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
                     },
-                    data: formData
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json'
                 }).done(function (response) {
                     const newReportId = response.id;
 
