@@ -6,28 +6,13 @@
  */
 
 use ChromaQA\Models\School;
+use ChromaQA\Models\Report;
 
 if ( ! current_user_can( 'cqa_manage_schools' ) && ! current_user_can( 'cqa_regional_director' ) && ! current_user_can( 'cqa_create_reports' ) ) {
     wp_die( __( 'You do not have permission to manage schools.', 'chroma-qa-reports' ) );
 }
 
 $schools = School::all(['orderby' => 'name']);
-
-// Debug: Check direct DB count if empty
-if ( empty( $schools ) ) {
-    global $wpdb;
-    $table_name = School::get_table_name();
-    $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
-    $last_error = $wpdb->last_error;
-    
-    echo '<div class="cqa-notice cqa-notice-warning" style="margin: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px;">';
-    echo '<strong>Debug Info:</strong><br>';
-    echo "Query Result Count: DB says $count schools exist.<br>";
-    echo "Table Name: $table_name<br>";
-    if ( $last_error ) echo "DB Error: $last_error<br>";
-    echo 'If count is > 0 but list is empty, there implies a permission or object mapping issue.';
-    echo '</div>';
-}
 ?>
 
 <div class="cqa-dashboard">
