@@ -571,6 +571,11 @@ class REST_Controller {
             return $pdf_path;
         }
 
+        // Clean output buffer to remove any leaked whitespace or logs
+        if ( ob_get_length() ) {
+            ob_end_clean();
+        }
+
         // Stream the PDF
         header( 'Content-Type: application/pdf' );
         header( 'Content-Disposition: inline; filename="' . \sanitize_file_name( $report->get_school()->name . '-QA-Report.pdf' ) . '"' );
