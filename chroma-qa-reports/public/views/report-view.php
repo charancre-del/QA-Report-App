@@ -97,9 +97,9 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
                             if ( ! isset( $section_responses[ $item['key'] ] ) ) continue;
                             $response = $section_responses[ $item['key'] ];
                             
-                            // Get photos for this item (from the $photos collection we already loaded)
+                            // Get photos for this item (handling composite key)
                             $item_photos = array_filter( $photos, function($photo) use ($section, $item) {
-                                return $photo->section_key === $section['key'] && $photo->item_key === $item['key'];
+                                return $photo->section_key === ( $section['key'] . '|' . $item['key'] );
                             });
                             ?>
                             <div class="cqa-result-item rating-<?php echo esc_attr( $response->rating ); ?>">
@@ -123,8 +123,8 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
                                     <div class="cqa-result-photos">
                                         <?php foreach ( $item_photos as $photo ) : ?>
                                             <div class="cqa-result-photo">
-                                                <a href="<?php echo esc_url( $photo->file_url ); ?>" target="_blank">
-                                                    <img src="<?php echo esc_url( $photo->thumbnail_url ?: $photo->file_url ); ?>" alt="Evidence">
+                                                <a href="<?php echo esc_url( $photo->get_view_url() ); ?>" target="_blank">
+                                                    <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" alt="Evidence">
                                                 </a>
                                             </div>
                                         <?php endforeach; ?>
@@ -137,6 +137,35 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
             <?php endforeach; ?>
         </div>
     </div>
+
+    <!-- General Photos Section -->
+    <?php
+    $general_photos = array_filter( $photos, function($photo) {
+        return strpos( $photo->section_key, '|' ) === false;
+    });
+    
+    if ( ! empty( $general_photos ) ) :
+    ?>
+    <div class="cqa-section">
+        <h2>📷 Photo Documentation</h2>
+        <div class="cqa-photo-comparison-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            <?php foreach ( $general_photos as $photo ) : ?>
+                <div class="cqa-comparison-card">
+                    <div class="cqa-comparison-photos">
+                        <div class="cqa-comparison-after">
+                             <a href="<?php echo esc_url( $photo->get_view_url() ); ?>" target="_blank">
+                                <img src="<?php echo esc_url( $photo->get_thumbnail_url( 400 ) ); ?>" alt="Photo">
+                            </a>
+                            <?php if ( $photo->caption ) : ?>
+                                <p style="margin-top:8px; font-size:12px; color:#666;"><?php echo esc_html( $photo->caption ); ?></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="cqa-report-actions">
         <a href="<?php echo home_url( '/qa-reports/' ); ?>" class="cqa-btn">← Back to Dashboard</a>
