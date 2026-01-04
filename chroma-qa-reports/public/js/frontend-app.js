@@ -824,13 +824,21 @@
                     // Skip responses fields for the main object, we handle them separately
                     if (this.name.startsWith('responses')) return;
 
-                    if (o[this.name]) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
+                    // Clean name (strip [] for PHP REST compatibility)
+                    const name = this.name.replace('[]', '');
+
+                    if (o[name]) {
+                        if (!o[name].push) {
+                            o[name] = [o[name]];
                         }
-                        o[this.name].push(this.value || '');
+                        o[name].push(this.value || '');
                     } else {
-                        o[this.name] = this.value || '';
+                        // If original name had [], initialize as array even if single item
+                        if (this.name.includes('[]')) {
+                            o[name] = [this.value || ''];
+                        } else {
+                            o[name] = this.value || '';
+                        }
                     }
                 });
                 return o;
