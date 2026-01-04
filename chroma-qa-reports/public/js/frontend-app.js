@@ -102,6 +102,15 @@
                 this.$saveDraftBtn.on('click', this.saveDraft.bind(this));
                 this.$form.on('submit', this.handleSubmit.bind(this));
 
+                // Submit button - manually trigger form submit
+                this.$submitBtn.on('click', function (e) {
+                    e.preventDefault();
+                    $('#cqa-submit-report').closest('form').trigger('submit');
+                });
+
+                // AI Summary button
+                $('#cqa-generate-summary').on('click', this.generateAISummary.bind(this));
+
                 // Rating buttons
                 $(document).on('click', '.cqa-rating-btn', this.handleOverallRating.bind(this));
                 $(document).on('click', '.cqa-item-rating-btn', this.handleItemRating.bind(this));
@@ -395,26 +404,53 @@
                 const $gallery = $('#cqa-photo-gallery');
 
                 Array.from(files).forEach(file => {
-                    // Check size (5MB limit)
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert(`File ${file.name} is too large. Max size is 5MB.`);
-                        return;
-                    }
-
                     if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
+                        // Compress image before adding
+                        self.compressImage(file, function (compressedDataUrl) {
                             const html = `
                             <div class="cqa-photo-thumb">
-                                <img src="${e.target.result}" alt="Preview">
-                                <input type="hidden" name="new_photos" value="${e.target.result}">
+                                <img src="${compressedDataUrl}" alt="Preview">
+                                <input type="hidden" name="new_photos" value="${compressedDataUrl}">
                             </div>
                         `;
                             $gallery.append(html);
-                        }
-                        reader.readAsDataURL(file);
+                        });
                     }
                 });
+            },
+
+            compressImage: function (file, callback) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Max dimensions
+                        let width = img.width;
+                        let height = img.height;
+                        const maxSize = 1920; // Max width/height
+
+                        if (width > height && width > maxSize) {
+                            height = (height / width) * maxSize;
+                            width = maxSize;
+                        } else if (height > maxSize) {
+                            width = (width / height) * maxSize;
+                            height = maxSize;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Compress to JPEG at 0.8 quality
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        callback(compressedDataUrl);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             },
 
             // --- Data Persistence ---
