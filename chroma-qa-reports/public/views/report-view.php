@@ -123,7 +123,7 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
                                     <div class="cqa-result-photos">
                                         <?php foreach ( $item_photos as $photo ) : ?>
                                             <div class="cqa-result-photo">
-                                                <a href="<?php echo esc_url( $photo->get_view_url() ); ?>" target="_blank">
+                                                <a href="javascript:void(0)" onclick="CQAPhotoModal.open('<?php echo esc_url( $photo->get_view_url() ); ?>')" class="cqa-photo-link">
                                                     <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" alt="Evidence">
                                                 </a>
                                             </div>
@@ -153,7 +153,7 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
                 <div class="cqa-comparison-card">
                     <div class="cqa-comparison-photos">
                         <div class="cqa-comparison-after">
-                             <a href="<?php echo esc_url( $photo->get_view_url() ); ?>" target="_blank">
+                             <a href="javascript:void(0)" onclick="CQAPhotoModal.open('<?php echo esc_url( $photo->get_view_url() ); ?>')" class="cqa-photo-link">
                                 <img src="<?php echo esc_url( $photo->get_thumbnail_url( 400 ) ); ?>" alt="Photo">
                             </a>
                             <?php if ( $photo->caption ) : ?>
@@ -265,4 +265,99 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
     gap: 12px;
     margin-top: 24px;
 }
+
+/* Photo Lightbox Modal */
+.cqa-photo-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.cqa-photo-modal.active {
+    display: flex;
+}
+
+.cqa-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cqa-modal-content iframe {
+    width: 80vw;
+    height: 80vh;
+    border: none;
+}
+
+.cqa-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: white;
+    color: #333;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cqa-modal-close:hover {
+    background: #f0f0f0;
+}
+
+.cqa-photo-link {
+    cursor: pointer;
+}
 </style>
+
+<!-- Photo Lightbox Modal -->
+<div id="cqa-photo-modal" class="cqa-photo-modal">
+    <div class="cqa-modal-content">
+        <button class="cqa-modal-close" onclick="CQAPhotoModal.close()">×</button>
+        <iframe id="cqa-modal-iframe" src=""></iframe>
+    </div>
+</div>
+
+<script>
+const CQAPhotoModal = {
+    open: function(url) {
+        document.getElementById('cqa-modal-iframe').src = url;
+        document.getElementById('cqa-photo-modal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    },
+    close: function() {
+        document.getElementById('cqa-photo-modal').classList.remove('active');
+        document.getElementById('cqa-modal-iframe').src = '';
+        document.body.style.overflow = '';
+    }
+};
+
+// Close on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        CQAPhotoModal.close();
+    }
+});
+
+// Close on background click
+document.getElementById('cqa-photo-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        CQAPhotoModal.close();
+    }
+});
+</script>
