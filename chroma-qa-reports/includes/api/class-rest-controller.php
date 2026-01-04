@@ -189,7 +189,7 @@ class REST_Controller {
     }
 
     public function check_delete_reports_permission() {
-        return \current_user_can( 'cqa_delete_reports' );
+        return \current_user_can( 'cqa_delete_reports' ) || \current_user_can( 'cqa_delete_own_reports' );
     }
 
     public function check_export_permission() {
@@ -427,6 +427,13 @@ class REST_Controller {
         
         if ( ! $report ) {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
+        }
+
+        // Check ownership if user only has delete_own_reports capability
+        if ( ! \current_user_can( 'cqa_delete_reports' ) ) {
+            if ( $report->user_id !== \get_current_user_id() ) {
+                return new WP_Error( 'forbidden', __( 'You can only delete your own reports.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+            }
         }
 
         $report->delete();

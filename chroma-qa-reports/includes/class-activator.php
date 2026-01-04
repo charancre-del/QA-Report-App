@@ -219,6 +219,7 @@ class Activator {
             $subscriber->add_cap( 'cqa_view_own_reports' );
             $subscriber->add_cap( 'cqa_create_reports' );
             $subscriber->add_cap( 'cqa_edit_own_reports' );
+            $subscriber->add_cap( 'cqa_delete_own_reports' );
             $subscriber->add_cap( 'cqa_export_reports' );
         }
     }
