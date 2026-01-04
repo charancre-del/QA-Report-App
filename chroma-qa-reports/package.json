@@ -1,0 +1,31 @@
+{
+    "name": "chroma-qa-reports-tests",
+    "version": "1.0.1",
+    "description": "Test suite for Chroma QA Reports WordPress plugin",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.23.0",
+        "@babel/preset-env": "^7.23.0",
+        "babel-jest": "^29.7.0",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0"
+    },
+    "jest": {
+        "testEnvironment": "jsdom",
+        "setupFiles": [
+            "<rootDir>/tests/js/setup.js"
+        ],
+        "collectCoverageFrom": [
+            "public/js/**/*.js",
+            "admin/js/**/*.js",
+            "!**/node_modules/**"
+        ],
+        "testMatch": [
+            "**/tests/js/**/*.test.js"
+        ]
+    }
+}
