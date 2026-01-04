@@ -681,8 +681,9 @@
     padding: 12px 0;
     border-bottom: 1px solid var(--cqa-gray-100);
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
 }
 
 .cqa-checklist-item:last-child {

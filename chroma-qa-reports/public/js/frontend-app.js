@@ -465,7 +465,7 @@
                     <div class="cqa-item-notes" style="width: 100%; margin-top: 12px;">
                         <textarea name="${name}[notes]" placeholder="Add notes..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-height: 60px;"></textarea>
                         <div style="margin-top: 8px;">
-                            <input type="file" id="${photoInputId}" accept="image/*" multiple style="display: none;">
+                            <input type="file" id="${photoInputId}" class="cqa-item-photo-input" accept="image/*" multiple style="display: none;">
                             <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}').click();" style="font-size: 12px;">📷 Attach Photo</button>
                             <span style="font-size: 12px; color: #6b7280; margin-left: 8px;">Optional evidence</span>
                         </div>
@@ -560,9 +560,19 @@
                     CQA.handleFiles(files);
                 });
 
-                // File input
+                // File input (Main)
                 $('#cqa-photo-input').on('change', function (e) {
                     CQA.handleFiles(this.files);
+                });
+
+                // File input (Per Item) - Delegated
+                $(document).on('change', '.cqa-item-photo-input', function (e) {
+                    CQA.handleFiles(this.files);
+                    // Optional: Visual feedback on the button?
+                    $(this).next('button').text('✅ Added');
+                    setTimeout(() => {
+                        $(this).next('button').text('📷 Attach Photo');
+                    }, 2000);
                 });
             },
 
