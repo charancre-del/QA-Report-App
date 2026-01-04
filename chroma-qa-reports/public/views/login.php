@@ -49,7 +49,7 @@ if ( is_user_logged_in() ) {
             </div>
         <?php endif; ?>
 
-        <form id="cqa-login-form" class="cqa-login-form">
+        <form id="cqa-login-form" class="cqa-login-form" method="POST">
             <?php wp_nonce_field( 'cqa_frontend_login', 'nonce' ); ?>
             
             <div class="cqa-form-group">
