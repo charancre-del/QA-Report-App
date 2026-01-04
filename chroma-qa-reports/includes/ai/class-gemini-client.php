@@ -15,7 +15,7 @@ class Gemini_Client {
     /**
      * API endpoint.
      */
-    const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent';
+    const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
 
     /**
      * Get the API key.
