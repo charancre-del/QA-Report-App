@@ -115,11 +115,12 @@ $my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => d
                                     <a href="<?php echo home_url( '/qa-reports/report/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm">
                                         View
                                     </a>
-                                    <?php if ( $report->status === 'draft' ) : ?>
-                                        <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm cqa-btn-primary">
-                                            Continue
-                                        </a>
-                                    <?php endif; ?>
+                                    <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm cqa-btn-primary">
+                                        <?php echo $report->status === 'draft' ? 'Continue' : 'Edit'; ?>
+                                    </a>
+                                    <button type="button" class="cqa-btn cqa-btn-sm cqa-btn-danger cqa-delete-report" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="return confirm('Are you sure you want to delete this report? This cannot be undone.')">
+                                        🗑️
+                                    </button>
                                 </div>
                             </div>
                         <?php endforeach; ?>

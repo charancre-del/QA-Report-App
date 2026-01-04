@@ -121,6 +121,9 @@
                 // Google Drive
                 // Using delegation in case button is dynamically added
                 $(document).on('click', '#cqa-drive-picker-btn', this.handleDriveClick.bind(this));
+
+                // Delete Report
+                $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
             },
 
             initWizard: function () {
@@ -356,8 +359,48 @@
                 }).done(function (checklist) {
                     self.checklist = checklist;
                     self.renderChecklist(checklist);
+
+                    // IF editing, load saved responses now
+                    const reportId = self.$wizard.data('report-id');
+                    if (reportId) {
+                        self.loadSavedResponses(reportId);
+                    }
                 }).fail(function () {
                     $container.html('<div class="cqa-error">Failed to load checklist. Please try again.</div>');
+                });
+            },
+
+            loadSavedResponses: function (reportId) {
+                const self = this;
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/responses',
+                    method: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function (responses) {
+                    // Responses grouped by section: { sectionKey: { itemKey: { rating: '...', notes: '...' } } }
+                    // Iterate and fill
+                    $.each(responses, function (sectionKey, items) {
+                        $.each(items, function (itemKey, data) {
+                            // Rating
+                            if (data.rating) {
+                                // Find the button
+                                const $container = $(`.cqa-checklist-item[data-section="${sectionKey}"][data-item="${itemKey}"]`);
+                                const $btn = $container.find(`.cqa-item-rating-btn[data-value="${data.rating}"]`);
+                                if ($btn.length) {
+                                    $container.find('.cqa-item-rating-btn').removeClass('selected');
+                                    $btn.addClass('selected');
+                                    $container.find('input[type="hidden"]').val(data.rating);
+                                }
+                            }
+                            // Notes
+                            if (data.notes) {
+                                const $container = $(`.cqa-checklist-item[data-section="${sectionKey}"][data-item="${itemKey}"]`);
+                                $container.find('textarea').val(data.notes);
+                            }
+                        });
+                    });
                 });
             },
 
@@ -567,6 +610,28 @@
                 reader.readAsDataURL(file);
             },
 
+            handleDelete: function (e) {
+                e.preventDefault();
+                const $btn = $(e.currentTarget);
+                const id = $btn.data('id');
+                const card = $btn.closest('.cqa-report-card');
+
+                $btn.prop('disabled', true).text('🗑️...');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + id,
+                    method: 'DELETE',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function () {
+                    card.fadeOut(function () { $(this).remove(); });
+                }).fail(function () {
+                    alert('Failed to delete report.');
+                    $btn.prop('disabled', false).text('🗑️');
+                });
+            },
+
             // --- Data Persistence ---
 
             generateAISummary: function (e) {
@@ -667,6 +732,12 @@
                 let url = cqaFrontend.restUrl + 'reports';
                 if (reportId) {
                     url += '/' + reportId;
+                }
+
+                // NUCLEAR OPTION: Append school_id to Query String to bypass Body Parsing failures
+                const safeSchoolId = $('#cqa-school-select').val();
+                if (safeSchoolId) {
+                    url += (url.includes('?') ? '&' : '?') + 'school_id=' + safeSchoolId;
                 }
 
                 // Gather Form Data
