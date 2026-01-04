@@ -200,14 +200,11 @@ class Report {
             $result = $wpdb->update( $table, $data, [ 'id' => $this->id ], $format, [ '%d' ] );
             return $result !== false ? $this->id : false;
         } else {
-            // DEBUG: Log insertion data
-            error_log( 'Report::save INSERT DATA: ' . print_r( $data, true ) );
             $result = $wpdb->insert( $table, $data, $format );
             if ( $result ) {
                 $this->id = $wpdb->insert_id;
                 return $this->id;
             }
-            error_log( 'Report::save INSERT FAILED: ' . $wpdb->last_error );
             return false;
         }
     }
