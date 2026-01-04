@@ -608,6 +608,38 @@ class REST_Controller {
      * @param WP_REST_Request $request   Request object.
      */
     private function process_report_photos( $report_id, $request ) {
+        // Update existing photo captions and sections
+        $photo_captions = $request->get_param( 'photo_captions' );
+        $photo_sections = $request->get_param( 'photo_sections' );
+        
+        if ( ! empty( $photo_captions ) && is_array( $photo_captions ) ) {
+            foreach ( $photo_captions as $photo_id => $caption ) {
+                $photo = Photo::find( intval( $photo_id ) );
+                if ( $photo && $photo->report_id == $report_id ) {
+                    $photo->caption = \sanitize_text_field( $caption );
+                    
+                    // Also update section if provided
+                    if ( ! empty( $photo_sections ) && isset( $photo_sections[ $photo_id ] ) ) {
+                        $photo->section_key = \sanitize_text_field( $photo_sections[ $photo_id ] );
+                    }
+                    
+                    $photo->save();
+                }
+            }
+        }
+        
+        // Delete photos marked for deletion
+        $delete_photos = $request->get_param( 'delete_photos' );
+        if ( ! empty( $delete_photos ) && is_array( $delete_photos ) ) {
+            foreach ( $delete_photos as $photo_id ) {
+                $photo = Photo::find( intval( $photo_id ) );
+                if ( $photo && $photo->report_id == $report_id ) {
+                    $photo->delete();
+                }
+            }
+        }
+        
+        // Process new photos
         $new_photos = $request->get_param( 'new_photos' );
         
         if ( empty( $new_photos ) || ! is_array( $new_photos ) ) {
