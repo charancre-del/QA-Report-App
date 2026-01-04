@@ -375,6 +375,7 @@
                     if (reportId) {
                         self.loadSavedResponses(reportId);
                         self.loadExistingPhotos(reportId);
+                        self.loadExistingAISummary(reportId);
                     }
                 }).fail(function () {
                     $container.html('<div class="cqa-error">Failed to load checklist. Please try again.</div>');
@@ -681,18 +682,37 @@
                 const $gallery = $('#cqa-photo-gallery');
                 const photoId = Date.now();
 
+                // Get available sections from checklist
+                const sections = self.checklist ? self.checklist.sections.map(s => ({ key: s.key, name: s.name })) : [];
+
+                // Build section options HTML
+                let sectionOptions = '<option value="general">General</option>';
+                sections.forEach(s => {
+                    const selected = (sectionKey === s.key) ? 'selected' : '';
+                    sectionOptions += `<option value="${s.key}" ${selected}>${s.name}</option>`;
+                });
+                // Select "general" if no section provided
+                if (!sectionKey) {
+                    sectionOptions = sectionOptions.replace('value="general"', 'value="general" selected');
+                }
+
                 Array.from(files).forEach((file, idx) => {
                     if (file.type.startsWith('image/')) {
                         self.compressImage(file, function (compressedDataUrl) {
                             const uniqueId = photoId + '_' + idx;
-                            const sectionInput = sectionKey ? `<input type="hidden" name="new_photos_sections[]" value="${sectionKey}">` : '';
                             const html = `
-                            <div class="cqa-photo-thumb" style="display:inline-block; margin:8px; vertical-align:top; width:150px;">
-                                <img src="${compressedDataUrl}" alt="Preview" style="width:100%; height:100px; object-fit:cover; border-radius:6px;">
+                            <div class="cqa-photo-thumb cqa-new-photo" style="display:inline-block; margin:8px; vertical-align:top; width:180px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; position:relative;">
+                                <img src="${compressedDataUrl}" alt="Preview" style="width:100%; height:100px; object-fit:cover;">
                                 <input type="hidden" name="new_photos[]" value="${compressedDataUrl}">
-                                ${sectionInput}
-                                <input type="text" name="new_photos_captions[]" placeholder="Caption (optional)" 
-                                    style="width:100%; margin-top:4px; padding:4px; font-size:11px; border:1px solid #ccc; border-radius:4px;">
+                                <div style="padding:8px;">
+                                    <select name="new_photos_sections[]" style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:6px;">
+                                        ${sectionOptions}
+                                    </select>
+                                    <input type="text" name="new_photos_captions[]" placeholder="Caption (optional)" 
+                                        style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; box-sizing:border-box;">
+                                </div>
+                                <button type="button" class="cqa-remove-new-photo-btn" 
+                                    style="position:absolute; top:4px; right:4px; background:#ef4444; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:12px;">×</button>
                             </div>
                         `;
                             $gallery.append(html);
@@ -801,415 +821,409 @@
                 }).fail(function () {
                     alert('Failed to delete report.');
                     $btn.prop('disabled', false).text('🗑️');
+                    $poiList.append(poiHTML);
                 });
-            },
+            } else {
+                $poiList.append('<p>No improvement items generated.</p>');
+            }
 
-            // --- Data Persistence ---
-
-            generateAISummary: function (e) {
-                e.preventDefault();
-                const $btn = $(e.currentTarget);
-                const originalText = $btn.html();
-                const reportId = this.$wizard.data('report-id');
-
-                if (!reportId) {
-                    alert('Please save the report as a draft first before generating AI summary.');
-                    return;
-                }
-
-                $btn.prop('disabled', true).html('🤖 Generating...');
-
-                $.ajax({
-                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/generate-summary',
-                    method: 'POST',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
-                    }
-                }).done(function (response) {
-                    // Display the summary in a dialog or section
-                    const summary = response.executive_summary || 'Summary generated successfully!';
-                    const $summaryArea = $('#cqa-ai-summary');
-
-                    // Create a nice summary display
-                    const summaryHTML = `
-                        <div class="cqa-summary-result" style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 16px;">
-                            <h4 style="margin: 0 0 12px; color: #4f46e5;">🤖 AI Executive Summary</h4>
-                            <div style="line-height: 1.6; color: #374151;">${summary}</div>
-                            ${response.suggested_rating ? `
-                                <div style="margin-top: 12px; padding: 8px; background: white; border-radius: 6px; border-left: 3px solid #4f46e5;">
-                                    <strong>Suggested Rating:</strong> ${response.suggested_rating.replace('_', ' ').toUpperCase()}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-
-                    $summaryArea.find('.cqa-summary-result').remove();
-                    $summaryArea.append(summaryHTML);
-
-                    $btn.prop('disabled', false).html(originalText + ' ✓');
-                }).fail(function (xhr) {
-                    const error = xhr.responseJSON?.message || 'Failed to generate summary. Please try again.';
-                    alert('Error: ' + error);
-                    $btn.prop('disabled', false).html(originalText);
-                });
-            },
-            saveDraft: function (e) {
-                e.preventDefault();
-                const $btn = $(e.currentTarget);
-                const originalText = $btn.text();
-
-                $btn.prop('disabled', true).text(cqaFrontend.strings.saving);
-
-                // Set status to draft
-                // If field doesn't exist, append it
-                if ($('#cqa_status').length === 0) {
-                    this.$form.append('<input type="hidden" id="cqa_status" name="status" value="draft">');
-                } else {
-                    $('#cqa_status').val('draft');
-                }
-
-                this.submitToRestApi('draft').always(function () {
-                    $btn.prop('disabled', false).text(originalText);
-                });
-            },
-
-            handleSubmit: function (e) {
-                e.preventDefault();
-
-                // Set status to submitted
-                if ($('#cqa_status').length === 0) {
-                    this.$form.append('<input type="hidden" id="cqa_status" name="status" value="submitted">');
-                } else {
-                    $('#cqa_status').val('submitted');
-                }
-
-                if (confirm('Are you sure you want to submit this report?')) {
-                    this.$submitBtn.prop('disabled', true).text(cqaFrontend.strings.saving);
-                    this.submitToRestApi('submitted');
-                }
-            },
-
-            /**
-             * Submit form data to REST API
-             * Supports both Create (POST) and Update (POST/PUT)
-             */
-            submitToRestApi: function (status) {
-                const reportId = this.$wizard.data('report-id');
-                const method = reportId ? 'POST' : 'POST'; // Keep POST for update if using _method override or just handling update logic in same endpoint? 
-                // REST Controller uses:
-                // POST /reports -> create_report
-                // POST /reports/(id) -> update_report (if using method override or just POST to ID?) 
-                // Actually WP REST supports POST to ID for update usually.
-
-                let url = cqaFrontend.restUrl + 'reports';
-                if (reportId) {
-                    url += '/' + reportId;
-                }
-
-                // NUCLEAR OPTION: Append school_id to Query String to bypass Body Parsing failures
-                const safeSchoolId = $('#cqa-school-select').val();
-                if (safeSchoolId) {
-                    url += (url.includes('?') ? '&' : '?') + 'school_id=' + safeSchoolId;
-                    // FALLBACK 3: Cookies (The Triple Nuclear Option)
-                    document.cookie = "cqa_temp_school_id=" + safeSchoolId + "; path=/";
-                }
-
-                // Gather Form Data
-                // We need to structure it to match what the REST API expects
-                // create_report expects: school_id, report_type, inspection_date, etc.
-                // AND responses array for checklsit items
-
-                // For file uploads and complex nested data, FormData is tricky with WP REST sometimes.
-                // But we are sending JSON for the main data usually, or standard FormData form-encoded.
-                // Let's stick to standard JQuery AJAX with serialized array for simplicity first, 
-                // but we need to handle the checklist responses deeply.
-
-                // Custom serialization to object structure
-                const formData = this.serializeFormJSON(this.$form);
-
-                // Add status manually if needed
-                formData.status = status;
-
-                // Force School ID from select if missing (Safety check)
-                const schoolIdVal = $('#cqa-school-select').val();
-                if ((!formData.school_id || formData.school_id == 0) && schoolIdVal) {
-                    formData.school_id = schoolIdVal;
-                }
-
-                console.log('Submitting Report Payload:', formData); // DEBUG for User
-
-                // Specifically format checklist responses
-                // The form has inputs like: name="responses[section][item][rating]"
-                // This needs to be parsed or sent as is if the PHP side expects that structure.
-                // REST_Controller::save_report_responses expects 'responses' param as array.
-
-                // If we are creating, we might need to do 2 steps? 
-                // 1. Create Report -> Get ID
-                // 2. Save Responses -> /reports/ID/responses
-                // Unless create_report handles responses? 
-                // create_report in REST_Controller DOES NOT seem to handle responses array in the provided code.
-                // It only saves school_id, date, etc.
-
-                // STRATEGY: 
-                // If New: Create Report -> Get ID -> Save Responses -> Redirect
-                // If Edit: Update Report -> Save Responses -> Redirect/Reload
-
-                const self = this;
-                const deferred = $.Deferred();
-
-                // Step 1: Save/Create Report Header
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
-                    },
-                    data: JSON.stringify(formData),
-                    contentType: 'application/json'
-                }).done(function (response) {
-                    const newReportId = response.id;
-
-                    // Update form check for ID so next save is an Update
-                    self.$wizard.data('report-id', newReportId);
-
-                    // Step 2: Save Responses
-                    self.saveResponses(newReportId).done(function () {
-                        if (status === 'draft') {
-                            // Just notify success
-                            // Show success toast
-                            const $toast = $('<div class="cqa-toast">Draft Saved</div>');
-                            $('body').append($toast);
-                            setTimeout(() => $toast.fadeOut(() => $toast.remove()), 3000);
-                            deferred.resolve();
-                        } else {
-                            // Redirect
-                            window.location.href = cqaFrontend.homeUrl;
-                            deferred.resolve();
-                        }
-                    }).fail(function () {
-                        alert('Report saved, but responses failed to save.');
-                        this.refreshProgress();
-
-                        // Apply imported responses if any
-                        if (this.importedResponses) {
-                            $.each(this.importedResponses, (sectionKey, items) => {
-                                $.each(items, (itemKey, response) => {
-                                    // Rating
-                                    if (response.rating) {
-                                        let rating = response.rating.toLowerCase();
-                                        if (rating === 'yes') rating = 'yes';
-                                        else if (rating === 'no') rating = 'no';
-                                        else if (rating === 'sometimes') rating = 'sometimes';
-                                        else if (rating === 'na' || rating === 'n/a') rating = 'na';
-
-                                        const $input = $(`input[name="responses[${sectionKey}][${itemKey}][rating]"][value="${rating}"]`);
-                                        if ($input.length) {
-                                            $input.prop('checked', true);
-                                            // Trigger visual update
-                                            $input.closest('.cqa-rating-group').find('.cqa-item-rating-btn').removeClass('active');
-                                            $input.closest('.cqa-item-rating-btn').addClass('active');
-                                        }
-                                    }
-                                    // Notes
-                                    if (response.notes) {
-                                        $(`textarea[name="responses[${sectionKey}][${itemKey}][notes]"]`).val(response.notes);
-                                    }
-                                });
-                            });
-                            this.importedResponses = null; // Clear
-                            this.refreshProgress();
-                        }
-                        deferred.reject();
-                    });
-
-                }).fail(function (xhr) {
-                    let msg = cqaFrontend.strings.error;
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        msg = xhr.responseJSON.message;
-                    }
-                    alert(msg);
-                    self.$submitBtn.prop('disabled', false).text('Submit Report');
-                    deferred.reject();
-                });
-
-                return deferred.promise();
-            },
-
-            saveResponses: function (reportId) {
-                // Collect all response inputs
-                // We need to parse inputs like name="responses[classroom_infant][ratios][rating]"
-                // into a structured object: { "classroom_infant": { "ratios": { "rating": "yes", "notes": "..." } } }
-
-                const responses = {};
-
-                this.$form.find('input[name^="responses"], textarea[name^="responses"]').each(function () {
-                    const name = $(this).attr('name');
-                    const val = $(this).val();
-
-                    // Regex to extract keys: responses[section][item][field]
-                    const match = name.match(/responses\[(.*?)\]\[(.*?)\]\[(.*?)\]/);
-                    if (match) {
-                        const section = match[1];
-                        const item = match[2];
-                        const field = match[3];
-
-                        if (!responses[section]) responses[section] = {};
-                        if (!responses[section][item]) responses[section][item] = {};
-
-                        responses[section][item][field] = val;
-                    }
-                });
-
-                return $.ajax({
-                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/responses',
-                    method: 'POST',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
-                    },
-                    data: JSON.stringify({ responses: responses }), // Send as JSON body
-                    contentType: 'application/json'
-                });
-            },
-
-            serializeFormJSON: function ($form) {
-                const o = {};
-                const a = $form.serializeArray();
-                $.each(a, function () {
-                    // Skip responses fields for the main object, we handle them separately
-                    if (this.name.startsWith('responses')) return;
-
-                    // Clean name (strip [] for PHP REST compatibility)
-                    const name = this.name.replace('[]', '');
-
-                    if (o[name]) {
-                        if (!o[name].push) {
-                            o[name] = [o[name]];
-                        }
-                        o[name].push(this.value || '');
-                    } else {
-                        // If original name had [], initialize as array even if single item
-                        if (this.name.includes('[]')) {
-                            o[name] = [this.value || ''];
-                        } else {
-                            o[name] = this.value || '';
-                        }
-                    }
-                });
-                return o;
-            },
-
-            initAutosave: function () {
-                // Simple autosave every 60 seconds
-                const self = this;
-                setInterval(function () {
-                    if (self.$wizard.data('report-id')) {
-                        // Silent save
-                        // console.log('Autosaving draft...');
-                        self.submitToRestApi('draft', true);
-                    }
-                }, 60000);
-            },
-
-            // --- Google Drive Picker ---
-
-            loadGooglePicker: function () {
-                $.getScript('https://apis.google.com/js/api.js', function () {
-                    gapi.load('picker', {
-                        'callback': function () {
-                            // Picker API loaded
-                            // We also need client library for auth if we need to get a token?
-                            // Actually, for Picker we need an OAuth token.
-                            // We can use gapi.client to get it.
-                        }
-                    });
-
-                    gapi.load('client', function () {
-                        gapi.client.init({
-                            'clientId': cqaFrontend.googleClientId,
-                            'scope': 'https://www.googleapis.com/auth/drive.file'
-                        });
+                // Add delegation for deleting POI items (if not already added)
+                if(!$poiList.data('handled')) {
+                $poiList.on('click', '.cqa-delete-poi-btn', function () {
+                    $(this).closest('.cqa-poi-box').fadeOut(function () {
+                        $(this).remove();
                     });
                 });
-            },
+        $poiList.data('handled', true);
+    }
+},
 
-            handleDriveClick: function (e) {
-                e.preventDefault();
+    generateAISummary: function (e) {
+        e.preventDefault();
+        const self = this;
+        const $btn = $(e.currentTarget);
+        const originalText = $btn.html();
+        const reportId = this.$wizard.data('report-id');
 
-                // Check if we have an access token
-                const token = gapi.client.getToken();
-                if (token) {
-                    this.createPicker(token.access_token);
-                } else {
-                    // Request auth
-                    gapi.auth2.getAuthInstance().signIn().then(function () {
-                        const newToken = gapi.client.getToken();
-                        CQA.createPicker(newToken.access_token);
+        if (!reportId) {
+            alert('Please save the report as a draft first before generating AI summary.');
+            return;
+        }
+
+        $btn.prop('disabled', true).html('🤖 Generating...');
+
+        $.ajax({
+            url: cqaFrontend.restUrl + 'reports/' + reportId + '/generate-summary',
+            method: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+            }
+        }).done(function (response) {
+            self.renderAISummary(response);
+            $btn.prop('disabled', false).html(originalText + ' ✓');
+        }).fail(function (xhr) {
+            const error = xhr.responseJSON?.message || 'Failed to generate summary. Please try again.';
+            alert('Error: ' + error);
+            $btn.prop('disabled', false).html(originalText);
+        });
+    },
+saveDraft: function (e) {
+    e.preventDefault();
+    const $btn = $(e.currentTarget);
+    const originalText = $btn.text();
+
+    $btn.prop('disabled', true).text(cqaFrontend.strings.saving);
+
+    // Set status to draft
+    // If field doesn't exist, append it
+    if ($('#cqa_status').length === 0) {
+        this.$form.append('<input type="hidden" id="cqa_status" name="status" value="draft">');
+    } else {
+        $('#cqa_status').val('draft');
+    }
+
+    this.submitToRestApi('draft').always(function () {
+        $btn.prop('disabled', false).text(originalText);
+    });
+},
+
+handleSubmit: function (e) {
+    e.preventDefault();
+
+    // Set status to submitted
+    if ($('#cqa_status').length === 0) {
+        this.$form.append('<input type="hidden" id="cqa_status" name="status" value="submitted">');
+    } else {
+        $('#cqa_status').val('submitted');
+    }
+
+    if (confirm('Are you sure you want to submit this report?')) {
+        this.$submitBtn.prop('disabled', true).text(cqaFrontend.strings.saving);
+        this.submitToRestApi('submitted');
+    }
+},
+
+/**
+ * Submit form data to REST API
+ * Supports both Create (POST) and Update (POST/PUT)
+ */
+submitToRestApi: function (status) {
+    const reportId = this.$wizard.data('report-id');
+    const method = reportId ? 'POST' : 'POST'; // Keep POST for update if using _method override or just handling update logic in same endpoint? 
+    // REST Controller uses:
+    // POST /reports -> create_report
+    // POST /reports/(id) -> update_report (if using method override or just POST to ID?) 
+    // Actually WP REST supports POST to ID for update usually.
+
+    let url = cqaFrontend.restUrl + 'reports';
+    if (reportId) {
+        url += '/' + reportId;
+    }
+
+    // NUCLEAR OPTION: Append school_id to Query String to bypass Body Parsing failures
+    const safeSchoolId = $('#cqa-school-select').val();
+    if (safeSchoolId) {
+        url += (url.includes('?') ? '&' : '?') + 'school_id=' + safeSchoolId;
+        // FALLBACK 3: Cookies (The Triple Nuclear Option)
+        document.cookie = "cqa_temp_school_id=" + safeSchoolId + "; path=/";
+    }
+
+    // Gather Form Data
+    // We need to structure it to match what the REST API expects
+    // create_report expects: school_id, report_type, inspection_date, etc.
+    // AND responses array for checklsit items
+
+    // For file uploads and complex nested data, FormData is tricky with WP REST sometimes.
+    // But we are sending JSON for the main data usually, or standard FormData form-encoded.
+    // Let's stick to standard JQuery AJAX with serialized array for simplicity first, 
+    // but we need to handle the checklist responses deeply.
+
+    // Custom serialization to object structure
+    const formData = this.serializeFormJSON(this.$form);
+
+    // Add status manually if needed
+    formData.status = status;
+
+    // Force School ID from select if missing (Safety check)
+    const schoolIdVal = $('#cqa-school-select').val();
+    if ((!formData.school_id || formData.school_id == 0) && schoolIdVal) {
+        formData.school_id = schoolIdVal;
+    }
+
+    console.log('Submitting Report Payload:', formData); // DEBUG for User
+
+    // Specifically format checklist responses
+    // The form has inputs like: name="responses[section][item][rating]"
+    // This needs to be parsed or sent as is if the PHP side expects that structure.
+    // REST_Controller::save_report_responses expects 'responses' param as array.
+
+    // If we are creating, we might need to do 2 steps? 
+    // 1. Create Report -> Get ID
+    // 2. Save Responses -> /reports/ID/responses
+    // Unless create_report handles responses? 
+    // create_report in REST_Controller DOES NOT seem to handle responses array in the provided code.
+    // It only saves school_id, date, etc.
+
+    // STRATEGY: 
+    // If New: Create Report -> Get ID -> Save Responses -> Redirect
+    // If Edit: Update Report -> Save Responses -> Redirect/Reload
+
+    const self = this;
+    const deferred = $.Deferred();
+
+    // Step 1: Save/Create Report Header
+    $.ajax({
+        url: url,
+        method: 'POST',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+        },
+        data: JSON.stringify(formData),
+        contentType: 'application/json'
+    }).done(function (response) {
+        const newReportId = response.id;
+
+        // Update form check for ID so next save is an Update
+        self.$wizard.data('report-id', newReportId);
+
+        // Step 2: Save Responses
+        self.saveResponses(newReportId).done(function () {
+            if (status === 'draft') {
+                // Just notify success
+                // Show success toast
+                const $toast = $('<div class="cqa-toast">Draft Saved</div>');
+                $('body').append($toast);
+                setTimeout(() => $toast.fadeOut(() => $toast.remove()), 3000);
+                deferred.resolve();
+            } else {
+                // Redirect
+                window.location.href = cqaFrontend.homeUrl;
+                deferred.resolve();
+            }
+        }).fail(function () {
+            alert('Report saved, but responses failed to save.');
+            this.refreshProgress();
+
+            // Apply imported responses if any
+            if (this.importedResponses) {
+                $.each(this.importedResponses, (sectionKey, items) => {
+                    $.each(items, (itemKey, response) => {
+                        // Rating
+                        if (response.rating) {
+                            let rating = response.rating.toLowerCase();
+                            if (rating === 'yes') rating = 'yes';
+                            else if (rating === 'no') rating = 'no';
+                            else if (rating === 'sometimes') rating = 'sometimes';
+                            else if (rating === 'na' || rating === 'n/a') rating = 'na';
+
+                            const $input = $(`input[name="responses[${sectionKey}][${itemKey}][rating]"][value="${rating}"]`);
+                            if ($input.length) {
+                                $input.prop('checked', true);
+                                // Trigger visual update
+                                $input.closest('.cqa-rating-group').find('.cqa-item-rating-btn').removeClass('active');
+                                $input.closest('.cqa-item-rating-btn').addClass('active');
+                            }
+                        }
+                        // Notes
+                        if (response.notes) {
+                            $(`textarea[name="responses[${sectionKey}][${itemKey}][notes]"]`).val(response.notes);
+                        }
                     });
-                }
-            },
+                });
+                this.importedResponses = null; // Clear
+                this.refreshProgress();
+            }
+            deferred.reject();
+        });
 
-            createPicker: function (oauthToken) {
-                if (this.pickerApiLoaded && oauthToken) {
-                    const picker = new google.picker.PickerBuilder()
-                        .addView(google.picker.ViewId.DOCS)
-                        .addView(google.picker.ViewId.PHOTOS)
-                        .setOAuthToken(oauthToken)
-                        .setDeveloperKey(cqaFrontend.developerKey)
-                        .setCallback(this.pickerCallback.bind(this))
-                        .build();
-                    picker.setVisible(true);
-                }
-            },
+    }).fail(function (xhr) {
+        let msg = cqaFrontend.strings.error;
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+            msg = xhr.responseJSON.message;
+        }
+        alert(msg);
+        self.$submitBtn.prop('disabled', false).text('Submit Report');
+        deferred.reject();
+    });
 
-            pickerCallback: function (data) {
-                if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-                    const doc = data[google.picker.Response.DOCUMENTS][0];
-                    const fileId = doc[google.picker.Document.ID];
-                    const url = doc[google.picker.Document.URL];
-                    const name = doc[google.picker.Document.NAME];
-                    const icon = doc[google.picker.Document.ICON_URL];
+    return deferred.promise();
+},
 
-                    // Add to gallery
-                    const html = `
+saveResponses: function (reportId) {
+    // Collect all response inputs
+    // We need to parse inputs like name="responses[classroom_infant][ratios][rating]"
+    // into a structured object: { "classroom_infant": { "ratios": { "rating": "yes", "notes": "..." } } }
+
+    const responses = {};
+
+    this.$form.find('input[name^="responses"], textarea[name^="responses"]').each(function () {
+        const name = $(this).attr('name');
+        const val = $(this).val();
+
+        // Regex to extract keys: responses[section][item][field]
+        const match = name.match(/responses\[(.*?)\]\[(.*?)\]\[(.*?)\]/);
+        if (match) {
+            const section = match[1];
+            const item = match[2];
+            const field = match[3];
+
+            if (!responses[section]) responses[section] = {};
+            if (!responses[section][item]) responses[section][item] = {};
+
+            responses[section][item][field] = val;
+        }
+    });
+
+    return $.ajax({
+        url: cqaFrontend.restUrl + 'reports/' + reportId + '/responses',
+        method: 'POST',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+        },
+        data: JSON.stringify({ responses: responses }), // Send as JSON body
+        contentType: 'application/json'
+    });
+},
+
+serializeFormJSON: function ($form) {
+    const o = {};
+    const a = $form.serializeArray();
+    $.each(a, function () {
+        // Skip responses fields for the main object, we handle them separately
+        if (this.name.startsWith('responses')) return;
+
+        // Clean name (strip [] for PHP REST compatibility)
+        const name = this.name.replace('[]', '');
+
+        if (o[name]) {
+            if (!o[name].push) {
+                o[name] = [o[name]];
+            }
+            o[name].push(this.value || '');
+        } else {
+            // If original name had [], initialize as array even if single item
+            if (this.name.includes('[]')) {
+                o[name] = [this.value || ''];
+            } else {
+                o[name] = this.value || '';
+            }
+        }
+    });
+    return o;
+},
+
+initAutosave: function () {
+    // Simple autosave every 60 seconds
+    const self = this;
+    setInterval(function () {
+        if (self.$wizard.data('report-id')) {
+            // Silent save
+            // console.log('Autosaving draft...');
+            self.submitToRestApi('draft', true);
+        }
+    }, 60000);
+},
+
+// --- Google Drive Picker ---
+
+loadGooglePicker: function () {
+    $.getScript('https://apis.google.com/js/api.js', function () {
+        gapi.load('picker', {
+            'callback': function () {
+                // Picker API loaded
+                // We also need client library for auth if we need to get a token?
+                // Actually, for Picker we need an OAuth token.
+                // We can use gapi.client to get it.
+            }
+        });
+
+        gapi.load('client', function () {
+            gapi.client.init({
+                'clientId': cqaFrontend.googleClientId,
+                'scope': 'https://www.googleapis.com/auth/drive.file'
+            });
+        });
+    });
+},
+
+handleDriveClick: function (e) {
+    e.preventDefault();
+
+    // Check if we have an access token
+    const token = gapi.client.getToken();
+    if (token) {
+        this.createPicker(token.access_token);
+    } else {
+        // Request auth
+        gapi.auth2.getAuthInstance().signIn().then(function () {
+            const newToken = gapi.client.getToken();
+            CQA.createPicker(newToken.access_token);
+        });
+    }
+},
+
+createPicker: function (oauthToken) {
+    if (this.pickerApiLoaded && oauthToken) {
+        const picker = new google.picker.PickerBuilder()
+            .addView(google.picker.ViewId.DOCS)
+            .addView(google.picker.ViewId.PHOTOS)
+            .setOAuthToken(oauthToken)
+            .setDeveloperKey(cqaFrontend.developerKey)
+            .setCallback(this.pickerCallback.bind(this))
+            .build();
+        picker.setVisible(true);
+    }
+},
+
+pickerCallback: function (data) {
+    if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+        const doc = data[google.picker.Response.DOCUMENTS][0];
+        const fileId = doc[google.picker.Document.ID];
+        const url = doc[google.picker.Document.URL];
+        const name = doc[google.picker.Document.NAME];
+        const icon = doc[google.picker.Document.ICON_URL];
+
+        // Add to gallery
+        const html = `
                     <div class="cqa-photo-thumb drive-file">
                         <img src="${icon}" alt="${name}" style="object-fit: contain; padding: 10px;">
                         <input type="hidden" name="drive_files[]" value="${fileId}">
                         <div class="photo-caption">${name}</div>
                     </div>
                 `;
-                    $('#cqa-photo-gallery').append(html);
-                }
-            }
+        $('#cqa-photo-gallery').append(html);
+    }
+}
         };
 
-        $(document).ready(function () {
-            CQA.init();
-        });
+$(document).ready(function () {
+    CQA.init();
+});
 
     } // End of initApp function
 
-    // Initialize app when jQuery is available
-    if (typeof jQuery !== 'undefined') {
-        initApp(jQuery);
-    } else {
-        // jQuery not loaded yet - wait for it
-        document.addEventListener('DOMContentLoaded', function checkjQuery() {
-            if (typeof jQuery !== 'undefined') {
-                initApp(jQuery);
-            } else {
-                // Poll for jQuery (handles deferred loading)
-                var attempts = 0;
-                var interval = setInterval(function () {
-                    if (typeof jQuery !== 'undefined') {
-                        clearInterval(interval);
-                        initApp(jQuery);
-                    } else if (++attempts > 50) {
-                        clearInterval(interval);
-                        console.error('CQA Reports: jQuery failed to load');
-                    }
-                }, 100);
-            }
-        });
-    }
+// Initialize app when jQuery is available
+if (typeof jQuery !== 'undefined') {
+    initApp(jQuery);
+} else {
+    // jQuery not loaded yet - wait for it
+    document.addEventListener('DOMContentLoaded', function checkjQuery() {
+        if (typeof jQuery !== 'undefined') {
+            initApp(jQuery);
+        } else {
+            // Poll for jQuery (handles deferred loading)
+            var attempts = 0;
+            var interval = setInterval(function () {
+                if (typeof jQuery !== 'undefined') {
+                    clearInterval(interval);
+                    initApp(jQuery);
+                } else if (++attempts > 50) {
+                    clearInterval(interval);
+                    console.error('CQA Reports: jQuery failed to load');
+                }
+            }, 100);
+        }
+    });
+}
 
-})();
+}) ();

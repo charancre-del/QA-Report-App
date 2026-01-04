@@ -154,7 +154,7 @@ class Executive_Summary {
      * @param int   $report_id Report ID.
      * @param array $summary Summary data.
      */
-    private function save_summary( $report_id, $summary ) {
+    public function save_summary( $report_id, $summary ) {
         global $wpdb;
         $table = $wpdb->prefix . 'cqa_ai_summaries';
 

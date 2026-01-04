@@ -539,6 +539,36 @@ $schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
     color: var(--cqa-gray-500);
 }
 
+/* Photo Cards */
+.cqa-photo-thumb {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.cqa-photo-thumb:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+.cqa-photo-thumb select:focus, .cqa-photo-thumb input:focus {
+    border-color: var(--cqa-primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+/* POI List */
+.cqa-poi-box {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cqa-poi-box:hover {
+    border-color: var(--cqa-primary) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.cqa-poi-box textarea:focus {
+    outline: none;
+    border-color: var(--cqa-primary) !important;
+}
+.cqa-delete-poi-btn:hover {
+    color: #ef4444 !important;
+}
+
 @media (max-width: 1024px) {
     .cqa-checklist-container {
         grid-template-columns: 1fr;

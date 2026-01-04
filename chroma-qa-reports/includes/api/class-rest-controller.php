@@ -419,6 +419,32 @@ class REST_Controller {
         $this->process_report_photos( $report->id, $request );
         $this->process_drive_files( $report->id, $request );
 
+        // Process AI Summary Updates (Plan of Improvement)
+        $summary_poi = $request->get_param( 'summary_poi' );
+        if ( ! empty( $summary_poi ) && is_array( $summary_poi ) ) {
+            $existing_summary = $report->get_ai_summary();
+            if ( $existing_summary ) {
+                $ai = new \ChromaQA\AI\Executive_Summary();
+                $updated_summary = $existing_summary;
+                
+                // Re-format the poi_json from the submitted data
+                $poi_list = [];
+                foreach ( $summary_poi as $item ) {
+                    if ( empty( $item['action'] ) ) continue;
+                    $poi_list[] = [
+                        'priority' => \sanitize_text_field( $item['priority'] ?? 'ongoing' ),
+                        'timeline' => \sanitize_text_field( $item['timeline'] ?? '' ),
+                        'action'   => \sanitize_textarea_field( $item['action'] ),
+                    ];
+                }
+                
+                $updated_summary['plan_of_improvement'] = $poi_list;
+                $updated_summary['poi'] = $poi_list; // For backward compatibility in code
+                
+                $ai->save_summary( $report->id, $updated_summary );
+            }
+        }
+
         return new WP_REST_Response( $this->prepare_report_response( $report ), 200 );
     }
 
