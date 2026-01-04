@@ -5,7 +5,7 @@
  * @package ChromaQAReports
  */
 
-if ( ! current_user_can( 'manage_options' ) ) {
+if ( ! current_user_can( 'cqa_create_reports' ) ) {
     wp_die( __( 'You do not have permission to access settings.', 'chroma-qa-reports' ) );
 }
 

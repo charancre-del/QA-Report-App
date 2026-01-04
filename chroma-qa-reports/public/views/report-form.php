@@ -25,6 +25,7 @@ if ( $report_id ) {
 $school = $school_id ? School::find( $school_id ) : null;
 ?>
 
+<form id="cqa-report-form" class="cqa-report-form">
 <div class="cqa-report-wizard" id="cqa-report-wizard" data-report-id="<?php echo esc_attr( $report_id ?: '' ); ?>">
     <!-- Step Progress -->
     <div class="cqa-wizard-progress">
@@ -163,12 +164,12 @@ $school = $school_id ? School::find( $school_id ) : null;
                     ⚠️ Needs Improvement
                 </button>
             </div>
-            <input type="hidden" id="cqa-overall-rating" required>
+            <input type="hidden" id="cqa-overall-rating" name="overall_rating" required>
         </div>
 
         <div class="cqa-form-group">
             <label>Closing Notes</label>
-            <textarea id="cqa-closing-notes" rows="4" placeholder="Any additional notes or observations..."></textarea>
+            <textarea id="cqa-closing-notes" name="closing_notes" rows="4" placeholder="Any additional notes or observations..."></textarea>
         </div>
 
         <div class="cqa-ai-summary" id="cqa-ai-summary">
@@ -188,3 +189,4 @@ $school = $school_id ? School::find( $school_id ) : null;
         </div>
     </div>
 </div>
+</form>

@@ -151,12 +151,12 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_settings' ],
-                'permission_callback' => [ $this, 'check_manage_options_permission' ],
+                'permission_callback' => [ $this, 'check_settings_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'update_settings' ],
-                'permission_callback' => [ $this, 'check_manage_options_permission' ],
+                'permission_callback' => [ $this, 'check_settings_permission' ],
             ],
         ] );
     }
@@ -202,6 +202,11 @@ class REST_Controller {
 
     public function check_manage_options_permission() {
         return \current_user_can( 'manage_options' ); // Super Admin only
+    }
+
+    public function check_settings_permission() {
+        // Allow anyone who can create reports to also configure the app (for now)
+        return \current_user_can( 'cqa_create_reports' ) || \current_user_can( 'manage_options' );
     }
 
     // ===== SCHOOLS ENDPOINTS =====

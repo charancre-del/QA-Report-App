@@ -7,7 +7,7 @@
 
 use ChromaQA\Models\School;
 
-if ( ! current_user_can( 'cqa_manage_schools' ) && ! current_user_can( 'cqa_regional_director' ) ) {
+if ( ! current_user_can( 'cqa_manage_schools' ) && ! current_user_can( 'cqa_regional_director' ) && ! current_user_can( 'cqa_create_reports' ) ) {
     wp_die( __( 'You do not have permission to manage schools.', 'chroma-qa-reports' ) );
 }
 

@@ -524,7 +524,7 @@
                             const html = `
                             <div class="cqa-photo-thumb">
                                 <img src="${compressedDataUrl}" alt="Preview">
-                                <input type="hidden" name="new_photos" value="${compressedDataUrl}">
+                                <input type="hidden" name="new_photos[]" value="${compressedDataUrl}">
                             </div>
                         `;
                             $gallery.append(html);
@@ -541,10 +541,10 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
 
-                        // Max dimensions
+                        // Max dimensions - Reduced to 1024 for reliability
                         let width = img.width;
                         let height = img.height;
-                        const maxSize = 1920; // Max width/height
+                        const maxSize = 1024; // Max width/height
 
                         if (width > height && width > maxSize) {
                             height = (height / width) * maxSize;
@@ -558,8 +558,8 @@
                         canvas.height = height;
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Compress to JPEG at 0.8 quality
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        // Compress to JPEG at 0.7 quality
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
                         callback(compressedDataUrl);
                     };
                     img.src = e.target.result;
