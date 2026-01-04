@@ -273,21 +273,25 @@
                 // Check for existing values if we are editing (needs implementation for storage check)
                 // For now, simple render
                 const name = `responses[${sectionKey}][${item.key}]`;
+                const photoInputId = `photo-${sectionKey}-${item.key}`;
 
                 return `
                 <div class="cqa-checklist-item" data-section="${sectionKey}" data-item="${item.key}">
-                    <div class="cqa-item-header">
-                        <span class="cqa-item-label">${item.label}</span>
-                    </div>
+                    <span class="cqa-item-label">${item.label}</span>
                     <div class="cqa-item-ratings">
-                        <button type="button" class="cqa-item-rating-btn" data-value="yes">✓ Yes</button>
-                        <button type="button" class="cqa-item-rating-btn" data-value="sometimes">~ Sometimes</button>
-                        <button type="button" class="cqa-item-rating-btn" data-value="no">✗ No</button>
-                        <button type="button" class="cqa-item-rating-btn selected" data-value="na">— N/A</button>
+                        <button type="button" class="cqa-item-rating-btn rating-yes" data-value="yes" title="Yes">✓</button>
+                        <button type="button" class="cqa-item-rating-btn rating-sometimes" data-value="sometimes" title="Sometimes">~</button>
+                        <button type="button" class="cqa-item-rating-btn rating-no" data-value="no" title="No">✗</button>
+                        <button type="button" class="cqa-item-rating-btn rating-na selected" data-value="na" title="N/A">—</button>
                         <input type="hidden" name="${name}[rating]" value="na">
                     </div>
-                    <div class="cqa-item-notes">
-                        <textarea name="${name}[notes]" placeholder="Add notes..."></textarea>
+                    <div class="cqa-item-notes" style="width: 100%; margin-top: 12px;">
+                        <textarea name="${name}[notes]" placeholder="Add notes..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-height: 60px;"></textarea>
+                        <div style="margin-top: 8px;">
+                            <input type="file" id="${photoInputId}" accept="image/*" multiple style="display: none;">
+                            <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}').click();" style="font-size: 12px;">📷 Attach Photo</button>
+                            <span style="font-size: 12px; color: #6b7280; margin-left: 8px;">Optional evidence</span>
+                        </div>
                     </div>
                 </div>
             `;
