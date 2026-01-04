@@ -296,8 +296,12 @@ class Google_OAuth {
         // Store tokens for this user (Drive access)
         self::store_tokens( $user->ID, $tokens );
 
-        // Log user in
+        // Log user in - use both functions to ensure proper session
+        wp_set_current_user( $user->ID );
         wp_set_auth_cookie( $user->ID, true );
+        
+        // Trigger WordPress login action (important for plugins and session handling)
+        do_action( 'wp_login', $user->user_login, $user );
         
         return $user->ID;
     }

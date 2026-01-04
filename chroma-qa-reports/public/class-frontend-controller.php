@@ -295,8 +295,14 @@ class Frontend_Controller {
                 exit;
             }
 
-            // Success redirect
-            wp_redirect( home_url( '/qa-reports/' ) );
+            // Verify session was actually created
+            if ( ! is_user_logged_in() ) {
+                wp_redirect( home_url( '/qa-reports/login/?error=session_failed&message=' . urlencode( 'Login succeeded but session was not created. Please try again.' ) ) );
+                exit;
+            }
+
+            // Success redirect - use wp_safe_redirect
+            wp_safe_redirect( home_url( '/qa-reports/' ) );
             exit;
         }
 
