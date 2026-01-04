@@ -141,6 +141,14 @@
                 this.checkDuplicateAction();
             },
 
+            initRatings: function () {
+                // Initialize Overall Rating
+                const overallVal = $('#cqa-overall-rating').val();
+                if (overallVal) {
+                    $(`.cqa-rating-btn[data-rating="${overallVal}"]`).addClass('selected');
+                }
+            },
+
             checkDuplicateAction: function () {
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('action') === 'duplicate' && urlParams.get('id')) {
