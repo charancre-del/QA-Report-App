@@ -48,7 +48,6 @@ class Plugin {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_api_hooks();
-        $this->define_api_hooks();
         $this->init_enhancements();
         $this->check_version();
     }
