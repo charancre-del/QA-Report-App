@@ -694,7 +694,21 @@ class REST_Controller {
                 $photo->report_id = $report_id;
                 $photo->drive_file_id = $drive_file_id;
                 $photo->filename = $filename;
-                $photo->section_key = 'general'; 
+                
+                // Get caption for this photo (if provided)
+                $captions = $request->get_param( 'new_photos_captions' );
+                if ( ! empty( $captions ) && isset( $captions[ $index ] ) ) {
+                    $photo->caption = \sanitize_text_field( $captions[ $index ] );
+                }
+                
+                // Get section key for this photo (if provided)
+                $sections = $request->get_param( 'new_photos_sections' );
+                if ( ! empty( $sections ) && isset( $sections[ $index ] ) ) {
+                    $photo->section_key = \sanitize_text_field( $sections[ $index ] );
+                } else {
+                    $photo->section_key = 'general'; 
+                }
+                
                 $photo->save();
             }
         }
@@ -757,7 +771,17 @@ class REST_Controller {
                                 $photo->report_id = $report_id;
                                 $photo->drive_file_id = $drive_file_id;
                                 $photo->filename = $filename;
-                                $photo->section_key = $section_key . '|' . $item_key; 
+                                $photo->section_key = $section_key . '|' . $item_key;
+                                
+                                // Get caption for this item photo (if provided)
+                                $item_captions = $request->get_param( 'item_photos_captions' );
+                                if ( ! empty( $item_captions ) 
+                                    && isset( $item_captions[ $section_key ] ) 
+                                    && isset( $item_captions[ $section_key ][ $item_key ] )
+                                    && isset( $item_captions[ $section_key ][ $item_key ][ $i ] ) ) {
+                                    $photo->caption = \sanitize_text_field( $item_captions[ $section_key ][ $item_key ][ $i ] );
+                                }
+                                
                                 $photo->save();
                             }
                     }

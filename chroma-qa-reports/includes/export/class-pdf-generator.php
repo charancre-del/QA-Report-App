@@ -511,22 +511,46 @@ class PDF_Generator {
             <!-- Photos Section -->
             <?php 
             $photos = $report->get_photos();
-            if ( ! empty( $photos ) ) : 
+            // Group photos by section (excluding item photos which have pipes)
+            $grouped_photos = [];
+            foreach ( $photos as $photo ) {
+                if ( strpos( $photo->section_key, '|' ) !== false ) continue; // Skip item photos
+                $key = $photo->section_key ?: 'general';
+                if (!isset($grouped_photos[$key])) {
+                    $grouped_photos[$key] = [];
+                }
+                $grouped_photos[$key][] = $photo;
+            }
+            
+            if ( ! empty( $grouped_photos ) ) : 
             ?>
             <div class="section photo-section">
                 <h2>Photo Documentation</h2>
-                <div class="photo-grid">
-                    <?php foreach ( $photos as $photo ) : 
-                        if ( strpos( $photo->section_key, '|' ) !== false ) continue; // Skip item photos
-                    ?>
-                        <div class="photo-item">
-                            <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" alt="">
-                            <?php if ( $photo->caption ) : ?>
-                                <div class="photo-caption"><?php echo esc_html( $photo->caption ); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
+                
+                <?php foreach ( $grouped_photos as $section_key => $section_photos ) : 
+                    $section_label = ucwords( str_replace( '_', ' ', $section_key ) );
+                ?>
+                <div style="margin-bottom: 20px;">
+                    <?php if ( $section_key !== 'general' ) : ?>
+                        <h3 style="font-size: 11pt; color: #374151; margin-bottom: 10px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">
+                            📍 <?php echo esc_html( $section_label ); ?>
+                        </h3>
+                    <?php endif; ?>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <?php foreach ( $section_photos as $photo ) : ?>
+                            <div style="width: 150px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; background: #fff;">
+                                <img src="<?php echo esc_url( $photo->get_thumbnail_url( 300 ) ); ?>" alt="" style="width: 100%; height: 100px; object-fit: cover;">
+                                <?php if ( $photo->caption ) : ?>
+                                    <div style="padding: 6px; font-size: 9pt; color: #4b5563; background: #f9fafb; border-top: 1px solid #e5e7eb;">
+                                        <?php echo esc_html( $photo->caption ); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
             <?php endif; ?>
 
