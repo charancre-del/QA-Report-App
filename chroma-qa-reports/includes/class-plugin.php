@@ -48,7 +48,19 @@ class Plugin {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_api_hooks();
+        $this->define_api_hooks();
         $this->init_enhancements();
+        $this->check_version();
+    }
+
+    /**
+     * Check for plugin updates and run activation if needed.
+     */
+    private function check_version() {
+        if ( get_option( 'cqa_db_version' ) !== $this->version ) {
+            require_once CQA_PLUGIN_DIR . 'includes/class-activator.php';
+            Activator::activate();
+        }
     }
 
     /**

@@ -97,7 +97,9 @@
             });
         },
 
-        nextStep: function () {
+        nextStep: function (e) {
+            if (e) e.preventDefault();
+
             if (this.validateStep(this.currentStep)) {
                 this.$panels.removeClass('active');
                 this.currentStep++;
@@ -108,6 +110,11 @@
                 // Load checklist if entering step 2
                 if (this.currentStep === 2) {
                     this.loadChecklist();
+                    // Auto-create draft if not exists to enable autosave
+                    if (!this.$wizard.data('report-id')) {
+                        console.log('Auto-creating draft...');
+                        this.submitToRestApi('draft', true);
+                    }
                 }
 
                 // Update review if entering final step
@@ -117,7 +124,8 @@
             }
         },
 
-        prevStep: function () {
+        prevStep: function (e) {
+            if (e) e.preventDefault();
             if (this.currentStep > 1) {
                 this.$panels.removeClass('active');
                 this.currentStep--;
@@ -133,13 +141,16 @@
             const $panel = $(`.cqa-wizard-panel[data-step="${step}"]`);
 
             $panel.find('input[required], select[required], textarea[required]').each(function () {
-                if (!$(this).val()) {
+                const $input = $(this);
+                const val = $input.val();
+
+                if (!val) {
                     isValid = false;
-                    $(this).addClass('error');
-                    $(this).css('border-color', 'var(--cqa-danger)');
+                    $input.addClass('error');
+                    $input.css('border-color', 'var(--cqa-danger)');
                 } else {
-                    $(this).removeClass('error');
-                    $(this).css('border-color', '');
+                    $input.removeClass('error');
+                    $input.css('border-color', '');
                 }
             });
 
@@ -258,9 +269,9 @@
 
         handleSchoolChange: function (e) {
             const schoolId = $(e.target).val();
-            if (schoolId) {
-                window.location.href = `?school_id=${schoolId}`;
-            }
+            // Removed auto-reload to prevent losing other form data
+            // School ID is captured by form submission
+            console.log('School selected:', schoolId);
         },
 
         handleOverallRating: function (e) {
@@ -321,9 +332,16 @@
         },
 
         handleFiles: function (files) {
+            const self = this;
             const $gallery = $('#cqa-photo-gallery');
 
             Array.from(files).forEach(file => {
+                // Check size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Max size is 5MB.`);
+                    return;
+                }
+
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
@@ -536,10 +554,9 @@
             const self = this;
             setInterval(function () {
                 if (self.$wizard.data('report-id')) {
-                    // Silent save-ish
-                    // For now just console log to avoid disrupting user
+                    // Silent save
                     // console.log('Autosaving draft...');
-                    // self.submitToRestApi('draft'); 
+                    self.submitToRestApi('draft', true);
                 }
             }, 60000);
         },

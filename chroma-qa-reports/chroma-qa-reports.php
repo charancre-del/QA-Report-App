@@ -3,7 +3,7 @@
  * Plugin Name: Chroma QA Reports
  * Plugin URI: https://chromaearlylearning.com/qa-reports
  * Description: Quality Assurance Report Management System for Chroma Early Learning Academy schools.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Chroma Early Learning Academy
  * Author URI: https://chromaearlylearning.com
  * License: GPL v2 or later
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants
-define( 'CQA_VERSION', '1.0.0' );
+define( 'CQA_VERSION', '1.0.1' );
 define( 'CQA_PLUGIN_FILE', __FILE__ );
 define( 'CQA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CQA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

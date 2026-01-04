@@ -52,19 +52,26 @@ $school = $school_id ? School::find( $school_id ) : null;
         
         <div class="cqa-form-group">
             <label>School *</label>
-            <select id="cqa-school-select" required>
-                <option value="">Select a school...</option>
-                <?php foreach ( $schools as $s ) : ?>
-                    <option value="<?php echo esc_attr( $s->id ); ?>" <?php selected( $school_id, $s->id ); ?>>
-                        <?php echo esc_html( $s->name ); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <?php if ( empty( $schools ) ) : ?>
+                <div class="cqa-notice cqa-notice-error">
+                    <p><?php esc_html_e( 'No schools found. Please ask an administrator to add a school first.', 'chroma-qa-reports' ); ?></p>
+                </div>
+                <input type="hidden" id="cqa-school-select" name="school_id" required value="">
+            <?php else : ?>
+                <select id="cqa-school-select" name="school_id" required>
+                    <option value="">Select a school...</option>
+                    <?php foreach ( $schools as $s ) : ?>
+                        <option value="<?php echo esc_attr( $s->id ); ?>" <?php selected( $school_id, $s->id ); ?>>
+                            <?php echo esc_html( $s->name ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php endif; ?>
         </div>
 
         <div class="cqa-form-group">
             <label>Report Type *</label>
-            <select id="cqa-report-type" required>
+            <select id="cqa-report-type" name="report_type" required>
                 <option value="tier1" <?php echo $report && $report->report_type === 'tier1' ? 'selected' : ''; ?>>Tier 1</option>
                 <option value="tier1_tier2" <?php echo $report && $report->report_type === 'tier1_tier2' ? 'selected' : ''; ?>>Tier 1 + Tier 2 (CQI)</option>
                 <option value="new_acquisition" <?php echo $report && $report->report_type === 'new_acquisition' ? 'selected' : ''; ?>>New Acquisition</option>
@@ -73,7 +80,7 @@ $school = $school_id ? School::find( $school_id ) : null;
 
         <div class="cqa-form-group">
             <label>Inspection Date *</label>
-            <input type="date" id="cqa-inspection-date" value="<?php echo esc_attr( $report ? $report->inspection_date : date('Y-m-d') ); ?>" required>
+            <input type="date" id="cqa-inspection-date" name="inspection_date" value="<?php echo esc_attr( $report ? $report->inspection_date : date('Y-m-d') ); ?>" required>
         </div>
 
         <div class="cqa-form-actions">
