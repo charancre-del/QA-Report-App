@@ -42,7 +42,7 @@ class Executive_Summary {
             'maxTokens'   => 3000,
         ] );
 
-        if ( is_wp_error( $result ) ) {
+        if ( \is_wp_error( $result ) ) {
             return $result;
         }
 
@@ -66,7 +66,7 @@ class Executive_Summary {
     private function build_prompt( $school, $report, $responses, $previous_report, $checklist, $stats ) {
         $school_name = $school ? $school->name : 'Unknown School';
         $report_type = $report->get_type_label();
-        $date = date_i18n( 'F j, Y', strtotime( $report->inspection_date ) );
+        $date = \date_i18n( 'F j, Y', \strtotime( $report->inspection_date ) );
 
         $prompt = "You are a QA analyst for Chroma Early Learning Academy, a childcare organization. ";
         $prompt .= "Analyze the following QA inspection report and generate an executive summary.\n\n";
@@ -167,10 +167,10 @@ class Executive_Summary {
             [
                 'report_id'         => $report_id,
                 'executive_summary' => $summary['executive_summary'] ?? '',
-                'issues_json'       => wp_json_encode( $summary['issues'] ?? [] ),
-                'poi_json'          => wp_json_encode( $summary['poi'] ?? [] ),
-                'comparison_json'   => wp_json_encode( $summary['comparison'] ?? [] ),
-                'generated_at'      => current_time( 'mysql' ),
+                'issues_json'       => \wp_json_encode( $summary['issues'] ?? [] ),
+                'poi_json'          => \wp_json_encode( $summary['poi'] ?? [] ),
+                'comparison_json'   => \wp_json_encode( $summary['comparison'] ?? [] ),
+                'generated_at'      => \current_time( 'mysql' ),
             ],
             [ '%d', '%s', '%s', '%s', '%s', '%s' ]
         );

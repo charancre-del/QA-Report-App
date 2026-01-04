@@ -23,7 +23,7 @@ class Gemini_Client {
      * @return string
      */
     public static function get_api_key() {
-        return get_option( 'cqa_gemini_api_key', '' );
+        return \get_option( 'cqa_gemini_api_key', '' );
     }
 
     /**
@@ -65,20 +65,20 @@ class Gemini_Client {
             ],
         ];
 
-        $response = wp_remote_post( $url, [
+        $response = \wp_remote_post( $url, [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
-            'body'    => wp_json_encode( $body ),
+            'body'    => \wp_json_encode( $body ),
             'timeout' => 60,
         ] );
 
-        if ( is_wp_error( $response ) ) {
+        if ( \is_wp_error( $response ) ) {
             return $response;
         }
 
-        $status_code = wp_remote_retrieve_response_code( $response );
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+        $status_code = \wp_remote_retrieve_response_code( $response );
+        $body = \json_decode( \wp_remote_retrieve_body( $response ), true );
 
         if ( $status_code !== 200 ) {
             $error_message = $body['error']['message'] ?? __( 'Unknown API error', 'chroma-qa-reports' );

@@ -26,7 +26,7 @@ class Document_Parser {
         // Extract text from DOCX
         $text = $this->extract_docx_text( $file_path );
 
-        if ( is_wp_error( $text ) ) {
+        if ( \is_wp_error( $text ) ) {
             return $text;
         }
 
@@ -53,7 +53,7 @@ class Document_Parser {
         $zip = new \ZipArchive();
         
         if ( $zip->open( $file_path ) !== true ) {
-            return new \WP_Error( 'invalid_docx', __( 'Could not open DOCX file.', 'chroma-qa-reports' ) );
+            return new \WP_Error( 'invalid_docx', \__( 'Could not open DOCX file.', 'chroma-qa-reports' ) );
         }
 
         $content = $zip->getFromName( 'word/document.xml' );
@@ -64,7 +64,7 @@ class Document_Parser {
         }
 
         // Parse XML and extract text
-        $xml = simplexml_load_string( $content, 'SimpleXMLElement', LIBXML_NOWARNING );
+        $xml = \simplexml_load_string( $content, 'SimpleXMLElement', LIBXML_NOWARNING );
         
         if ( $xml === false ) {
             return new \WP_Error( 'xml_error', __( 'Could not parse document XML.', 'chroma-qa-reports' ) );
@@ -166,8 +166,8 @@ class Document_Parser {
         }
 
         // Try to extract date
-        if ( preg_match( '/(?:Date|Inspection Date):\s*(\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4})/i', $text, $matches ) ) {
-            $result['inspection_date'] = date( 'Y-m-d', strtotime( $matches[1] ) );
+        if ( \preg_match( '/(?:Date|Inspection Date):\s*(\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4})/i', $text, $matches ) ) {
+            $result['inspection_date'] = \date( 'Y-m-d', \strtotime( $matches[1] ) );
         }
 
         // Detect report type

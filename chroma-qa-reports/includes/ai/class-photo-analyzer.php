@@ -36,7 +36,7 @@ class Photo_Analyzer {
         // Get image data
         $image_data = self::get_image_data( $image_url );
         
-        if ( is_wp_error( $image_data ) ) {
+        if ( \is_wp_error( $image_data ) ) {
             return [ 'error' => $image_data->get_error_message() ];
         }
 
@@ -57,9 +57,9 @@ class Photo_Analyzer {
      */
     private static function get_image_data( $image_url ) {
         // Check if it's a local file
-        if ( file_exists( $image_url ) ) {
-            $content = file_get_contents( $image_url );
-            $mime = mime_content_type( $image_url );
+        if ( \file_exists( $image_url ) ) {
+            $content = \file_get_contents( $image_url );
+            $mime = \mime_content_type( $image_url );
         } else {
             // Fetch remote image
             $response = \wp_remote_get( $image_url );

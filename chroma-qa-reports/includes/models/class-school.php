@@ -154,7 +154,7 @@ class School {
             'offset'   => 0,
         ];
 
-        $args = wp_parse_args( $args, $defaults );
+        $args = \wp_parse_args( $args, $defaults );
 
         $where = [];
         $values = [];

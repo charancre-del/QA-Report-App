@@ -450,7 +450,7 @@ class REST_Controller {
         $ai = new \ChromaQA\AI\Executive_Summary();
         $result = $ai->generate( $report );
 
-        if ( is_wp_error( $result ) ) {
+        if ( \is_wp_error( $result ) ) {
             return $result;
         }
 
@@ -467,7 +467,7 @@ class REST_Controller {
         $parser = new \ChromaQA\AI\Document_Parser();
         $result = $parser->parse( $files['document']['tmp_name'] );
 
-        if ( is_wp_error( $result ) ) {
+        if ( \is_wp_error( $result ) ) {
             return $result;
         }
 
@@ -554,9 +554,9 @@ class REST_Controller {
         $folder_id = $school->drive_folder_id ?? null;
 
         // Load image functions for fallback
-        require_once( ABSPATH . 'wp-admin/includes/image.php' );
-        require_once( ABSPATH . 'wp-admin/includes/file.php' );
-        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+        require_once( \ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( \ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( \ABSPATH . 'wp-admin/includes/media.php' );
         
         foreach ( $new_photos as $index => $data_url ) {
             if ( ! is_string( $data_url ) ) continue;
@@ -578,13 +578,18 @@ class REST_Controller {
                 continue;
             }
 
+            if ( strlen( $decoded_data ) > 10 * 1024 * 1024 ) { // 10MB limit
+                error_log( 'File too large: ' . $filename );
+                continue;
+            }
+
             $filename = 'report-' . $report_id . '-photo-' . time() . '-' . $index . '.' . $ext;
             $drive_file_id = '';
             $tmp_file = sys_get_temp_dir() . '/' . $filename;
             
             // 1. Try Google Drive Upload
             if ( \get_option( 'cqa_google_client_id' ) ) {
-                file_put_contents( $tmp_file, $decoded_data );
+                \file_put_contents( $tmp_file, $decoded_data );
                 $drive_result = Google_Drive::upload_file( $tmp_file, $filename, $folder_id );
                 if ( ! \is_wp_error( $drive_result ) && isset( $drive_result['id'] ) ) {
                     $drive_file_id = $drive_result['id'];
@@ -612,6 +617,9 @@ class REST_Controller {
                     \wp_update_attachment_metadata( $attach_id, $attach_data );
                     
                     $drive_file_id = 'wp_' . $attach_id;
+                } else {
+                     // Log error or handle upload failure
+                     error_log( 'Upload failed: ' . $upload['error'] );
                 }
             }
             
@@ -698,6 +706,7 @@ class REST_Controller {
             'status'             => $report->status,
             'status_label'       => $report->get_status_label(),
             'created_at'         => $report->created_at,
+            'school_name'        => $report->get_school() ? $report->get_school()->name : 'Unknown School',
         ];
 
         if ( $include_details ) {

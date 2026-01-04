@@ -220,25 +220,25 @@ class Frontend_Controller {
                 self::oauth_callback();
                 break;
             case 'schools-list':
-                self::load_template( 'schools-list' );
+                include CQA_PLUGIN_DIR . 'public/views/schools-list.php';
                 break;
             case 'school-form':
-                self::load_template( 'school-form' );
+                include CQA_PLUGIN_DIR . 'public/views/school-form.php';
                 break;
             case 'settings':
-                self::load_template( 'settings' );
+                include CQA_PLUGIN_DIR . 'public/views/settings.php';
                 break;
             case 'import':
-                self::load_template( 'import' );
+                include CQA_PLUGIN_DIR . 'public/views/import.php';
                 break;
             case 'reports-list':
-                self::load_template( 'reports-list' );
+                include CQA_PLUGIN_DIR . 'public/views/reports-list.php';
                 break;
             case 'analytics':
                 if ( get_query_var( 'cqa_page' ) === 'analytics' ) { // Ensure script is enqueued
                      // Already handled in loop or script enqueue logic if we check cqa_page
                 }
-                self::load_template( 'analytics' );
+                include CQA_PLUGIN_DIR . 'public/views/analytics.php';
                 break;
             default:
                 include CQA_PLUGIN_DIR . 'public/views/404.php';
