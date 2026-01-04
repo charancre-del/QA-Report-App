@@ -642,6 +642,28 @@
                         CQA.handleSectionFiles(this, this.files, sectionKey);
                     }
                 });
+
+                // Photo Remove Button - Delete photo
+                $(document).on('click', '.cqa-remove-photo-btn', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const $btn = $(this);
+                    const photoId = $btn.data('id');
+                    const $thumb = $btn.closest('.cqa-photo-thumb, .cqa-existing-photo');
+
+                    if (photoId && confirm('Remove this photo?')) {
+                        // Mark existing photo for deletion
+                        $thumb.find('input[name="existing_photos[]"]').remove();
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'delete_photos[]',
+                            value: photoId
+                        }).appendTo($thumb.parent());
+                    }
+
+                    // Remove from UI
+                    $thumb.fadeOut(200, function () { $(this).remove(); });
+                });
             },
 
             handleFiles: function (files, sectionKey) {

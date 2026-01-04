@@ -159,7 +159,7 @@ if ( $export_pdf ) {
                     <?php endif; ?>
 
                     <?php if ( ! empty( $ai_summary['poi'] ) ) : ?>
-                        <h4><?php esc_html_e( 'Points of Interest (POI)', 'chroma-qa-reports' ); ?></h4>
+                        <h4><?php esc_html_e( '📋 Plan of Improvement', 'chroma-qa-reports' ); ?></h4>
                         <ul class="cqa-poi-list">
                             <?php foreach ( $ai_summary['poi'] as $poi ) : ?>
                                 <li><?php echo esc_html( is_array( $poi ) ? $poi['recommendation'] : $poi ); ?></li>

@@ -378,11 +378,32 @@ class PDF_Generator {
                 <?php endif; ?>
 
                 <?php if ( ! empty( $ai_summary['poi'] ) ) : ?>
-                    <h4 style="margin: 15px 0 10px;">Points of Interest (POI):</h4>
+                    <h4 style="margin: 15px 0 10px;">📋 Plan of Improvement:</h4>
                     <div class="poi-list">
-                        <?php foreach ( $ai_summary['poi'] as $poi ) : ?>
-                            <div class="poi-item">
-                                ✓ <?php echo esc_html( is_array( $poi ) ? $poi['recommendation'] : $poi ); ?>
+                        <?php foreach ( $ai_summary['poi'] as $item ) : 
+                            $priority = is_array( $item ) ? ( $item['priority'] ?? 'ongoing' ) : 'ongoing';
+                            $action = is_array( $item ) ? ( $item['action'] ?? $item['recommendation'] ?? $item ) : $item;
+                            $timeline = is_array( $item ) ? ( $item['timeline'] ?? '' ) : '';
+                            $area = is_array( $item ) ? ( $item['area'] ?? $item['section'] ?? '' ) : '';
+                            
+                            $priority_colors = [
+                                'immediate' => '#dc2626',
+                                'short_term' => '#f59e0b',
+                                'ongoing' => '#3b82f6'
+                            ];
+                            $priority_label = ucwords( str_replace( '_', ' ', $priority ) );
+                            $color = $priority_colors[$priority] ?? '#3b82f6';
+                        ?>
+                            <div class="poi-item" style="display: flex; align-items: flex-start; gap: 10px;">
+                                <span style="background: <?php echo $color; ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 9pt; white-space: nowrap;">
+                                    <?php echo esc_html( $priority_label ); ?>
+                                </span>
+                                <div>
+                                    <div>✓ <?php echo esc_html( $action ); ?></div>
+                                    <?php if ( $timeline ) : ?>
+                                        <div style="font-size: 9pt; color: #666; margin-top: 2px;">⏱ <?php echo esc_html( $timeline ); ?></div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>

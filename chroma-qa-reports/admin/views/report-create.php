@@ -219,7 +219,7 @@ $schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
                         <h3><?php esc_html_e( 'Identified Issues', 'chroma-qa-reports' ); ?></h3>
                         <div id="issues-list" class="cqa-issues-list"></div>
 
-                        <h3><?php esc_html_e( 'Points of Interest (POI)', 'chroma-qa-reports' ); ?></h3>
+                        <h3><?php esc_html_e( '📋 Plan of Improvement', 'chroma-qa-reports' ); ?></h3>
                         <div id="poi-list" class="cqa-poi-list"></div>
                     </div>
                 </div>

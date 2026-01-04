@@ -122,9 +122,9 @@ class Executive_Summary {
         $prompt .= '    { "severity": "high|medium|low", "section": "section name", "description": "issue description" }';
         $prompt .= "\n";
         $prompt .= "  ],\n";
-        $prompt .= '  "poi": [';
+        $prompt .= '  "plan_of_improvement": [';
         $prompt .= "\n";
-        $prompt .= '    { "section": "section name", "recommendation": "actionable recommendation" }';
+        $prompt .= '    { "priority": "immediate|short_term|ongoing", "area": "section/area name", "action": "specific actionable step", "timeline": "timeframe for completion" }';
         $prompt .= "\n";
         $prompt .= "  ],\n";
         $prompt .= '  "comparison": {';
@@ -142,7 +142,7 @@ class Executive_Summary {
         $prompt .= "1. Critical safety and compliance issues (mark as HIGH severity)\n";
         $prompt .= "2. Areas that need immediate attention\n";
         $prompt .= "3. Positive observations and strengths\n";
-        $prompt .= "4. Specific, actionable recommendations for the Points of Interest (POI)\n";
+        $prompt .= "4. Generate a comprehensive Plan of Improvement with specific, actionable steps, priorities (immediate/short-term/ongoing), and realistic timelines\n";
         $prompt .= "5. Overall assessment and suggested rating based on the responses\n";
 
         return $prompt;
@@ -168,7 +168,7 @@ class Executive_Summary {
                 'report_id'         => $report_id,
                 'executive_summary' => $summary['executive_summary'] ?? '',
                 'issues_json'       => \wp_json_encode( $summary['issues'] ?? [] ),
-                'poi_json'          => \wp_json_encode( $summary['poi'] ?? [] ),
+                'poi_json'          => \wp_json_encode( $summary['plan_of_improvement'] ?? $summary['poi'] ?? [] ),
                 'comparison_json'   => \wp_json_encode( $summary['comparison'] ?? [] ),
                 'generated_at'      => \current_time( 'mysql' ),
             ],
