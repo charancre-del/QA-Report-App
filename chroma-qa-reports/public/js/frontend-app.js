@@ -692,4 +692,30 @@
             CQA.init();
         });
 
-    }) (jQuery);
+    } // End of initApp function
+
+    // Initialize app when jQuery is available
+    if (typeof jQuery !== 'undefined') {
+        initApp(jQuery);
+    } else {
+        // jQuery not loaded yet - wait for it
+        document.addEventListener('DOMContentLoaded', function checkjQuery() {
+            if (typeof jQuery !== 'undefined') {
+                initApp(jQuery);
+            } else {
+                // Poll for jQuery (handles deferred loading)
+                var attempts = 0;
+                var interval = setInterval(function () {
+                    if (typeof jQuery !== 'undefined') {
+                        clearInterval(interval);
+                        initApp(jQuery);
+                    } else if (++attempts > 50) {
+                        clearInterval(interval);
+                        console.error('CQA Reports: jQuery failed to load');
+                    }
+                }, 100);
+            }
+        });
+    }
+
+})();
