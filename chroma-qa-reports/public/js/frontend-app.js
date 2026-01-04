@@ -374,6 +374,7 @@
                     const reportId = self.$wizard.data('report-id');
                     if (reportId) {
                         self.loadSavedResponses(reportId);
+                        self.loadExistingPhotos(reportId);
                     }
                 }).fail(function () {
                     $container.html('<div class="cqa-error">Failed to load checklist. Please try again.</div>');
@@ -411,6 +412,48 @@
                             }
                         });
                     });
+                });
+            },
+
+            loadExistingPhotos: function (reportId) {
+                const self = this;
+                const $gallery = $('#cqa-photo-gallery');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId,
+                    method: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function (report) {
+                    if (report.photos && report.photos.length > 0) {
+                        report.photos.forEach(function (photo) {
+                            // Determine section label
+                            let sectionLabel = 'General';
+                            if (photo.section_key && photo.section_key !== 'general') {
+                                if (photo.section_key.indexOf('|') > -1) {
+                                    // Item photo - skip for now, they show inline
+                                    return;
+                                }
+                                sectionLabel = photo.section_key.replace(/_/g, ' ');
+                                sectionLabel = sectionLabel.charAt(0).toUpperCase() + sectionLabel.slice(1);
+                            }
+
+                            const html = `
+                                <div class="cqa-photo-thumb cqa-existing-photo" data-photo-id="${photo.id}" style="display:inline-block; margin:8px; vertical-align:top; width:150px; position:relative;">
+                                    <input type="hidden" name="existing_photos[]" value="${photo.id}">
+                                    <img src="${photo.thumbnail_url}" alt="Photo" style="width:100%; height:100px; object-fit:cover; border-radius:6px;">
+                                    <div style="padding:4px; background:#f3f4f6; border-radius:0 0 6px 6px;">
+                                        <div style="font-size:10px; color:#6b7280; margin-bottom:4px;">📍 ${sectionLabel}</div>
+                                        ${photo.caption ? `<div style="font-size:11px; color:#374151;">${photo.caption}</div>` : ''}
+                                    </div>
+                                    <button type="button" class="cqa-remove-photo-btn" data-id="${photo.id}" 
+                                        style="position:absolute; top:4px; right:4px; background:#ef4444; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:12px;">×</button>
+                                </div>
+                            `;
+                            $gallery.append(html);
+                        });
+                    }
                 });
             },
 
