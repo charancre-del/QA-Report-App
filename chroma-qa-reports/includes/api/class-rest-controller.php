@@ -321,6 +321,10 @@ class REST_Controller {
     }
 
     public function create_report( WP_REST_Request $request ) {
+        // DEBUG: Log incoming parameters to check for empty payload
+        error_log( 'CREATE REPORT PARAMS: ' . print_r( $request->get_params(), true ) );
+        error_log( 'CREATE REPORT BODY: ' . $request->get_body() );
+
         $report = new Report();
         $report->school_id = intval( $request->get_param( 'school_id' ) );
         $report->user_id = \get_current_user_id();
