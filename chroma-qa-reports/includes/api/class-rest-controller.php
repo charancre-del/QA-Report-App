@@ -345,6 +345,12 @@ class REST_Controller {
              }
         }
 
+        // FALLBACK 3: Check Cookies (The Triple Nuclear Option)
+        if ( empty( $school_id ) && isset( $_COOKIE['cqa_temp_school_id'] ) ) {
+            $school_id = intval( $_COOKIE['cqa_temp_school_id'] );
+            error_log( 'create_report: Recovered school_id from COOKIE: ' . $school_id );
+        }
+
         $report->school_id = $school_id;
         $report->user_id = \get_current_user_id();
         $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );

@@ -748,6 +748,8 @@
                 const safeSchoolId = $('#cqa-school-select').val();
                 if (safeSchoolId) {
                     url += (url.includes('?') ? '&' : '?') + 'school_id=' + safeSchoolId;
+                    // FALLBACK 3: Cookies (The Triple Nuclear Option)
+                    document.cookie = "cqa_temp_school_id=" + safeSchoolId + "; path=/";
                 }
 
                 // Gather Form Data
