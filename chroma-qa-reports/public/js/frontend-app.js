@@ -8,21 +8,73 @@
 
     const CQA = {
         init: function () {
-            this.cacheDOM();
-            this.bindEvents();
-            this.initWizard();
-            this.initPhotoUpload();
-            this.initRatings();
+            // Check if we're on the wizard page
+            if (this.$wizard.length) {
+                this.cacheDOM();
+                this.bindEvents();
+                this.initWizard();
+                this.initPhotoUpload();
+                this.initRatings();
 
-            // Do not start autosave immediately on checking, only if editing existing
-            if (this.$wizard.data('report-id')) {
-                this.initAutosave();
+                // Do not start autosave immediately on checking, only if editing existing
+                if (this.$wizard.data('report-id')) {
+                    this.initAutosave();
+                }
+
+                // Load Google Picker if available
+                if (cqaFrontend.googleClientId && cqaFrontend.developerKey) {
+                    this.loadGooglePicker();
+                }
             }
 
-            // Load Google Picker if available
-            if (cqaFrontend.googleClientId && cqaFrontend.developerKey) {
-                this.loadGooglePicker();
+            // Initialize login form if present
+            if ($('#cqa-login-form').length) {
+                this.initLogin();
             }
+        },
+
+        initLogin: function () {
+            const $form = $('#cqa-login-form');
+            const $error = $('#cqa-login-error');
+
+            $form.on('submit', function (e) {
+                e.preventDefault();
+
+                const $btn = $form.find('button[type="submit"]');
+
+                $btn.prop('disabled', true);
+                $btn.find('.cqa-btn-text').hide();
+                $btn.find('.cqa-btn-loading').show();
+                $error.hide();
+
+                $.ajax({
+                    url: cqaFrontend.ajaxUrl,
+                    method: 'POST',
+                    data: {
+                        action: 'cqa_frontend_login',
+                        username: $('#username').val(),
+                        password: $('#password').val(),
+                        remember: $('input[name="remember"]').is(':checked') ? 1 : 0,
+                        nonce: $('input[name="nonce"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.data.redirect;
+                        } else {
+                            $error.text(response.data.message).show();
+                            $btn.prop('disabled', false);
+                            $btn.find('.cqa-btn-text').show();
+                            $btn.find('.cqa-btn-loading').hide();
+                        }
+                    },
+                    error: function () {
+                        $error.text(cqaFrontend.strings.error).show();
+                        $btn.prop('disabled', false);
+                        $btn.find('.cqa-btn-text').show();
+                        $btn.find('.cqa-btn-loading').hide();
+                    }
+                });
+            });
         },
 
         cacheDOM: function () {
