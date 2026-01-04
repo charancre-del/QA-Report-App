@@ -580,9 +580,14 @@ class REST_Controller {
             ob_end_clean();
         }
 
-        // Stream the PDF
-        header( 'Content-Type: application/pdf' );
-        header( 'Content-Disposition: inline; filename="' . \sanitize_file_name( $report->get_school()->name . '-QA-Report.pdf' ) . '"' );
+        // Detect correct mime type (Fallback to HTML if PDF libs missing)
+        $ext = pathinfo( $pdf_path, PATHINFO_EXTENSION );
+        $mime = $ext === 'html' ? 'text/html' : 'application/pdf';
+        $filename = \sanitize_file_name( $report->get_school()->name . '-QA-Report.' . $ext );
+
+        // Stream the file
+        header( 'Content-Type: ' . $mime );
+        header( 'Content-Disposition: inline; filename="' . $filename . '"' );
         readfile( $pdf_path );
         exit;
     }
