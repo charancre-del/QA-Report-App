@@ -385,6 +385,22 @@ class REST_Controller {
         if ( $request->has_param( 'report_type' ) ) {
             $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         }
+        
+        // Allow updating School ID (Vital for fixing Unknown Schools)
+        if ( $request->has_param( 'school_id' ) ) {
+            $school_id = intval( $request->get_param( 'school_id' ) );
+             // Fallback 1: $_GET
+            if ( empty( $school_id ) && isset( $_GET['school_id'] ) ) {
+                $school_id = intval( $_GET['school_id'] );
+            }
+             // Fallback 2: POST/JSON handled by has_param generally, but if param is strict...
+             // Just take the param if it exists.
+            
+            if ( $school_id > 0 ) {
+                $report->school_id = $school_id;
+            }
+        }
+        
         if ( $request->has_param( 'inspection_date' ) ) {
             $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         }
