@@ -325,8 +325,27 @@ class REST_Controller {
         error_log( 'CREATE REPORT PARAMS: ' . print_r( $request->get_params(), true ) );
         error_log( 'CREATE REPORT BODY: ' . $request->get_body() );
 
+        // Initialize Report
         $report = new Report();
-        $report->school_id = intval( $request->get_param( 'school_id' ) );
+        $school_id = intval( $request->get_param( 'school_id' ) );
+
+        // FALLBACK 1: Check $_GET (The Nuclear Option)
+        if ( empty( $school_id ) && isset( $_GET['school_id'] ) ) {
+            $school_id = intval( $_GET['school_id'] );
+            error_log( 'create_report: Recovered school_id from $_GET: ' . $school_id );
+        }
+
+        // FALLBACK 2: Check Raw PHP Input (The Double Nuclear Option)
+        if ( empty( $school_id ) ) {
+             $raw_input = file_get_contents( 'php://input' );
+             $json = json_decode( $raw_input, true );
+             if ( isset( $json['school_id'] ) ) {
+                 $school_id = intval( $json['school_id'] );
+                 error_log( 'create_report: Recovered school_id from php://input: ' . $school_id );
+             }
+        }
+
+        $report->school_id = $school_id;
         $report->user_id = \get_current_user_id();
         $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
