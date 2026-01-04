@@ -39,13 +39,6 @@ class Frontend_Controller {
         
         // Add noindex to QA pages
         add_action( 'wp_head', [ self::class, 'add_noindex_meta' ] );
-
-        // Emergency Flush (Self-Healing)
-        if ( ! get_option( 'cqa_rewrite_flush_check_v3' ) ) {
-            self::register_rewrites();
-            flush_rewrite_rules();
-            update_option( 'cqa_rewrite_flush_check_v3', true );
-        }
     }
 
     /**
