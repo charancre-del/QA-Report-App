@@ -22,6 +22,9 @@
 
         const CQA = {
             init: function () {
+                // Global events (Dashboard, Reports List, etc.)
+                this.bindGlobalEvents();
+
                 // Initialize login form if present (login page doesn't need wizard features)
                 if ($('#cqa-login-form').length) {
                     this.initLogin();
@@ -30,7 +33,7 @@
                 // Check if we're on the wizard page before initializing wizard features
                 if ($('#cqa-report-wizard').length) {
                     this.cacheDOM();
-                    this.bindEvents();
+                    this.bindWizardEvents();
                     this.initWizard();
                     this.initPhotoUpload();
                     this.initRatings();
@@ -45,6 +48,11 @@
                         this.loadGooglePicker();
                     }
                 }
+            },
+
+            bindGlobalEvents: function () {
+                // Delete Report (Available on Dashboard and List)
+                $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
             },
 
             initLogin: function () {
@@ -104,7 +112,7 @@
                 this.$driveBtn = $('.cqa-drive-picker-btn'); // Add class to your button HTML
             },
 
-            bindEvents: function () {
+            bindWizardEvents: function () {
                 // Navigation with delegation
                 $(document).on('click', '.cqa-wizard-next', this.nextStep.bind(this));
                 $(document).on('click', '.cqa-wizard-prev', this.prevStep.bind(this));
@@ -133,9 +141,6 @@
 
                 // Google Drive delegation
                 $(document).on('click', '#cqa-drive-picker-btn', this.handleDriveClick.bind(this));
-
-                // Delete Report
-                $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
             },
 
 
