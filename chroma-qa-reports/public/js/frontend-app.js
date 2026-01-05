@@ -131,13 +131,13 @@
                 // Checklist navigation
                 $(document).on('click', '.cqa-checklist-section-header', this.toggleSection.bind(this));
 
-                // Google Drive
-                // Using delegation in case button is dynamically added
+                // Google Drive delegation
                 $(document).on('click', '#cqa-drive-picker-btn', this.handleDriveClick.bind(this));
 
                 // Delete Report
                 $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
             },
+
 
             initWizard: function () {
                 this.currentStep = 1;
