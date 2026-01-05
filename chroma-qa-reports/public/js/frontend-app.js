@@ -2,12 +2,23 @@
  * Chroma QA Reports - Frontend Application
  * 
  * Handles report wizard, photo uploads, and form submission.
+ * 
+ * @global cqaFrontend
+ * @global jQuery
+ * @global gapi
+ * @global google
  */
 (function () {
     'use strict';
 
     // Wait for jQuery to be available (handles deferred loading)
     function initApp($) {
+        console.log('CQA: Frontend App Loading... jQuery v' + $.fn.jquery);
+
+        if (typeof cqaFrontend === 'undefined') {
+            console.error('CQA Error: cqaFrontend config object is missing.');
+            return;
+        }
 
         const CQA = {
             init: function () {
