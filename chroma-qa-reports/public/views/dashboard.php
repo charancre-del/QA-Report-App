@@ -121,7 +121,7 @@ $my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => d
                                     <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm cqa-btn-primary">
                                         <?php echo $report->status === 'draft' ? 'Continue' : 'Edit'; ?>
                                     </a>
-                                    <button type="button" class="cqa-btn cqa-btn-sm cqa-btn-danger cqa-delete-report" data-id="<?php echo esc_attr( $report->id ); ?>">
+                                    <button type="button" class="cqa-btn cqa-btn-sm cqa-btn-danger cqa-delete-report" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="if(window.CQA) CQA.deleteReport(<?php echo esc_attr( $report->id ); ?>)">
                                         🗑️
                                     </button>
                                 </div>

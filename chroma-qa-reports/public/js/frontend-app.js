@@ -55,6 +55,18 @@
                 $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
             },
 
+            // Public method for inline calls (Failsafe)
+            deleteReport: function (id) {
+                // Trigger the logic manually by finding the button and mocking the event
+                const $btn = $(`.cqa-delete-report[data-id="${id}"]`);
+                if ($btn.length) {
+                    const fakeEvent = { preventDefault: () => { }, currentTarget: $btn[0] };
+                    this.handleDelete(fakeEvent);
+                } else {
+                    console.error('CQA: Delete button not found for ID', id);
+                }
+            },
+
             initLogin: function () {
                 const $form = $('#cqa-login-form');
                 const $error = $('#cqa-login-error');
@@ -1210,6 +1222,7 @@
         };
 
         $(document).ready(function () {
+            window.CQA = CQA; // Expose global API
             CQA.init();
         });
 
