@@ -226,8 +226,8 @@ class School {
         $school->name = $row['name'];
         $school->location = $row['location'];
         $school->region = $row['region'];
-        $school->acquired_date = $row['acquired_date'];
-        $school->status = $row['status'];
+        $school->acquired_date = $row['acquired_date'] ?: null;
+        $school->status = $row['status'] ?? 'active';
         $school->drive_folder_id = $row['drive_folder_id'];
         $school->classroom_config = json_decode( $row['classroom_config'] ?: '{}', true );
         $school->created_at = $row['created_at'];
@@ -248,13 +248,13 @@ class School {
             'name'             => $this->name,
             'location'         => $this->location,
             'region'           => $this->region,
-            'acquired_date'    => $this->acquired_date,
+            'acquired_date'    => ! empty( $this->acquired_date ) ? $this->acquired_date : null,
             'status'           => $this->status ?: 'active',
             'drive_folder_id'  => $this->drive_folder_id,
             'classroom_config' => \wp_json_encode( $this->classroom_config ?: [] ),
         ];
 
-        $format = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];
+        $format = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];
 
         if ( $this->id ) {
             // Update existing

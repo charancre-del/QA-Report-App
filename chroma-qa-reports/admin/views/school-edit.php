@@ -37,12 +37,21 @@ if ( isset( $_POST['cqa_school_nonce'] ) && wp_verify_nonce( $_POST['cqa_school_
         $redirect_url = admin_url( 'admin.php?page=chroma-qa-reports-school-edit&id=' . $result . '&saved=1' );
         echo '<script>window.location.href = "' . esc_url( $redirect_url ) . '";</script>';
         exit;
+    } else {
+        global $wpdb;
+        $error_message = $wpdb->last_error ?: __( 'Failed to save school. Please check your input and try again.', 'chroma-qa-reports' );
+        set_transient( 'cqa_school_error', $error_message, 30 );
     }
 }
 
-// Show success message
+// Show success/error messages
 if ( isset( $_GET['saved'] ) ) {
     echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'School saved successfully.', 'chroma-qa-reports' ) . '</p></div>';
+}
+
+if ( $error_message = get_transient( 'cqa_school_error' ) ) {
+    delete_transient( 'cqa_school_error' );
+    echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Error:', 'chroma-qa-reports' ) . '</strong> ' . esc_html( $error_message ) . '</p></div>';
 }
 
 $classroom_types = [
