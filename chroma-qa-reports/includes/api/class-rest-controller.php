@@ -242,6 +242,7 @@ class REST_Controller {
         $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
         $school->acquired_date = \sanitize_text_field( $request->get_param( 'acquired_date' ) );
         $school->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'active';
+        $school->drive_folder_id = \sanitize_text_field( $request->get_param( 'drive_folder_id' ) );
         $school->classroom_config = $request->get_param( 'classroom_config' ) ?: [];
 
         $result = $school->save();
@@ -269,8 +270,14 @@ class REST_Controller {
         if ( $request->has_param( 'region' ) ) {
             $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
         }
+        if ( $request->has_param( 'acquired_date' ) ) {
+            $school->acquired_date = \sanitize_text_field( $request->get_param( 'acquired_date' ) );
+        }
         if ( $request->has_param( 'status' ) ) {
             $school->status = \sanitize_text_field( $request->get_param( 'status' ) );
+        }
+        if ( $request->has_param( 'drive_folder_id' ) ) {
+            $school->drive_folder_id = \sanitize_text_field( $request->get_param( 'drive_folder_id' ) );
         }
         if ( $request->has_param( 'classroom_config' ) ) {
             $school->classroom_config = $request->get_param( 'classroom_config' );
