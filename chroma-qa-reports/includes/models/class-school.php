@@ -315,6 +315,18 @@ class School {
     }
 
     /**
+     * Get available locations.
+     *
+     * @return array
+     */
+    public static function get_locations() {
+        global $wpdb;
+        $table = self::get_table_name();
+        
+        return $wpdb->get_col( "SELECT DISTINCT location FROM {$table} WHERE location != '' ORDER BY location" );
+    }
+
+    /**
      * Get overdue schools (no approved report in X days).
      *
      * @param int $days_threshold Days threshold (default 90).

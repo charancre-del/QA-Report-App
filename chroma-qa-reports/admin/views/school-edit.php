@@ -100,7 +100,12 @@ $classroom_types = [
                         <tr>
                             <th><label for="location"><?php esc_html_e( 'Location/Address', 'chroma-qa-reports' ); ?></label></th>
                             <td>
-                                <input type="text" id="location" name="location" value="<?php echo esc_attr( $school->location ?? '' ); ?>" class="regular-text">
+                                <input type="text" id="location" name="location" value="<?php echo esc_attr( $school->location ?? '' ); ?>" class="regular-text" list="locations-list">
+                                <datalist id="locations-list">
+                                    <?php foreach ( School::get_locations() as $location ) : ?>
+                                        <option value="<?php echo esc_attr( $location ); ?>">
+                                    <?php endforeach; ?>
+                                </datalist>
                             </td>
                         </tr>
                         <tr>
