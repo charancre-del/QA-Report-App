@@ -815,9 +815,18 @@
 
             handleDelete: function (e) {
                 e.preventDefault();
+                console.log('CQA: Delete button clicked');
+
+                if (!confirm('Are you sure you want to delete this report? This cannot be undone.')) {
+                    console.log('CQA: Delete cancelled by user');
+                    return;
+                }
+
                 const $btn = $(e.currentTarget);
                 const id = $btn.data('id');
-                const card = $btn.closest('.cqa-report-card');
+                const $card = $btn.closest('.cqa-report-card'); // Use $card naming convention
+
+                console.log('CQA: Deleting report ID:', id);
 
                 $btn.prop('disabled', true).text('🗑️...');
 
@@ -828,9 +837,11 @@
                         xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
                     }
                 }).done(function () {
-                    card.fadeOut(function () { $(this).remove(); });
-                }).fail(function () {
-                    alert('Failed to delete report.');
+                    console.log('CQA: Delete success');
+                    $card.fadeOut(function () { $(this).remove(); });
+                }).fail(function (xhr) {
+                    console.error('CQA: Delete failed', xhr);
+                    alert('Failed to delete report. Check console for details.');
                     $btn.prop('disabled', false).text('🗑️');
                 });
             },
