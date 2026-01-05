@@ -412,6 +412,8 @@
 
             loadSavedResponses: function (reportId) {
                 const self = this;
+                console.log('CQA: Loading saved responses for report', reportId);
+
                 $.ajax({
                     url: cqaFrontend.restUrl + 'reports/' + reportId + '/responses',
                     method: 'GET',
@@ -419,28 +421,29 @@
                         xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
                     }
                 }).done(function (responses) {
-                    // Responses grouped by section: { sectionKey: { itemKey: { rating: '...', notes: '...' } } }
-                    // Iterate and fill
+                    console.log('CQA: Saved responses loaded', responses);
+
+                    // Iterate and fill responses
                     $.each(responses, function (sectionKey, items) {
                         $.each(items, function (itemKey, data) {
-                            // Rating
                             if (data.rating) {
-                                // Find the button
                                 const $container = $(`.cqa-checklist-item[data-section="${sectionKey}"][data-item="${itemKey}"]`);
                                 const $btn = $container.find(`.cqa-item-rating-btn[data-value="${data.rating}"]`);
+
                                 if ($btn.length) {
-                                    $container.find('.cqa-item-rating-btn').removeClass('selected');
-                                    $btn.addClass('selected');
-                                    $container.find('input[type="hidden"]').val(data.rating);
+                                    $btn.addClass('selected').siblings().removeClass('selected');
+                                    $container.attr('data-validation', 'valid');
                                 }
                             }
-                            // Notes
+
                             if (data.notes) {
                                 const $container = $(`.cqa-checklist-item[data-section="${sectionKey}"][data-item="${itemKey}"]`);
                                 $container.find('textarea').val(data.notes);
                             }
                         });
                     });
+                }).fail(function (xhr) {
+                    console.error('CQA: Failed to load saved responses', xhr);
                 });
             },
 
