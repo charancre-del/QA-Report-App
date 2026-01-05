@@ -254,7 +254,7 @@ class School {
             'classroom_config' => \wp_json_encode( $this->classroom_config ?: [] ),
         ];
 
-        $format = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];
+        $format = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];
 
         if ( $this->id ) {
             // Update existing
