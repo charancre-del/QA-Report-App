@@ -68,12 +68,40 @@ $title = $action === 'edit' ? 'Edit School' : 'Add New School';
 
             <div class="cqa-form-group">
                 <label for="location">Location (City/Address)</label>
-                <input type="text" id="location" name="location" value="<?php echo esc_attr( $school ? $school->location : '' ); ?>" class="cqa-input">
+                <input type="text" id="location" name="location" value="<?php echo esc_attr( $school ? $school->location : '' ); ?>" class="cqa-input" list="locations-list">
+                <datalist id="locations-list">
+                    <?php foreach ( School::get_locations() as $loc ) : ?>
+                        <option value="<?php echo esc_attr( $loc ); ?>">
+                    <?php endforeach; ?>
+                </datalist>
             </div>
 
             <div class="cqa-form-group">
                 <label for="acquired_date">Acquired Date</label>
                 <input type="date" id="acquired_date" name="acquired_date" value="<?php echo esc_attr( $school ? $school->acquired_date : '' ); ?>" class="cqa-input">
+            </div>
+
+            <div class="cqa-form-group">
+                <label>Classroom Configuration (Max Capacities)</label>
+                <div class="cqa-classroom-grid">
+                    <?php
+                    $classroom_types = [
+                        'infant_a'   => 'Infant A (1:6)',
+                        'toddler'    => 'Toddler (1:8)',
+                        'preschool'  => 'Preschool (1:10)',
+                        'pre_k'      => 'Pre-K (1:11)',
+                        'school_age' => 'School Age (1:15)',
+                    ];
+                    $config = $school ? $school->classroom_config : [];
+                    foreach ( $classroom_types as $key => $label ) :
+                        $val = $config[ $key ] ?? '';
+                    ?>
+                        <div class="cqa-classroom-item">
+                            <label for="classroom_<?php echo $key; ?>"><?php echo esc_html( $label ); ?></label>
+                            <input type="number" id="classroom_<?php echo $key; ?>" name="classroom[<?php echo $key; ?>]" value="<?php echo esc_attr( $val ); ?>" class="cqa-input">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
             <div class="cqa-form-group">
@@ -140,6 +168,21 @@ $title = $action === 'edit' ? 'Edit School' : 'Add New School';
     font-size: 13px;
 }
 
+.cqa-classroom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.cqa-classroom-item label {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+}
+
 .cqa-form-actions {
     margin-top: 32px;
     display: flex;
@@ -155,13 +198,20 @@ jQuery(document).ready(function($) {
         const $form = $(this);
         const $btn = $('#save-school-btn');
         const originalText = $btn.text();
+        const classroom = {};
+        $form.find('input[name^="classroom"]').each(function() {
+            const name = $(this).attr('name').match(/\[(.*?)\]/)[1];
+            classroom[name] = $(this).val();
+        });
+
         const formData = {
             name: $('#name').val(),
             region: $('#region').val(),
             location: $('#location').val(),
             status: $('#status').val(),
             acquired_date: $('#acquired_date').val(),
-            drive_folder_id: $('#drive_folder_id').val()
+            drive_folder_id: $('#drive_folder_id').val(),
+            classroom_config: classroom
         };
 
         const action = $form.find('input[name="action"]').val();
@@ -177,6 +227,9 @@ jQuery(document).ready(function($) {
             url += '/' + id;
         }
 
+        console.log('CQA Debug: Submitting to', url, 'method', method);
+        console.log('CQA Debug: Data:', formData);
+
         $.ajax({
             url: url,
             method: method,
@@ -185,11 +238,15 @@ jQuery(document).ready(function($) {
             },
             data: formData
         }).done(function(response) {
+            console.log('CQA Debug: Save Success', response);
             alert('School saved successfully!');
             window.location.href = cqaFrontend.homeUrl + 'schools/';
         }).fail(function(xhr) {
+            console.error('CQA Debug: Save Failed', xhr);
             const error = xhr.responseJSON?.message || 'Failed to save school.';
-            alert('Error: ' + error);
+            const status = xhr.status;
+            const statusText = xhr.statusText;
+            alert('Error (' + status + ' ' + statusText + '): ' + error + '\n\nPlease check the browser console for details.');
         }).always(function() {
             $btn.prop('disabled', false).text(originalText);
         });

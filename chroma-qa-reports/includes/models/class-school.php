@@ -258,16 +258,25 @@ class School {
 
         if ( $this->id ) {
             // Update existing
+            error_log( 'CQA Error Log: Updating school ID ' . $this->id );
             $result = $wpdb->update( $table, $data, [ 'id' => $this->id ], $format, [ '%d' ] );
+            if ( $result === false ) {
+                error_log( 'CQA Error Log: DB UPDATE FAILED: ' . $wpdb->last_error );
+            }
             return $result !== false ? $this->id : false;
         } else {
             // Insert new
-            $result = $wpdb->insert( $table, $data, $format );
+            error_log( 'CQA Error Log: Inserting new school: ' . $this->name );
+            $result = $wpdb->insert( $table, $table_data = $data, $format ); // Assignment purely for log
             if ( $result ) {
                 $this->id = $wpdb->insert_id;
+                error_log( 'CQA Error Log: DB INSERT SUCCESS: ID ' . $this->id );
                 return $this->id;
+            } else {
+                error_log( 'CQA Error Log: DB INSERT FAILED: ' . $wpdb->last_error );
+                error_log( 'CQA Error Log: Data attempted: ' . print_r( $data, true ) );
+                return false;
             }
-            return false;
         }
     }
 

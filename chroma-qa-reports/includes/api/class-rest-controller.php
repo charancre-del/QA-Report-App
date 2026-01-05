@@ -245,10 +245,13 @@ class REST_Controller {
         $school->drive_folder_id = \sanitize_text_field( $request->get_param( 'drive_folder_id' ) );
         $school->classroom_config = $request->get_param( 'classroom_config' ) ?: [];
 
+        error_log( 'REST_Controller: create_school - Data: ' . print_r( $request->get_params(), true ) );
+
         $result = $school->save();
 
         if ( ! $result ) {
-            return new WP_Error( 'create_failed', \__( 'Failed to create school.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
+            error_log( 'REST_Controller: create_school - SAVE FAILED' );
+            return new WP_Error( 'create_failed', \__( 'Failed to create school. Check error logs.', 'chroma-qa-reports' ), [ 'status' => 500 ] );
         }
 
         return new WP_REST_Response( $this->prepare_school_response( $school ), 201 );
