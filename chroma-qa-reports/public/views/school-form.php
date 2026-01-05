@@ -191,65 +191,92 @@ $title = $action === 'edit' ? 'Edit School' : 'Add New School';
 </style>
 
 <script>
-jQuery(document).ready(function($) {
-    $('#cqa-school-form').on('submit', function(e) {
-        e.preventDefault();
-        
-        const $form = $(this);
-        const $btn = $('#save-school-btn');
-        const originalText = $btn.text();
-        const classroom = {};
-        $form.find('input[name^="classroom"]').each(function() {
-            const name = $(this).attr('name').match(/\[(.*?)\]/)[1];
-            classroom[name] = $(this).val();
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    // TIMESTAMP: <?php echo time(); ?>
+    console.log('CQA: School Form Loaded (Timestamp: <?php echo time(); ?>)');
 
-        const formData = {
-            name: $('#name').val(),
-            region: $('#region').val(),
-            location: $('#location').val(),
-            status: $('#status').val(),
-            acquired_date: $('#acquired_date').val(),
-            drive_folder_id: $('#drive_folder_id').val(),
-            classroom_config: classroom
-        };
-
-        const action = $form.find('input[name="action"]').val();
-        const id = $form.find('input[name="id"]').val();
-        
-        $btn.prop('disabled', true).text('Saving...');
-
-        let method = 'POST';
-        let url = cqaFrontend.restUrl + 'schools';
-        
-        if (action === 'edit') {
-            method = 'POST'; // WP REST API update allows POST to /schools/{id}
-            url += '/' + id;
+    // Wait for jQuery to be available
+    var waitForJQuery = setInterval(function() {
+        if (window.jQuery) {
+            clearInterval(waitForJQuery);
+            initSchoolForm(window.jQuery);
         }
+    }, 100);
 
-        console.log('CQA Debug: Submitting to', url, 'method', method);
-        console.log('CQA Debug: Data:', formData);
+    // Timeout safety
+    setTimeout(function() {
+        if (!window.jQuery) {
+             console.error('CQA: jQuery failed to load after 5 seconds.');
+             alert('System Error: Required libraries failed to load. Please refresh the page.');
+        }
+    }, 5000);
 
-        $.ajax({
-            url: url,
-            method: method,
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
-            },
-            data: formData
-        }).done(function(response) {
-            console.log('CQA Debug: Save Success', response);
-            alert('School saved successfully!');
-            window.location.href = cqaFrontend.homeUrl + 'schools/';
-        }).fail(function(xhr) {
-            console.error('CQA Debug: Save Failed', xhr);
-            const error = xhr.responseJSON?.message || 'Failed to save school.';
-            const status = xhr.status;
-            const statusText = xhr.statusText;
-            alert('Error (' + status + ' ' + statusText + '): ' + error + '\n\nPlease check the browser console for details.');
-        }).always(function() {
-            $btn.prop('disabled', false).text(originalText);
+    function initSchoolForm($) {
+        console.log('CQA: jQuery Found, initializing form logic.');
+        
+        $('#cqa-school-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            const $form = $(this);
+            const $btn = $('#save-school-btn');
+            const originalText = $btn.text();
+            
+            // Console logging data
+            console.log('CQA: Attempting Submit');
+            
+            const classroom = {};
+            $form.find('input[name^="classroom"]').each(function() {
+                const name = $(this).attr('name').match(/\[(.*?)\]/)[1];
+                classroom[name] = $(this).val();
+            });
+
+            const formData = {
+                name: $('#name').val(),
+                region: $('#region').val(),
+                location: $('#location').val(),
+                status: $('#status').val(),
+                acquired_date: $('#acquired_date').val(),
+                drive_folder_id: $('#drive_folder_id').val(),
+                classroom_config: classroom
+            };
+
+            const action = $form.find('input[name="action"]').val();
+            const id = $form.find('input[name="id"]').val();
+            
+            $btn.prop('disabled', true).text('Saving...');
+
+            let method = 'POST';
+            let url = cqaFrontend.restUrl + 'schools';
+            
+            if (action === 'edit') {
+                method = 'POST'; // WP REST API update allows POST to /schools/{id}
+                url += '/' + id;
+            }
+
+            console.log('CQA Debug: Submitting to', url, 'method', method);
+            console.log('CQA Debug: Data:', formData);
+
+            $.ajax({
+                url: url,
+                method: method,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                },
+                data: formData
+            }).done(function(response) {
+                console.log('CQA Debug: Save Success', response);
+                alert('School saved successfully!');
+                window.location.href = cqaFrontend.homeUrl + 'schools/';
+            }).fail(function(xhr) {
+                console.error('CQA Debug: Save Failed', xhr);
+                const error = xhr.responseJSON?.message || 'Failed to save school.';
+                const status = xhr.status;
+                const statusText = xhr.statusText;
+                alert('Error (' + status + ' ' + statusText + '): ' + error + '\n\nPlease check the browser console for details.');
+            }).always(function() {
+                $btn.prop('disabled', false).text(originalText);
+            });
         });
-    });
+    }
 });
 </script>
