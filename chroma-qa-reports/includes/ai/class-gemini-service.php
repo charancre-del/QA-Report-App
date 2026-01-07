@@ -10,12 +10,12 @@ namespace ChromaQA\AI;
 /**
  * Client for Google Gemini API.
  */
-class Gemini_Client {
+class Gemini_Service {
 
     /**
      * API endpoint.
      */
-    const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
+    const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
     /**
      * Get the API key.
@@ -137,7 +137,7 @@ class Gemini_Client {
             error_log( 'CQA Gemini JSON Error: ' . json_last_error_msg() );
             // Log a snippet for safety
             error_log( 'CQA Gemini Failed Text: ' . substr( $text, 0, 500 ) . '...' ); 
-            return new \WP_Error( 'json_parse_error', __( 'Failed to parse JSON response. Check error logs.', 'chroma-qa-reports' ) );
+            return new \WP_Error( 'json_parse_error', '[DEBUG-NEW-SERVICE] JSON Error: ' . json_last_error_msg() . ' | Content: ' . substr( $text, 0, 200 ) );
         }
 
         return $data;
@@ -174,5 +174,4 @@ class Gemini_Client {
 
         return self::generate_json( $prompt, [ 'maxTokens' => 4000 ] );
     }
-} 
-
+}

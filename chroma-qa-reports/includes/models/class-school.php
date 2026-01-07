@@ -407,4 +407,17 @@ class School {
         
         return $stats;
     }
+    public function get_last_visit_display() {
+        if ( ! empty( $this->last_inspection_date ) ) {
+             return date_i18n( get_option( 'date_format' ), strtotime( $this->last_inspection_date ) );
+        }
+
+        // Try to fetch if not populated
+        $recent = $this->get_recent_reports( 1 );
+        if ( ! empty( $recent ) ) {
+            return date_i18n( get_option( 'date_format' ), strtotime( $recent[0]->inspection_date ) );
+        }
+
+        return __( 'Never', 'chroma-qa-reports' );
+    }
 }

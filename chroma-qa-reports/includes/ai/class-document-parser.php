@@ -35,7 +35,7 @@ class Document_Parser {
         }
 
         // Use AI to parse the text if configured
-        if ( Gemini_Client::is_configured() ) {
+        if ( Gemini_Service::is_configured() ) {
             return $this->parse_with_ai( $text );
         }
 
@@ -138,7 +138,7 @@ class Document_Parser {
         $prompt .= "- posted_notices, first_aid_kit, building_maintenance, lobby_office_staff\n";
         $prompt .= "For Tier 2: physical_environment, relationships_interactions, curriculum_teaching, etc.\n";
 
-        return Gemini_Client::generate_json( $prompt, [
+        return Gemini_Service::generate_json( $prompt, [
             'temperature' => 0.2,
             'maxTokens'   => 4000,
         ] );

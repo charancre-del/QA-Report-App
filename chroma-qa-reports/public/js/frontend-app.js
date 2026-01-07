@@ -13,7 +13,7 @@
 
     // Wait for jQuery to be available (handles deferred loading)
     function initApp($) {
-        console.log('CQA: Frontend App Loading... jQuery v' + $.fn.jquery);
+        // console.log('CQA: Frontend App Loading... jQuery v' + $.fn.jquery);
 
         if (typeof cqaFrontend === 'undefined') {
             console.error('CQA Error: cqaFrontend config object is missing.');
@@ -38,6 +38,9 @@
                     this.initPhotoUpload();
                     this.initRatings();
 
+                    // Initialize photo queue
+                    this.photoQueue = [];
+
                     // Do not start autosave immediately on checking, only if editing existing
                     if (this.$wizard.data('report-id')) {
                         this.initAutosave();
@@ -55,6 +58,50 @@
                 $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
                 // Approve Report
                 $(document).on('click', '#cqa-approve-report-btn', this.handleApprove.bind(this));
+                // Regenerate AI
+                $(document).on('click', '#cqa-regenerate-ai-btn', this.handleRegenerateAI.bind(this));
+            },
+
+            showToast: function (type, title, message) {
+                let icon = 'info';
+                if (type === 'success') icon = 'yes';
+                if (type === 'error') icon = 'warning';
+
+                const html = `
+                    <div class="cqa-toast ${type}">
+                        <div class="cqa-toast-icon">
+                            <span class="dashicons dashicons-${icon}"></span>
+                        </div>
+                        <div class="cqa-toast-content">
+                            <div class="cqa-toast-title">${title}</div>
+                            <div class="cqa-toast-message">${message}</div>
+                        </div>
+                        <button class="cqa-toast-close">&times;</button>
+                    </div>
+                `;
+
+                let $container = $('.cqa-toast-container');
+                if (!$container.length) {
+                    $container = $('<div class="cqa-toast-container"></div>').appendTo('body');
+                }
+
+                const $toast = $(html).appendTo($container);
+
+                // Trigger reflow
+                $toast[0].offsetHeight;
+
+                $toast.addClass('show');
+
+                // Auto hide
+                setTimeout(() => {
+                    $toast.removeClass('show');
+                    setTimeout(() => $toast.remove(), 300);
+                }, 5000);
+
+                $toast.find('.cqa-toast-close').on('click', function () {
+                    $toast.removeClass('show');
+                    setTimeout(() => $toast.remove(), 300);
+                });
             },
 
             // Public method for inline calls (Failsafe)
@@ -155,6 +202,21 @@
 
                 // Google Drive delegation
                 $(document).on('click', '#cqa-drive-picker-btn', this.handleDriveClick.bind(this));
+
+                // Photo Upload Buttons
+                $('#select-photos-btn').on('click', (e) => {
+                    e.preventDefault();
+                    $('#cqa-photo-input').click();
+                });
+
+                $('#camera-capture-btn').on('click', (e) => {
+                    e.preventDefault();
+                    $('#cqa-camera-input').click();
+                });
+
+                // File Input Changes
+                $('#cqa-photo-input').on('change', this.handlePhotoSelect.bind(this));
+                $('#cqa-camera-input').on('change', this.handlePhotoSelect.bind(this));
             },
 
 
@@ -221,9 +283,9 @@
 
                         // Populate
                         this.populateWizard(data);
-                        alert('Report duplicated! Date has been reset to today.');
+                        this.showToast('success', 'Report Duplicated', 'Date has been reset to today. Please review all fields.');
                     }).fail((xhr) => {
-                        alert('Failed to load report for duplication.');
+                        this.showToast('error', 'Error', 'Failed to load report for duplication.');
                     });
                 }
             },
@@ -239,7 +301,7 @@
                             setTimeout(() => {
                                 this.populateWizard(parsed);
                                 sessionStorage.removeItem('cqa_imported_data');
-                                alert('Report data imported successfully! Please review all fields.');
+                                this.showToast('success', 'Import Successful', 'Report data imported successfully! Please review all fields.');
                             }, 500);
                         } catch (e) {
                             console.error('Import error', e);
@@ -377,7 +439,7 @@
                 });
 
                 if (!isValid) {
-                    alert('Please fill in all required fields.'); // Better UI later
+                    this.showToast('error', 'Incomplete Fields', 'Please fill in all required fields marked in red.');
                 }
 
                 return isValid;
@@ -899,9 +961,9 @@
                     $card.fadeOut(function () { $(this).remove(); });
                 }).fail(function (xhr) {
                     console.error('CQA: Delete failed', xhr);
-                    alert('Failed to delete report. Check console for details.');
+                    this.showToast('error', 'Delete Failed', 'Failed to delete report. Check console for details.');
                     $btn.prop('disabled', false).text('🗑️');
-                });
+                }.bind(this));
             },
 
             // New: Handle Approve
@@ -926,16 +988,16 @@
                         status: 'approved'
                     }
                 }).done(function () {
-                    alert('Report approved successfully! 🎉');
+                    this.showToast('success', 'Report Approved', 'Report approved successfully! 🎉');
                     window.location.reload();
-                }).fail(function (xhr) {
+                }.bind(this)).fail(function (xhr) {
                     let msg = 'Failed to approve report.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         msg = 'Error: ' + xhr.responseJSON.message;
                     }
-                    alert(msg);
+                    this.showToast('error', 'Approval Error', msg);
                     $btn.prop('disabled', false).text('✅ Approve Report');
-                });
+                }.bind(this));
             },
 
             generateAISummary: function (e) {
@@ -946,7 +1008,7 @@
                 const reportId = this.$wizard.data('report-id');
 
                 if (!reportId) {
-                    alert('Please save the report as a draft first before generating AI summary.');
+                    this.showToast('warning', 'Save Required', 'Please save the report as a draft first before generating AI summary.');
                     return;
                 }
 
@@ -963,7 +1025,7 @@
                     $btn.prop('disabled', false).html(originalText + ' ✓');
                 }).fail(function (xhr) {
                     const error = xhr.responseJSON?.message || 'Failed to generate summary. Please try again.';
-                    alert('Error: ' + error);
+                    self.showToast('error', 'Generation Failed', 'Error: ' + error);
                     $btn.prop('disabled', false).html(originalText);
                 });
             },
@@ -1093,25 +1155,27 @@
 
                     // Step 2: Save Responses
                     self.saveResponses(newReportId).done(function () {
-                        if (status === 'draft') {
-                            // Just notify success
-                            // Show success toast
-                            const $toast = $('<div class="cqa-toast">Draft Saved</div>');
-                            $('body').append($toast);
-                            setTimeout(() => $toast.fadeOut(() => $toast.remove()), 3000);
-                            deferred.resolve();
-                        } else {
-                            // Redirect
-                            window.location.href = cqaFrontend.homeUrl;
-                            deferred.resolve();
-                        }
+                        // Step 3: Upload Photos
+                        self.uploadPhotos(newReportId).always(function () {
+                            if (status === 'draft') {
+                                // Just notify success
+                                const $toast = $('<div class="cqa-toast">Draft Saved</div>');
+                                $('body').append($toast);
+                                setTimeout(() => $toast.fadeOut(() => $toast.remove()), 3000);
+                                deferred.resolve();
+                            } else {
+                                // Redirect
+                                window.location.href = cqaFrontend.homeUrl;
+                                deferred.resolve();
+                            }
+                        });
                     }).fail(function () {
-                        alert('Report saved, but responses failed to save.');
-                        this.refreshProgress();
+                        self.showToast('error', 'Save Partial', 'Report saved, but responses failed to save.');
+                        self.refreshProgress();
 
                         // Apply imported responses if any
-                        if (this.importedResponses) {
-                            $.each(this.importedResponses, (sectionKey, items) => {
+                        if (self.importedResponses) {
+                            $.each(self.importedResponses, (sectionKey, items) => {
                                 $.each(items, (itemKey, response) => {
                                     // Rating
                                     if (response.rating) {
@@ -1135,8 +1199,8 @@
                                     }
                                 });
                             });
-                            this.importedResponses = null; // Clear
-                            this.refreshProgress();
+                            self.importedResponses = null; // Clear
+                            self.refreshProgress();
                         }
                         deferred.reject();
                     });
@@ -1146,7 +1210,7 @@
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         msg = xhr.responseJSON.message;
                     }
-                    alert(msg);
+                    self.showToast('error', 'Submission Failed', msg);
                     self.$submitBtn.prop('disabled', false).text('Submit Report');
                     deferred.reject();
                 });
@@ -1190,6 +1254,43 @@
                 });
             },
 
+            uploadPhotos: function (reportId) {
+                const deferred = $.Deferred();
+                const self = this;
+
+                if (this.photoQueue.length === 0) {
+                    return deferred.resolve().promise();
+                }
+
+                // Show Toast
+                this.showToast('info', 'Uploading Photos', `Uploading ${this.photoQueue.length} photos...`);
+
+                const formData = new FormData();
+                this.photoQueue.forEach((file, index) => {
+                    formData.append('file_' + index, file);
+                });
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/photos',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function () {
+                    self.showToast('success', 'Upload Complete', 'Photos uploaded successfully.');
+                    self.photoQueue = []; // Clear queue
+                    deferred.resolve();
+                }).fail(function (xhr) {
+                    self.showToast('error', 'Upload Failed', 'Some photos may not have uploaded.');
+                    deferred.reject();
+                });
+
+                return deferred.promise();
+            },
+
             serializeFormJSON: function ($form) {
                 const o = {};
                 const a = $form.serializeArray();
@@ -1229,23 +1330,45 @@
                 }, 60000);
             },
 
+            handlePhotoSelect: function (e) {
+                const files = e.target.files;
+                if (!files || files.length === 0) return;
+
+                const $gallery = $('#message-photo-gallery, #photo-gallery'); // Fallback
+
+                Array.from(files).forEach(file => {
+                    this.photoQueue.push(file);
+
+                    // Create object URL for preview
+                    const url = URL.createObjectURL(file);
+
+                    const html = `
+                        <div class="cqa-photo-thumb local-file">
+                            <img src="${url}" alt="${file.name}" style="object-fit: contain; padding: 10px;">
+                            <div class="photo-caption">${file.name}</div>
+                            <button type="button" class="remove-photo" onclick="$(this).parent().remove()">×</button>
+                        </div>
+                    `;
+
+                    // Simple append
+                    if ($gallery.length) {
+                        $gallery.append(html);
+                    } else {
+                        $('.cqa-photo-gallery').append(html);
+                    }
+                });
+            },
+
             // --- Google Drive Picker ---
 
             loadGooglePicker: function () {
-                $.getScript('https://apis.google.com/js/api.js', function () {
-                    gapi.load('picker', {
-                        'callback': function () {
-                            // Picker API loaded
-                            // We also need client library for auth if we need to get a token?
-                            // Actually, for Picker we need an OAuth token.
-                            // We can use gapi.client to get it.
-                        }
-                    });
-
-                    gapi.load('client', function () {
-                        gapi.client.init({
-                            'clientId': cqaFrontend.googleClientId,
-                            'scope': 'https://www.googleapis.com/auth/drive.file'
+                // Load both GIS and GAPI
+                $.getScript('https://accounts.google.com/gsi/client', function () {
+                    $.getScript('https://apis.google.com/js/api.js', function () {
+                        gapi.load('picker', {
+                            'callback': function () {
+                                console.log('CQA: Picker API loaded');
+                            }
                         });
                     });
                 });
@@ -1254,21 +1377,23 @@
             handleDriveClick: function (e) {
                 e.preventDefault();
 
-                // Check if we have an access token
-                const token = gapi.client.getToken();
-                if (token) {
-                    this.createPicker(token.access_token);
-                } else {
-                    // Request auth
-                    gapi.auth2.getAuthInstance().signIn().then(function () {
-                        const newToken = gapi.client.getToken();
-                        CQA.createPicker(newToken.access_token);
-                    });
-                }
+                // Modern GIS Client
+                const client = google.accounts.oauth2.initTokenClient({
+                    client_id: cqaFrontend.googleClientId,
+                    scope: 'https://www.googleapis.com/auth/drive.file',
+                    callback: (response) => {
+                        if (response.access_token) {
+                            this.createPicker(response.access_token);
+                        }
+                    },
+                });
+
+                // Request token
+                client.requestAccessToken();
             },
 
             createPicker: function (oauthToken) {
-                if (this.pickerApiLoaded && oauthToken) {
+                if (oauthToken) {
                     const picker = new google.picker.PickerBuilder()
                         .addView(google.picker.ViewId.DOCS)
                         .addView(google.picker.ViewId.PHOTOS)
@@ -1298,6 +1423,75 @@
                 `;
                     $('#cqa-photo-gallery').append(html);
                 }
+            },
+
+            handleOverallRating: function (e) {
+                const $btn = $(e.currentTarget);
+                const rating = $btn.data('rating');
+
+                // Visual update
+                $('.cqa-rating-btn').removeClass('selected');
+                $btn.addClass('selected');
+
+                // Input update
+                $('#cqa-overall-rating').val(rating);
+            },
+
+            handleApprove: function (e) {
+                e.preventDefault();
+                if (!confirm('Are you sure you want to approve this report? This will finalize it.')) {
+                    return;
+                }
+
+                const $btn = $(e.currentTarget);
+                const reportId = $btn.data('id');
+                const originalText = $btn.text();
+
+                $btn.prop('disabled', true).text('Approving...');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId,
+                    method: 'POST',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    },
+                    data: {
+                        status: 'approved'
+                    }
+                }).done(function (response) {
+                    this.showToast('success', 'Report Approved', 'Report approved successfully!');
+                    window.location.reload();
+                }.bind(this)).fail(function (xhr) {
+                    this.showToast('error', 'Approval Failed', 'Failed to approve report: ' + (xhr.responseJSON ? xhr.responseJSON.message : xhr.statusText));
+                    $btn.prop('disabled', false).text(originalText);
+                }.bind(this));
+            },
+
+            handleRegenerateAI: function (e) {
+                e.preventDefault();
+                if (!confirm('Are you sure you want to regenerate the AI Summary? This will overwrite the existing summary.')) {
+                    return;
+                }
+
+                const $btn = $(e.currentTarget);
+                const reportId = $btn.data('id');
+                const originalText = $btn.text();
+
+                $btn.prop('disabled', true).text('Generating...');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId + '/generate-summary',
+                    method: 'POST',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function (response) {
+                    this.showToast('success', 'AI Generated', 'AI Summary regenerated successfully!');
+                    window.location.reload();
+                }.bind(this)).fail(function (xhr) {
+                    this.showToast('error', 'Generation Failed', 'Failed to regenerate summary: ' + (xhr.responseJSON ? xhr.responseJSON.message : xhr.statusText));
+                    $btn.prop('disabled', false).text(originalText);
+                }.bind(this));
             }
         };
 

@@ -131,13 +131,7 @@ $regions = School::get_regions();
                                     </span>
                                 </td>
                                 <td>
-                                    <?php if ( $last_report ) : ?>
-                                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-view&id=' . $last_report->id ) ); ?>">
-                                            <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $last_report->inspection_date ) ) ); ?>
-                                        </a>
-                                    <?php else : ?>
-                                        <span class="cqa-text-muted"><?php esc_html_e( 'No reports', 'chroma-qa-reports' ); ?></span>
-                                    <?php endif; ?>
+                                    <?php echo esc_html( $school->get_last_visit_display() ); ?>
                                 </td>
                                 <td>
                                     <div class="cqa-row-actions">

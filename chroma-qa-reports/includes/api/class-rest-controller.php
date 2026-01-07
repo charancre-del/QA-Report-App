@@ -14,7 +14,7 @@ use ChromaQA\Models\Photo;
 use ChromaQA\Integrations\Google_Drive;
 use ChromaQA\Checklists\Checklist_Manager;
 use ChromaQA\Utils\Docx_Parser;
-use ChromaQA\AI\Gemini_Client;
+use ChromaQA\AI\Gemini_Service;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -132,6 +132,13 @@ class REST_Controller {
             'methods'             => 'POST',
             'callback'            => [ $this, 'upload_report_doc' ],
             'permission_callback' => [ $this, 'check_create_reports_permission' ],
+        ] );
+
+        // Upload Report Photos (New)
+        \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/photos', [
+            'methods'             => 'POST',
+            'callback'            => [ $this, 'upload_report_photos' ],
+            'permission_callback' => [ $this, 'check_edit_reports_permission' ],
         ] );
 
         \register_rest_route( self::NAMESPACE, '/ai/parse-document', [
@@ -596,6 +603,91 @@ class REST_Controller {
     }
 
 
+
+    // ===== PHOTO ENDPOINTS =====
+
+    public function upload_report_photos( WP_REST_Request $request ) {
+        $report_id = $request['id'];
+        $files = $request->get_file_params();
+        
+        if ( empty( $files['photos'] ) ) {
+            return new WP_Error( 'no_photos', __( 'No photos provided.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+        }
+
+        $report = Report::find( $report_id );
+        if ( ! $report ) {
+            return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
+        }
+
+        // Check permissions
+        if ( ! \current_user_can( 'cqa_edit_reports' ) ) {
+             return new WP_Error( 'forbidden', __( 'Permission denied.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+        }
+
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+
+        $uploaded_photos = [];
+        $photos = $files['photos'];
+
+        // Normalize if single file
+        if ( ! is_array( $photos['name'] ) ) {
+            $photos = [ $photos ];
+        } else {
+            // Re-structure $_FILES array if needed (WP REST usually gives structured array per file if name="photos[]")
+            // But if it comes as standard $_FILES format with arrays of names, we need to iterate.
+            // Let's assume standard PHP $_FILES normalization:
+            $normalized = [];
+            foreach( $photos['name'] as $key => $value ) {
+                $normalized[] = [
+                    'name'     => $photos['name'][$key],
+                    'type'     => $photos['type'][$key],
+                    'tmp_name' => $photos['tmp_name'][$key],
+                    'error'    => $photos['error'][$key],
+                    'size'     => $photos['size'][$key],
+                ];
+            }
+            $photos = $normalized;
+        }
+
+        foreach ( $photos as $file ) {
+            // Upload to WP Media Library
+            $upload_overrides = [ 'test_form' => false ];
+            $movefile = wp_handle_upload( $file, $upload_overrides );
+
+            if ( $movefile && ! isset( $movefile['error'] ) ) {
+                // Create attachment
+                $attachment = [
+                    'guid'           => $movefile['url'], 
+                    'post_mime_type' => $movefile['type'],
+                    'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file['name'] ) ),
+                    'post_content'   => '',
+                    'post_status'    => 'inherit'
+                ];
+
+                $attach_id = wp_insert_attachment( $attachment, $movefile['file'] );
+                
+                if ( ! is_wp_error( $attach_id ) ) {
+                    $attach_data = wp_generate_attachment_metadata( $attach_id, $movefile['file'] );
+                    wp_update_attachment_metadata( $attach_id, $attach_data );
+
+                    // Create Photo Record
+                    $photo = new \ChromaQA\Models\Photo();
+                    $photo->report_id = $report_id;
+                    $photo->section_key = $request['section_key'] ?: 'general'; // Default to general
+                    $photo->drive_file_id = 'wp_' . $attach_id; // Prefix to distinguish from Drive ID
+                    $photo->filename = basename( $movefile['file'] );
+                    $photo->caption = sanitize_text_field( $request['caption'] ?: '' );
+                    $photo->save();
+
+                    $uploaded_photos[] = $photo;
+                }
+            }
+        }
+
+        return new WP_REST_Response( [ 'success' => true, 'photos' => $uploaded_photos ], 200 );
+    }
 
     // ===== SETTINGS ENDPOINTS =====
 

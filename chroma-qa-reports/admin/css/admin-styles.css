@@ -725,8 +725,101 @@
 }
 
 /* ===================================
-   Checklist Items
+   Toast Notifications
    =================================== */
+.cqa-toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cqa-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: var(--cqa-radius);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid var(--cqa-primary);
+}
+
+.cqa-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.cqa-toast.success {
+    border-left-color: var(--cqa-success);
+}
+
+.cqa-toast.error {
+    border-left-color: var(--cqa-danger);
+}
+
+.cqa-toast.info {
+    border-left-color: var(--cqa-info);
+}
+
+.cqa-toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.cqa-toast.success .cqa-toast-icon {
+    color: var(--cqa-success);
+}
+
+.cqa-toast.error .cqa-toast-icon {
+    color: var(--cqa-danger);
+}
+
+.cqa-toast.info .cqa-toast-icon {
+    color: var(--cqa-info);
+}
+
+.cqa-toast-content {
+    flex: 1;
+}
+
+.cqa-toast-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--cqa-gray-800);
+    margin-bottom: 2px;
+}
+
+.cqa-toast-message {
+    font-size: 13px;
+    color: var(--cqa-gray-600);
+}
+
+.cqa-toast-close {
+    background: transparent;
+    border: none;
+    color: var(--cqa-gray-400);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.cqa-toast-close:hover {
+    color: var(--cqa-gray-600);
+}
+
 .cqa-checklist-item {
     padding: 16px;
     border-bottom: 1px solid var(--cqa-gray-100);

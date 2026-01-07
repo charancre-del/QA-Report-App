@@ -172,6 +172,25 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
         <a href="<?php echo esc_url( rest_url( 'cqa/v1/reports/' . $report_id . '/pdf?_wpnonce=' . wp_create_nonce( 'wp_rest' ) ) ); ?>" class="cqa-btn cqa-btn-primary" target="_blank">
             📄 Download PDF
         </a>
+
+        <?php if ( current_user_can( 'cqa_edit_reports' ) ) : ?>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-create&id=' . $report_id ) ); ?>" class="cqa-btn">
+                ✏️ Edit
+            </a>
+        <?php endif; ?>
+
+        <?php if ( current_user_can( 'cqa_delete_reports' ) ) : ?>
+            <button type="button" class="cqa-btn cqa-delete-report" data-id="<?php echo esc_attr( $report_id ); ?>" style="color: #ef4444; border-color: #ef4444;">
+                🗑️ Delete
+            </button>
+        <?php endif; ?>
+
+        <?php if ( current_user_can( 'cqa_manage_settings' ) ) : ?>
+             <button type="button" class="cqa-btn" id="cqa-regenerate-ai-btn" data-id="<?php echo esc_attr( $report_id ); ?>">
+                🤖 Regenerate AI
+            </button>
+        <?php endif; ?>
+
         <?php if ( $report->status === 'submitted' && current_user_can('cqa_edit_all_reports') ) : ?>
             <button type="button" class="cqa-btn cqa-btn-success" id="cqa-approve-report-btn" data-id="<?php echo esc_attr($report->id); ?>" style="background-color: #10b981; color: white;">
                 ✅ Approve Report

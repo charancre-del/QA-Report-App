@@ -27,6 +27,10 @@ $pending_reports = Report::all( [ 'status' => 'draft', 'limit' => 5 ] );
             <p class="cqa-subtitle"><?php esc_html_e( 'Quality Assurance Report Management System', 'chroma-qa-reports' ); ?></p>
         </div>
         <div class="cqa-header-actions">
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-import' ) ); ?>" class="button button-secondary button-hero" style="margin-right: 10px;">
+                <span class="dashicons dashicons-upload"></span>
+                <?php esc_html_e( 'Import Word Doc', 'chroma-qa-reports' ); ?>
+            </a>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-create' ) ); ?>" class="button button-primary button-hero">
                 <span class="dashicons dashicons-plus-alt2"></span>
                 <?php esc_html_e( 'Create New Report', 'chroma-qa-reports' ); ?>
@@ -150,6 +154,10 @@ $pending_reports = Report::all( [ 'status' => 'draft', 'limit' => 5 ] );
                     <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-create' ) ); ?>" class="cqa-action-button">
                         <span class="dashicons dashicons-plus-alt2"></span>
                         <span><?php esc_html_e( 'New Report', 'chroma-qa-reports' ); ?></span>
+                    </a>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-import' ) ); ?>" class="cqa-action-button">
+                        <span class="dashicons dashicons-upload"></span>
+                        <span><?php esc_html_e( 'Import Doc', 'chroma-qa-reports' ); ?></span>
                     </a>
                     <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-schools' ) ); ?>" class="cqa-action-button">
                         <span class="dashicons dashicons-building"></span>

@@ -179,12 +179,12 @@ jQuery(document).ready(function($) {
                      }).done(function() {
                          $('.cqa-progress-fill').css('width', '100%');
                          alert('Import Successful!');
-                         window.location.href = 'admin.php?page=chroma-qa-reports-view&cqa_report_id=' + report.id;
+                         window.location.href = 'admin.php?page=chroma-qa-reports-view&id=' + report.id;
                      });
                  } else {
                      $('.cqa-progress-fill').css('width', '100%');
                      alert('Import Successful (No checklist data found)!');
-                     window.location.href = 'admin.php?page=chroma-qa-reports-view&cqa_report_id=' + report.id;
+                     window.location.href = 'admin.php?page=chroma-qa-reports-view&id=' + report.id;
                  }
             });
 

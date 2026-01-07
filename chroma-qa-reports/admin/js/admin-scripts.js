@@ -218,12 +218,13 @@
         },
 
         loadGooglePicker: function () {
-            $.getScript('https://apis.google.com/js/api.js', function () {
-                gapi.load('picker', { 'callback': function () { } });
-                gapi.load('client', function () {
-                    gapi.client.init({
-                        'clientId': cqaAdmin.googleClientId,
-                        'scope': 'https://www.googleapis.com/auth/drive.file'
+            // Load both GIS and GAPI
+            $.getScript('https://accounts.google.com/gsi/client', function () {
+                $.getScript('https://apis.google.com/js/api.js', function () {
+                    gapi.load('picker', {
+                        'callback': function () {
+                            console.log('CQA: Picker API loaded');
+                        }
                     });
                 });
             });
@@ -231,25 +232,32 @@
 
         handleDriveClick: function (e) {
             e.preventDefault();
-            const token = gapi.client.getToken();
-            if (token) {
-                this.createPicker(token.access_token);
-            } else {
-                gapi.auth2.getAuthInstance().signIn().then(() => {
-                    const newToken = gapi.client.getToken();
-                    this.createPicker(newToken.access_token);
-                });
-            }
+
+            // Modern GIS Client
+            const client = google.accounts.oauth2.initTokenClient({
+                client_id: cqaAdmin.googleClientId,
+                scope: 'https://www.googleapis.com/auth/drive.file',
+                callback: (response) => {
+                    if (response.access_token) {
+                        this.createPicker(response.access_token);
+                    }
+                },
+            });
+
+            // Request token
+            client.requestAccessToken();
         },
 
         createPicker: function (oauthToken) {
-            const picker = new google.picker.PickerBuilder()
-                .addView(google.picker.ViewId.FOLDERS)
-                .setOAuthToken(oauthToken)
-                .setDeveloperKey(cqaAdmin.developerKey)
-                .setCallback(this.pickerCallback.bind(this))
-                .build();
-            picker.setVisible(true);
+            if (oauthToken) {
+                const picker = new google.picker.PickerBuilder()
+                    .addView(google.picker.ViewId.FOLDERS)
+                    .setOAuthToken(oauthToken)
+                    .setDeveloperKey(cqaAdmin.developerKey)
+                    .setCallback(this.pickerCallback.bind(this))
+                    .build();
+                picker.setVisible(true);
+            }
         },
 
         pickerCallback: function (data) {
@@ -257,6 +265,9 @@
                 const doc = data[google.picker.Response.DOCUMENTS][0];
                 const folderId = doc[google.picker.Document.ID];
                 this.$driveInput.val(folderId);
+
+                // Trigger change to ensure any listeners pick it up
+                this.$driveInput.trigger('change');
             }
         }
     };

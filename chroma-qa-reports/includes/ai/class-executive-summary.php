@@ -23,7 +23,7 @@ class Executive_Summary {
      * @return array|WP_Error
      */
     public function generate( Report $report ) {
-        if ( ! Gemini_Client::is_configured() ) {
+        if ( ! Gemini_Service::is_configured() ) {
             return new \WP_Error( 'not_configured', __( 'AI features are not configured.', 'chroma-qa-reports' ) );
         }
 
@@ -37,7 +37,7 @@ class Executive_Summary {
         $prompt = $this->build_prompt( $school, $report, $responses, $previous_report, $checklist, $stats );
 
         // Generate summary using Gemini
-        $result = Gemini_Client::generate_json( $prompt, [
+        $result = Gemini_Service::generate_json( $prompt, [
             'temperature' => 0.3,
             'maxTokens'   => 3000,
         ] );
@@ -199,7 +199,7 @@ class Executive_Summary {
         }
 
         // Try AI-powered suggestion
-        if ( Gemini_Client::is_configured() ) {
+        if ( Gemini_Service::is_configured() ) {
             return self::generate_ai_suggestion( $item_label, $rating, $section_key );
         }
 
@@ -275,7 +275,7 @@ class Executive_Summary {
             $rating === 'no' ? 'NOT compliant/No' : 'partially compliant/Sometimes'
         );
 
-        $result = Gemini_Client::generate( $prompt, [ 'temperature' => 0.3, 'maxTokens' => 200 ] );
+        $result = Gemini_Service::generate( $prompt, [ 'temperature' => 0.3, 'maxTokens' => 200 ] );
 
         if ( is_wp_error( $result ) ) {
             return self::get_generic_suggestion( $item_label, $rating );

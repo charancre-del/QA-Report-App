@@ -32,6 +32,10 @@ $schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
             </h1>
         </div>
         <div class="cqa-header-actions">
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-import' ) ); ?>" class="button button-secondary" style="margin-right: 10px;">
+                <span class="dashicons dashicons-upload"></span>
+                <?php esc_html_e( 'Import Doc', 'chroma-qa-reports' ); ?>
+            </a>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-reports' ) ); ?>" class="button">
                 ← <?php esc_html_e( 'Back to Reports', 'chroma-qa-reports' ); ?>
             </a>

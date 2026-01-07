@@ -136,8 +136,7 @@ class Comparative_Insights {
     private static function ai_analyze( $api_key, $data ) {
         $prompt = self::build_prompt( $data );
 
-        $client = new Gemini_Client();
-        $response = $client->generate( $prompt );
+        $response = Gemini_Service::generate( $prompt );
 
         if ( isset( $response['error'] ) ) {
             // Fallback to rule-based
