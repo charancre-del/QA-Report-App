@@ -351,7 +351,7 @@ class School {
             DATEDIFF(NOW(), MAX(r.inspection_date)) as days_since_last_report,
             MAX(r.inspection_date) as last_inspection_date
             FROM {$schools_table} s
-            LEFT JOIN {$reports_table} r ON s.id = r.school_id AND r.status = 'approved'
+            LEFT JOIN {$reports_table} r ON s.id = r.school_id AND r.status IN ('approved', 'submitted')
             WHERE s.status = 'active'
             GROUP BY s.id
             HAVING days_since_last_report > %d OR days_since_last_report IS NULL
@@ -386,10 +386,10 @@ class School {
             INNER JOIN (
                 SELECT school_id, MAX(inspection_date) as latest_date
                 FROM {$reports_table}
-                WHERE status = 'approved'
+                WHERE status IN ('approved', 'submitted')
                 GROUP BY school_id
             ) latest ON r.school_id = latest.school_id AND r.inspection_date = latest.latest_date
-            WHERE r.status = 'approved' AND r.overall_rating != 'pending'
+            WHERE r.status IN ('approved', 'submitted') AND r.overall_rating != 'pending'
             GROUP BY r.overall_rating
         ";
         
