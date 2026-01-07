@@ -412,7 +412,7 @@
 
             loadSavedResponses: function (reportId) {
                 const self = this;
-                console.log('CQA: Loading saved responses for report', reportId);
+                // console.log('CQA: Loading saved responses for report', reportId);
 
                 $.ajax({
                     url: cqaFrontend.restUrl + 'reports/' + reportId + '/responses',
@@ -421,7 +421,7 @@
                         xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
                     }
                 }).done(function (responses) {
-                    console.log('CQA: Saved responses loaded', responses);
+                    // console.log('CQA: Saved responses loaded', responses);
 
                     // Iterate and fill responses
                     $.each(responses, function (sectionKey, items) {
@@ -835,10 +835,10 @@
 
             handleDelete: function (e) {
                 e.preventDefault();
-                console.log('CQA: Delete button clicked');
+                // console.log('CQA: Delete button clicked');
 
                 if (!confirm('Are you sure you want to delete this report? This cannot be undone.')) {
-                    console.log('CQA: Delete cancelled by user');
+                    // console.log('CQA: Delete cancelled by user');
                     return;
                 }
 
@@ -846,7 +846,7 @@
                 const id = $btn.data('id');
                 const $card = $btn.closest('.cqa-report-card'); // Use $card naming convention
 
-                console.log('CQA: Deleting report ID:', id);
+                // console.log('CQA: Deleting report ID:', id);
 
                 $btn.prop('disabled', true).text('🗑️...');
 
@@ -857,7 +857,7 @@
                         xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
                     }
                 }).done(function () {
-                    console.log('CQA: Delete success');
+                    // console.log('CQA: Delete success');
                     $card.fadeOut(function () { $(this).remove(); });
                 }).fail(function (xhr) {
                     console.error('CQA: Delete failed', xhr);
@@ -978,7 +978,7 @@
                     formData.school_id = schoolIdVal;
                 }
 
-                console.log('Submitting Report Payload:', formData); // DEBUG for User
+                // console.log('Submitting Report Payload:', formData); // DEBUG for User
 
                 // Specifically format checklist responses
                 // The form has inputs like: name="responses[section][item][rating]"
