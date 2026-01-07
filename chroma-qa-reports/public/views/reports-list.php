@@ -148,10 +148,13 @@ $schools = School::all();
                                 <td>
                                     <div class="cqa-table-actions">
                                         <a href="<?php echo home_url( '/qa-reports/report/' . $report->id . '/' ); ?>" class="cqa-btn-icon" title="View">👁️</a>
-                                        <?php if ( $report->status === 'draft' && ( current_user_can( 'cqa_edit_all_reports' ) || $report->user_id === get_current_user_id() ) ) : ?>
+                                        <?php if ( current_user_can( 'cqa_edit_all_reports' ) || $report->user_id === get_current_user_id() ) : ?>
                                             <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn-icon" title="Edit">✏️</a>
                                         <?php endif; ?>
                                         <a href="<?php echo home_url( '/qa-reports/new/?action=duplicate&id=' . $report->id ); ?>" class="cqa-btn-icon" title="Duplicate">📋</a>
+                                        <?php if ( current_user_can( 'cqa_delete_reports' ) || $report->user_id === get_current_user_id() ) : ?>
+                                            <button type="button" class="cqa-btn-icon cqa-delete-report" style="background:none;border:none;cursor:pointer;" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="if(window.CQA) CQA.deleteReport(<?php echo esc_attr( $report->id ); ?>)" title="Delete">🗑️</button>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
