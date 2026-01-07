@@ -117,13 +117,21 @@ class Gemini_Client {
 
         // Clean the response - remove markdown if present
         $text = trim( $text );
-        $text = preg_replace( '/^```json\s*/i', '', $text );
-        $text = preg_replace( '/\s*```$/', '', $text );
+        
+        // Try to find JSON start and end
+        $start = strpos( $text, '{' );
+        $end = strrpos( $text, '}' );
+        
+        if ( $start !== false && $end !== false && $end > $start ) {
+            $text = substr( $text, $start, $end - $start + 1 );
+        }
 
         $data = json_decode( $text, true );
 
         if ( json_last_error() !== JSON_ERROR_NONE ) {
-            return new \WP_Error( 'json_parse_error', __( 'Failed to parse JSON response.', 'chroma-qa-reports' ) );
+            error_log( 'CQA Gemini JSON Error: ' . json_last_error_msg() );
+            error_log( 'CQA Gemini Raw Response: ' . $response['text'] ?? ($response ?: 'Empty') );
+            return new \WP_Error( 'json_parse_error', __( 'Failed to parse JSON response. Check error logs.', 'chroma-qa-reports' ) );
         }
 
         return $data;
