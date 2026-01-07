@@ -89,7 +89,7 @@ class Plugin {
         require_once CQA_PLUGIN_DIR . 'includes/integrations/class-google-drive.php';
 
         // AI
-        require_once CQA_PLUGIN_DIR . 'includes/ai/class-gemini-client.php';
+        require_once CQA_PLUGIN_DIR . 'includes/ai/class-gemini-service.php';
         require_once CQA_PLUGIN_DIR . 'includes/ai/class-document-parser.php';
         require_once CQA_PLUGIN_DIR . 'includes/ai/class-executive-summary.php';
 
