@@ -104,7 +104,7 @@ class Gemini_Client {
      */
     public static function generate_json( $prompt, $options = [] ) {
         // Add JSON instruction to prompt
-        $json_prompt = $prompt . "\n\nRespond ONLY with valid JSON. Do not include any other text or markdown formatting.";
+        $json_prompt = $prompt . "\n\nRespond ONLY with valid JSON. Do not include any other text or markdown formatting. Ensure all strings are properly escaped.";
         
         $response = self::generate( $json_prompt, $options );
 
@@ -114,11 +114,14 @@ class Gemini_Client {
 
         // Extract text from array response
         $text = is_array( $response ) ? ( $response['text'] ?? '' ) : $response;
-
-        // Clean the response - remove markdown if present
         $text = trim( $text );
-        
-        // Try to find JSON start and end
+
+        // 1. Strip Markdown Code Blocks explicitly
+        $text = preg_replace( '/^```json\s*/i', '', $text );
+        $text = preg_replace( '/^```\s*/', '', $text );
+        $text = preg_replace( '/\s*```$/', '', $text );
+
+        // 2. Locate JSON object (find first { and last })
         $start = strpos( $text, '{' );
         $end = strrpos( $text, '}' );
         
@@ -126,11 +129,20 @@ class Gemini_Client {
             $text = substr( $text, $start, $end - $start + 1 );
         }
 
+        // 3. Attempt Decode
         $data = json_decode( $text, true );
+
+        // 4. Fallback: Try cleaning control characters if decode failed
+        if ( json_last_error() !== JSON_ERROR_NONE ) {
+            // Remove potential invisible control characters
+            $text_clean = preg_replace( '/[\x00-\x1F\x7F]/', '', $text );
+            $data = json_decode( $text_clean, true );
+        }
 
         if ( json_last_error() !== JSON_ERROR_NONE ) {
             error_log( 'CQA Gemini JSON Error: ' . json_last_error_msg() );
-            error_log( 'CQA Gemini Raw Response: ' . $response['text'] ?? ($response ?: 'Empty') );
+            // Log a snippet for safety
+            error_log( 'CQA Gemini Failed Text: ' . substr( $text, 0, 500 ) . '...' ); 
             return new \WP_Error( 'json_parse_error', __( 'Failed to parse JSON response. Check error logs.', 'chroma-qa-reports' ) );
         }
 
