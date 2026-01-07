@@ -1226,8 +1226,16 @@
                 const responses = {};
 
                 this.$form.find('input[name^="responses"], textarea[name^="responses"]').each(function () {
-                    const name = $(this).attr('name');
-                    const val = $(this).val();
+                    const $input = $(this);
+                    const name = $input.attr('name');
+                    const val = $input.val();
+
+                    // For radio buttons, only process if checked
+                    // Note: Checklist items use buttons + hidden input, not radio types.
+                    // This check is for standard radios if any.
+                    if ($input.attr('type') === 'radio' && !$input.is(':checked')) {
+                        return;
+                    }
 
                     // Regex to extract keys: responses[section][item][field]
                     const match = name.match(/responses\[(.*?)\]\[(.*?)\]\[(.*?)\]/);
@@ -1435,6 +1443,28 @@
 
                 // Input update
                 $('#cqa-overall-rating').val(rating);
+            },
+
+            handleItemRating: function (e) {
+                const $btn = $(e.currentTarget);
+                const value = $btn.data('value');
+                const $container = $btn.closest('.cqa-checklist-item');
+                // The hidden input is a sibling or child of .cqa-item-ratings
+                const $hiddenInput = $container.find('input[type="hidden"]');
+
+                // Visual update
+                $btn.addClass('selected').siblings().removeClass('selected');
+
+                // Update hidden input
+                if ($hiddenInput.length) {
+                    $hiddenInput.val(value);
+                    // console.log('Updated input', $hiddenInput.attr('name'), 'to', value);
+                } else {
+                    console.error('CQA: Hidden input not found for rating');
+                }
+
+                // Mark valid
+                $container.attr('data-validation', 'valid');
             },
 
             handleApprove: function (e) {

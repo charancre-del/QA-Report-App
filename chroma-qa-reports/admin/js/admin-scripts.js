@@ -223,7 +223,7 @@
                 $.getScript('https://apis.google.com/js/api.js', function () {
                     gapi.load('picker', {
                         'callback': function () {
-                            console.log('CQA: Picker API loaded');
+                            // Picker API loaded
                         }
                     });
                 });

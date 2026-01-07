@@ -1112,7 +1112,7 @@ class REST_Controller {
         }
 
         // 3. Parse with AI
-        $parsed_data = Gemini_Client::parse_document( $text );
+        $parsed_data = Gemini_Service::parse_document( $text );
 
         // Cleanup temp file
         @unlink( $file_path );
