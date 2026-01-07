@@ -118,12 +118,59 @@ $schools = School::all();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ( $reports as $report ) : 
-                            $school = $report->get_school();
+                        <?php 
+                        // Map schools for efficient lookup
+                        $school_map = [];
+                        foreach ( $schools as $s ) {
+                            $school_map[ $s->id ] = $s;
+                        }
+
+                        // Attach school data and Sort
+                        // Sort by Region DESC (so meaningful regions come first), then School Name ASC, then Report Date DESC
+                        usort( $reports, function( $a, $b ) use ( $school_map ) {
+                            $school_a = $school_map[ $a->school_id ] ?? null;
+                            $school_b = $school_map[ $b->school_id ] ?? null;
+
+                            $region_a = $school_a ? ( $school_a->region ?: 'Unassigned' ) : 'Z_Unknown';
+                            $region_b = $school_b ? ( $school_b->region ?: 'Unassigned' ) : 'Z_Unknown';
+
+                            // 1. Sort by Region
+                            $region_compare = strcmp( $region_a, $region_b );
+                            if ( $region_compare !== 0 ) return $region_compare;
+
+                            // 2. Sort by School Name
+                            $name_a = $school_a ? $school_a->name : '';
+                            $name_b = $school_b ? $school_b->name : '';
+                            $name_compare = strcmp( $name_a, $name_b );
+                            if ( $name_compare !== 0 ) return $name_compare;
+
+                            // 3. Sort by Date (Newest First)
+                            return strtotime( $b->inspection_date ) - strtotime( $a->inspection_date );
+                        });
+
+                        $current_region = null;
+                        $current_school_id = null;
+
+                        foreach ( $reports as $report ) : 
+                            $school = $school_map[ $report->school_id ] ?? null;
+                            $region = $school ? ( $school->region ?: 'Unassigned' ) : 'Unknown';
+                            
+                            // Region Header
+                            if ( $region !== $current_region ) {
+                                $current_region = $region;
+                                $current_school_id = null; // Reset school on region change
+                                echo '<tr class="cqa-region-header"><td colspan="6">' . esc_html( $region ) . '</td></tr>';
+                            }
+
+                            // School Header
+                            if ( $school && $school->id !== $current_school_id ) {
+                                $current_school_id = $school->id;
+                                echo '<tr class="cqa-school-header"><td colspan="6">🏫 ' . esc_html( $school->name ) . ' <span class="cqa-text-muted" style="font-weight:normal;font-size:12px;margin-left:8px;">' . esc_html( $school->location ) . '</span></td></tr>';
+                            }
                         ?>
-                            <tr>
-                                <td class="cqa-primary-col">
-                                    <strong><?php echo esc_html( $school ? $school->name : 'Unknown School' ); ?></strong>
+                            <tr class="cqa-report-row">
+                                <td class="cqa-primary-col" style="padding-left: 32px;">
+                                    <?php echo esc_html( $school ? $school->name : 'Unknown School' ); ?>
                                 </td>
                                 <td>
                                     <?php echo esc_html( date( 'M j, Y', strtotime( $report->inspection_date ) ) ); ?>
@@ -257,6 +304,23 @@ $schools = School::all();
 
 .cqa-page-info {
     font-size: 14px;
-    color: #6b7280;
+
+.cqa-region-header td {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #c7d2fe;
+}
+
+.cqa-school-header td {
+    background: #f1f5f9;
+    color: #1f2937;
+    font-weight: 600;
+    padding-left: 24px;
+    font-size: 14px;
+    border-bottom: 1px solid #e2e8f0;
 }
 </style>

@@ -169,7 +169,7 @@ $school = $school_id ? School::find( $school_id ) : null;
                     ⚠️ Needs Improvement
                 </button>
             </div>
-            <input type="hidden" id="cqa-overall-rating" name="overall_rating" required>
+            <input type="hidden" id="cqa-overall-rating" name="overall_rating" value="<?php echo esc_attr( $report ? $report->overall_rating : '' ); ?>" required>
         </div>
 
         <div class="cqa-form-group">
