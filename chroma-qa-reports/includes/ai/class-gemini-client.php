@@ -134,12 +134,6 @@ class Gemini_Client {
 
         // 4. Fallback: Try cleaning control characters if decode failed
         if ( json_last_error() !== JSON_ERROR_NONE ) {
-            // Remove potential invisible control characters
-            $text_clean = preg_replace( '/[\x00-\x1F\x7F]/', '', $text );
-            $data = json_decode( $text_clean, true );
-        }
-
-        if ( json_last_error() !== JSON_ERROR_NONE ) {
             error_log( 'CQA Gemini JSON Error: ' . json_last_error_msg() );
             // Log a snippet for safety
             error_log( 'CQA Gemini Failed Text: ' . substr( $text, 0, 500 ) . '...' ); 
@@ -148,4 +142,37 @@ class Gemini_Client {
 
         return $data;
     }
-}
+
+    /**
+     * Parse text from a document into structured report data.
+     *
+     * @param string $text The raw text from the document.
+     * @return array|WP_Error Parsed data or error.
+     */
+    public static function parse_document( $text ) {
+        // We need to map the text to our schema
+        $prompt = "You are a QA Data Extraction AI.\n\n" .
+                  "I will provide text from a childcare QA inspection report. " .
+                  "Extract the ratings and notes for the following checklist items and return a JSON object.\n\n" .
+                  "STRUCTURE:\n" .
+                  "{\n" .
+                  "  \"responses\": {\n" .
+                  "     \"section_key\": {\n" .
+                  "        \"item_key\": { \"rating\": \"yes|no|sometimes|n/a\", \"notes\": \"...\" }\n" .
+                  "     }\n" .
+                  "  },\n" .
+                  "  \"report_type\": \"tier1\",\n" .
+                  "  \"overall_rating\": \"exceeds|meets|needs_improvement|pending\",\n" .
+                  "  \"closing_notes\": \"Summary text...\"\n" .
+                  "}\n\n" .
+                  "RULES:\n" .
+                  "1. Map loose terms: 'Consistently'->'yes', 'Needs Improvement'->'sometimes', 'Not Met'->'no'.\n" .
+                  "2. If an item is not mentioned, ignore it (do not include in JSON).\n" .
+                  "3. Extract section/item structure based on standard Chroma QA Tier 1 checklist.\n" .
+                  "4. Respond ONLY with valid JSON.\n\n" .
+                  "REPORT TEXT:\n" . $text;
+
+        return self::generate_json( $prompt, [ 'maxTokens' => 4000 ] );
+    }
+} 
+

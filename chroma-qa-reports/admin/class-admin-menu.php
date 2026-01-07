@@ -74,6 +74,16 @@ class Admin_Menu {
             [ $this, 'render_create_report' ]
         );
 
+        // Import Reports
+        add_submenu_page(
+            self::MENU_SLUG,
+            __( 'Import Report', 'chroma-qa-reports' ),
+            __( 'Import Report', 'chroma-qa-reports' ),
+            'cqa_create_reports',
+            self::MENU_SLUG . '-import',
+            [ $this, 'render_legacy_import' ]
+        );
+
         // Settings (admin only)
         add_submenu_page(
             self::MENU_SLUG,
@@ -317,6 +327,13 @@ class Admin_Menu {
      */
     public function render_create_report() {
         include CQA_PLUGIN_DIR . 'admin/views/report-create.php';
+    }
+
+    /**
+     * Render legacy import page.
+     */
+    public function render_legacy_import() {
+        include CQA_PLUGIN_DIR . 'admin/views/legacy-import.php';
     }
 
     /**

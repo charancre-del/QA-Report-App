@@ -172,6 +172,11 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
         <a href="<?php echo esc_url( rest_url( 'cqa/v1/reports/' . $report_id . '/pdf?_wpnonce=' . wp_create_nonce( 'wp_rest' ) ) ); ?>" class="cqa-btn cqa-btn-primary" target="_blank">
             📄 Download PDF
         </a>
+        <?php if ( $report->status === 'submitted' && current_user_can('cqa_edit_all_reports') ) : ?>
+            <button type="button" class="cqa-btn cqa-btn-success" id="cqa-approve-report-btn" data-id="<?php echo esc_attr($report->id); ?>" style="background-color: #10b981; color: white;">
+                ✅ Approve Report
+            </button>
+        <?php endif; ?>
     </div>
 </div>
 

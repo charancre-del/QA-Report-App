@@ -13,6 +13,8 @@ use ChromaQA\Models\Checklist_Response;
 use ChromaQA\Models\Photo;
 use ChromaQA\Integrations\Google_Drive;
 use ChromaQA\Checklists\Checklist_Manager;
+use ChromaQA\Utils\Docx_Parser;
+use ChromaQA\AI\Gemini_Client;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -124,6 +126,12 @@ class REST_Controller {
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'generate_ai_summary' ],
             'permission_callback' => [ $this, 'check_ai_permission' ],
+        ] );
+
+        \register_rest_route( self::NAMESPACE, '/reports/upload-doc', [
+            'methods'             => 'POST',
+            'callback'            => [ $this, 'upload_report_doc' ],
+            'permission_callback' => [ $this, 'check_create_reports_permission' ],
         ] );
 
         \register_rest_route( self::NAMESPACE, '/ai/parse-document', [
@@ -362,6 +370,21 @@ class REST_Controller {
         $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         $report->previous_report_id = intval( $request->get_param( 'previous_report_id' ) ) ?: null;
+        
+        // Auto-link previous report if not provided
+        if ( ! $report->previous_report_id && $school_id ) {
+            $previous_reports = Report::all( [
+                'school_id' => $school_id,
+                'status'    => 'approved',
+                'limit'     => 1,
+                'orderby'   => 'inspection_date',
+                'order'     => 'DESC',
+            ] );
+
+            if ( ! empty( $previous_reports ) ) {
+                $report->previous_report_id = $previous_reports[0]->id;
+            }
+        }
         $report->overall_rating = \sanitize_text_field( $request->get_param( 'overall_rating' ) ) ?: 'pending';
         $report->closing_notes = \sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
         $report->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'draft';
@@ -420,7 +443,16 @@ class REST_Controller {
             $report->closing_notes = \sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
         }
         if ( $request->has_param( 'status' ) ) {
-            $report->status = \sanitize_text_field( $request->get_param( 'status' ) );
+            $new_status = \sanitize_text_field( $request->get_param( 'status' ) );
+
+            // Permission check for approval
+            if ( $new_status === 'approved' && $report->status !== 'approved' ) {
+                if ( ! current_user_can( 'cqa_edit_all_reports' ) ) {
+                     return new WP_Error( 'forbidden', __( 'You do not have permission to approve reports.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+                }
+            }
+
+            $report->status = $new_status;
         }
 
         $report->save();
@@ -954,4 +986,50 @@ class REST_Controller {
 
         return $data;
     }
-}
+    /**
+     * Handle DOCX Report Upload and Parsing.
+     *
+     * @param WP_REST_Request $request Request object.
+     * @return WP_REST_Response|WP_Error
+     */
+    public function upload_report_doc( WP_REST_Request $request ) {
+        $files = $request->get_file_params();
+
+        if ( empty( $files['file'] ) ) {
+            return new WP_Error( 'no_file', __( 'No file uploaded.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+        }
+
+        $file = $files['file'];
+        
+        // 1. Move to temp location
+        $upload = \wp_handle_upload( $file, [ 'test_form' => false ] );
+        if ( isset( $upload['error'] ) ) {
+            return new WP_Error( 'upload_error', $upload['error'], [ 'status' => 500 ] );
+        }
+
+        $file_path = $upload['file'];
+
+        // 2. Extract Text
+        require_once CQA_PLUGIN_DIR . 'includes/utils/class-docx-parser.php';
+        $text = Docx_Parser::extract_text( $file_path );
+
+        if ( \is_wp_error( $text ) ) {
+            // cleanup
+            @unlink( $file_path );
+            return $text;
+        }
+
+        // 3. Parse with AI
+        $parsed_data = Gemini_Client::parse_document( $text );
+
+        // Cleanup temp file
+        @unlink( $file_path );
+
+        if ( \is_wp_error( $parsed_data ) ) {
+            return $parsed_data;
+        }
+
+        return new WP_REST_Response( $parsed_data, 200 );
+    }
+
+} // End Class

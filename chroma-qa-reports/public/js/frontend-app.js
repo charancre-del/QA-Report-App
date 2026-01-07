@@ -53,6 +53,8 @@
             bindGlobalEvents: function () {
                 // Delete Report (Available on Dashboard and List)
                 $(document).on('click', '.cqa-delete-report', this.handleDelete.bind(this));
+                // Approve Report
+                $(document).on('click', '#cqa-approve-report-btn', this.handleApprove.bind(this));
             },
 
             // Public method for inline calls (Failsafe)
@@ -598,8 +600,44 @@
 
             handleSchoolChange: function (e) {
                 const schoolId = $(e.target).val();
-                // Removed auto-reload to prevent losing other form data
-                // School ID is captured by form submission
+
+                // Reset Previous Report dropdown
+                const $prevSelect = $('#cqa-previous-report-select');
+                $prevSelect.html('<option value="">Auto-detect (Latest Approved)</option>').prop('disabled', true);
+
+                if (!schoolId) return;
+
+                // Fetch approved reports for this school
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports',
+                    method: 'GET',
+                    data: {
+                        school_id: schoolId,
+                        status: 'approved',
+                        per_page: 10,
+                        orderby: 'inspection_date', // Assuming API supports this
+                        order: 'desc'
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    }
+                }).done(function (reports) {
+                    if (reports && reports.length) {
+                        $prevSelect.prop('disabled', false);
+                        let options = '<option value="">Auto-detect (Latest Approved)</option>';
+
+                        reports.forEach(function (report) {
+                            // Format date for display
+                            const date = new Date(report.inspection_date).toLocaleDateString();
+                            const type = report.report_type.replace('_', ' ').toUpperCase();
+                            options += `<option value="${report.id}">${date} - ${type} (${report.overall_rating})</option>`;
+                        });
+
+                        $prevSelect.html(options);
+                    } else {
+                        $prevSelect.html('<option value="">No previous reports found</option>');
+                    }
+                });
             },
 
             handleOverallRating: function (e) {
@@ -866,6 +904,40 @@
                 });
             },
 
+            // New: Handle Approve
+            handleApprove: function (e) {
+                e.preventDefault();
+                const $btn = $(e.currentTarget); // Safer selector
+                const reportId = $btn.data('id');
+
+                if (!confirm('Are you sure you want to approve this report? This will mark it as official.')) {
+                    return;
+                }
+
+                $btn.prop('disabled', true).text('Approving...');
+
+                $.ajax({
+                    url: cqaFrontend.restUrl + 'reports/' + reportId,
+                    method: 'POST', // Use POST for update (or PUT if supported/configured)
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', cqaFrontend.nonce);
+                    },
+                    data: {
+                        status: 'approved'
+                    }
+                }).done(function () {
+                    alert('Report approved successfully! 🎉');
+                    window.location.reload();
+                }).fail(function (xhr) {
+                    let msg = 'Failed to approve report.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = 'Error: ' + xhr.responseJSON.message;
+                    }
+                    alert(msg);
+                    $btn.prop('disabled', false).text('✅ Approve Report');
+                });
+            },
+
             generateAISummary: function (e) {
                 e.preventDefault();
                 const self = this;
@@ -973,9 +1045,14 @@
                 formData.status = status;
 
                 // Force School ID from select if missing (Safety check)
-                const schoolIdVal = $('#cqa-school-select').val();
                 if ((!formData.school_id || formData.school_id == 0) && schoolIdVal) {
                     formData.school_id = schoolIdVal;
+                }
+
+                // Manual Previous Report Selection
+                const prevReportId = $('#cqa-previous-report-select').val();
+                if (prevReportId) {
+                    formData.previous_report_id = prevReportId;
                 }
 
                 // console.log('Submitting Report Payload:', formData); // DEBUG for User
