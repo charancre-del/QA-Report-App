@@ -144,10 +144,15 @@ class Report {
         $values[] = $args['limit'];
         $values[] = $args['offset'];
 
+        $prepared_sql = $wpdb->prepare( $sql, $values );
+        error_log( "CQA DEBUG: Report::all query: " . $prepared_sql . "\n", 3, "C:/Users/chara/Documents/QA Report App/cqa-debug.log" );
+
         $rows = $wpdb->get_results(
-            $wpdb->prepare( $sql, $values ),
+            $prepared_sql,
             \ARRAY_A
         );
+
+        error_log( "CQA DEBUG: Report::all returned " . count($rows) . " rows\n", 3, "C:/Users/chara/Documents/QA Report App/cqa-debug.log" );
 
         return array_map( [ self::class, 'from_row' ], $rows );
     }
