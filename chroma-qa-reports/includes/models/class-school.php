@@ -193,7 +193,7 @@ class School {
         }
 
         $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
-        $orderby = \sanitize_sql_orderby( "s.{$args['orderby']} {$args['order']}" );
+        $orderby = \sanitize_sql_orderby( "{$args['orderby']} {$args['order']}" );
 
         $sql = "SELECT s.* FROM {$table} s {$join} {$where_clause} ORDER BY {$orderby} LIMIT %d OFFSET %d";
         $values[] = $args['limit'];

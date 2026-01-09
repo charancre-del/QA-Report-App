@@ -306,6 +306,7 @@ $schools = School::all();
 
 .cqa-page-info {
     font-size: 14px;
+}
 
 .cqa-region-header td {
     background: #e0e7ff;
