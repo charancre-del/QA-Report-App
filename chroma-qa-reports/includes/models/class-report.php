@@ -153,6 +153,46 @@ class Report {
     }
 
     /**
+     * Count total reports matching criteria.
+     *
+     * @param array $args Query arguments.
+     * @return int
+     */
+    public static function count( $args = [] ) {
+        global $wpdb;
+        $table = self::get_table_name();
+
+        $where = [];
+        $values = [];
+
+        if ( ! empty( $args['school_id'] ) ) {
+            $where[] = 'school_id = %d';
+            $values[] = $args['school_id'];
+        }
+
+        if ( ! empty( $args['user_id'] ) ) {
+            $where[] = 'user_id = %d';
+            $values[] = $args['user_id'];
+        }
+
+        if ( ! empty( $args['status'] ) ) {
+            $where[] = 'status = %s';
+            $values[] = $args['status'];
+        }
+
+        $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
+
+        if ( ! empty( $values ) ) {
+            return (int) $wpdb->get_var( $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$table} {$where_clause}",
+                $values
+            ) );
+        }
+
+        return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+    }
+
+    /**
      * Create a report from a database row.
      *
      * @param array $row Database row.

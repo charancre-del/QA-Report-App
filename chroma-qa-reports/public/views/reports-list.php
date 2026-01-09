@@ -17,6 +17,7 @@ if ( ! is_user_logged_in() ) {
 $filter_school = isset( $_GET['school_id'] ) ? intval( $_GET['school_id'] ) : '';
 $filter_status = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
 $filter_type = isset( $_GET['report_type'] ) ? sanitize_text_field( $_GET['report_type'] ) : '';
+$filter_user = isset( $_GET['user_id'] ) ? intval( $_GET['user_id'] ) : '';
 $page = isset( $_GET['paged'] ) ? max( 1, intval( $_GET['paged'] ) ) : 1;
 $limit = 20;
 
@@ -29,6 +30,7 @@ $args = [
 if ( $filter_school ) $args['school_id'] = $filter_school;
 if ( $filter_status ) $args['status'] = $filter_status;
 if ( $filter_type ) $args['report_type'] = $filter_type;
+if ( $filter_user ) $args['user_id'] = $filter_user;
 
 // Limit to own reports if not admin/director
 if ( ! current_user_can( 'cqa_view_all_reports' ) ) {
@@ -87,7 +89,7 @@ $schools = School::all();
             </div>
 
             <button type="submit" class="cqa-btn cqa-btn-secondary">Filter</button>
-            <?php if ( $filter_school || $filter_status || $filter_type ) : ?>
+            <?php if ( $filter_school || $filter_status || $filter_type || $filter_user ) : ?>
                 <a href="<?php echo home_url( '/qa-reports/reports/' ); ?>" class="cqa-btn-text">Clear</a>
             <?php endif; ?>
         </form>

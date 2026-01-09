@@ -104,6 +104,11 @@ class Frontend_Controller {
             'top' 
         );
         add_rewrite_rule( 
+            '^qa-reports/report/([0-9]+)/final/?$', 
+            'index.php?cqa_page=final-report&cqa_report_id=$matches[1]', 
+            'top' 
+        );
+        add_rewrite_rule( 
             '^qa-reports/edit/([0-9]+)/?$', 
             'index.php?cqa_page=edit-report&cqa_report_id=$matches[1]', 
             'top' 
@@ -215,6 +220,9 @@ class Frontend_Controller {
                 break;
             case 'view-report':
                 include CQA_PLUGIN_DIR . 'public/views/report-view.php';
+                break;
+            case 'final-report':
+                include CQA_PLUGIN_DIR . 'public/views/report-final.php';
                 break;
             case 'oauth_callback':
                 self::oauth_callback();

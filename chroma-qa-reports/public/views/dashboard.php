@@ -9,15 +9,20 @@ use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
 
 $current_user = wp_get_current_user();
-$recent_reports = Report::all( [ 'user_id' => $current_user->ID, 'limit' => 5 ] );
+
+// Show global activity if user has permission
+$recent_args = [ 'limit' => 5 ];
+if ( ! current_user_can( 'cqa_view_all_reports' ) ) {
+    $recent_args['user_id'] = $current_user->ID;
+}
+$recent_reports = Report::all( $recent_args );
+
 $schools = School::all();
 $overdue_schools = School::get_overdue_schools();
 $compliance_stats = School::get_compliance_stats();
 
-// Calculate my stats
-$my_total_reports = count(Report::all(['user_id' => $current_user->ID]));
-$my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => date('Y-m-01')])); // 'after' param logic needs to exist in Report::all, assuming standard WP_Query style or we filter array. 
-// Report::all doesn't support 'after' yet based on previous read. Let's simple count for now.
+// Calculate my stats using the new count methodology
+$my_total_reports = Report::count(['user_id' => $current_user->ID]);
 ?>
 
 <div class="cqa-dashboard">
@@ -33,34 +38,42 @@ $my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => d
 
     <!-- Top Stats Row -->
     <div class="cqa-stats-grid">
-        <div class="cqa-stat-card">
-            <div class="cqa-stat-icon" style="background: #e0e7ff; color: #4338ca;">🏫</div>
-            <div class="cqa-stat-content">
-                <span class="cqa-stat-value"><?php echo count( $schools ); ?></span>
-                <span class="cqa-stat-label">Total Schools</span>
+        <a href="<?php echo home_url( '/qa-reports/schools/' ); ?>" class="cqa-stat-card-link">
+            <div class="cqa-stat-card">
+                <div class="cqa-stat-icon" style="background: #e0e7ff; color: #4338ca;">🏫</div>
+                <div class="cqa-stat-content">
+                    <span class="cqa-stat-value"><?php echo count( $schools ); ?></span>
+                    <span class="cqa-stat-label">Total Schools</span>
+                </div>
             </div>
-        </div>
-        <div class="cqa-stat-card">
-            <div class="cqa-stat-icon" style="background: #dcfce7; color: #15803d;">✅</div>
-            <div class="cqa-stat-content">
-                <span class="cqa-stat-value"><?php echo $compliance_stats['meets'] + $compliance_stats['exceeds']; ?></span>
-                <span class="cqa-stat-label">Compliant Schools</span>
+        </a>
+        <a href="<?php echo home_url( '/qa-reports/schools/?compliance=compliant' ); ?>" class="cqa-stat-card-link">
+            <div class="cqa-stat-card">
+                <div class="cqa-stat-icon" style="background: #dcfce7; color: #15803d;">✅</div>
+                <div class="cqa-stat-content">
+                    <span class="cqa-stat-value"><?php echo $compliance_stats['meets'] + $compliance_stats['exceeds']; ?></span>
+                    <span class="cqa-stat-label">Compliant Schools</span>
+                </div>
             </div>
-        </div>
-        <div class="cqa-stat-card">
-            <div class="cqa-stat-icon" style="background: #fee2e2; color: #b91c1c;">⚠️</div>
-            <div class="cqa-stat-content">
-                <span class="cqa-stat-value"><?php echo count( $overdue_schools ); ?></span>
-                <span class="cqa-stat-label">Overdue Visits</span>
+        </a>
+        <a href="<?php echo home_url( '/qa-reports/schools/?status=overdue' ); ?>" class="cqa-stat-card-link">
+            <div class="cqa-stat-card">
+                <div class="cqa-stat-icon" style="background: #fee2e2; color: #b91c1c;">⚠️</div>
+                <div class="cqa-stat-content">
+                    <span class="cqa-stat-value"><?php echo count( $overdue_schools ); ?></span>
+                    <span class="cqa-stat-label">Overdue Visits</span>
+                </div>
             </div>
-        </div>
-        <div class="cqa-stat-card">
-            <div class="cqa-stat-icon" style="background: #f3f4f6; color: #4b5563;">📊</div>
-            <div class="cqa-stat-content">
-                <span class="cqa-stat-value"><?php echo $my_total_reports; ?></span>
-                <span class="cqa-stat-label">My Total Reports</span>
+        </a>
+        <a href="<?php echo home_url( '/qa-reports/reports/?user_id=' . $current_user->ID ); ?>" class="cqa-stat-card-link">
+            <div class="cqa-stat-card">
+                <div class="cqa-stat-icon" style="background: #f3f4f6; color: #4b5563;">📊</div>
+                <div class="cqa-stat-content">
+                    <span class="cqa-stat-value"><?php echo $my_total_reports; ?></span>
+                    <span class="cqa-stat-label">My Total Reports</span>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <div class="cqa-dashboard-columns">
@@ -296,6 +309,17 @@ $my_this_month = count(Report::all(['user_id' => $current_user->ID, 'after' => d
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     color: #4f46e5;
 }
+
+.cqa-stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.cqa-stat-card-link:hover {
+    transform: translateY(-4px);
+}
 </style>
 
 <script>
@@ -308,7 +332,11 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Exceeds', 'Meets', 'Needs Improvement'],
+                labels: [
+                    'Exceeds (' + stats.exceeds + ')', 
+                    'Meets (' + stats.meets + ')', 
+                    'Needs Improvement (' + stats.needs_improvement + ')'
+                ],
                 datasets: [{
                     data: [stats.exceeds, stats.meets, stats.needs_improvement],
                     backgroundColor: [
@@ -327,11 +355,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         position: 'right',
                         labels: {
                             usePointStyle: true,
-                            boxWidth: 10
+                            boxWidth: 10,
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
                         }
                     }
                 },
-                cutout: '70%'
+                cutout: '70%',
+                onClick: (evt, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const statuses = ['exceeds', 'meets', 'needs_improvement'];
+                        const targetStatus = statuses[index];
+                        window.location.href = '<?php echo home_url("/qa-reports/schools/?compliance="); ?>' + targetStatus;
+                    }
+                }
             }
         });
     }

@@ -12,7 +12,35 @@ if ( ! current_user_can( 'cqa_manage_schools' ) && ! current_user_can( 'cqa_regi
     wp_die( __( 'You do not have permission to manage schools.', 'chroma-qa-reports' ) );
 }
 
-$schools = School::all(['orderby' => 'name']);
+$filter_compliance = isset( $_GET['compliance'] ) ? sanitize_text_field( $_GET['compliance'] ) : '';
+$filter_status = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
+
+$args = ['orderby' => 'name'];
+
+if ( $filter_status === 'overdue' ) {
+    $args['overdue'] = true;
+}
+
+if ( $filter_compliance ) {
+    if ( $filter_compliance === 'compliant' ) {
+        // Needs custom handling or we just show meets/exceeds. 
+        // Our School::all doesn't support an array for compliance_status yet, 
+        // but we can just filter it here or improve the model.
+        // Let's improve the model briefly if needed, or just handle 'compliant' as 'meets' + 'exceeds'.
+        // Actually, let's just make it simpler for now and pass it if it's a specific status.
+    }
+    $args['compliance_status'] = $filter_compliance; 
+}
+
+$schools = School::all($args);
+
+// Post-filter for 'compliant' if specified
+if ( $filter_compliance === 'compliant' ) {
+    $schools = array_filter( $schools, function($s) {
+        $latest = Report::get_latest_for_school($s->id);
+        return $latest && ($latest->overall_rating === 'meets' || $latest->overall_rating === 'exceeds');
+    });
+}
 ?>
 
 <div class="cqa-dashboard">

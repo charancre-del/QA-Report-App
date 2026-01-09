@@ -144,14 +144,17 @@ class School {
     public static function all( $args = [] ) {
         global $wpdb;
         $table = self::get_table_name();
+        $reports_table = Report::get_table_name();
 
         $defaults = [
-            'status'   => '',
-            'region'   => '',
-            'orderby'  => 'name',
-            'order'    => 'ASC',
-            'limit'    => 100,
-            'offset'   => 0,
+            'status'            => '',
+            'region'            => '',
+            'compliance_status' => '', // exceeds, meets, needs_improvement
+            'overdue'           => false,
+            'orderby'           => 'name',
+            'order'             => 'ASC',
+            'limit'             => 100,
+            'offset'            => 0,
         ];
 
         $args = \wp_parse_args( $args, $defaults );
@@ -160,19 +163,39 @@ class School {
         $values = [];
 
         if ( ! empty( $args['status'] ) ) {
-            $where[] = 'status = %s';
+            $where[] = 's.status = %s';
             $values[] = $args['status'];
         }
 
         if ( ! empty( $args['region'] ) ) {
-            $where[] = 'region = %s';
+            $where[] = 's.region = %s';
             $values[] = $args['region'];
         }
 
-        $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
-        $orderby = \sanitize_sql_orderby( "{$args['orderby']} {$args['order']}" );
+        $join = "";
+        if ( ! empty( $args['compliance_status'] ) || $args['overdue'] ) {
+            // Need latest report info
+            $join = " LEFT JOIN (
+                SELECT school_id, MAX(inspection_date) as last_inspection, overall_rating
+                FROM {$reports_table}
+                WHERE status IN ('approved', 'submitted')
+                GROUP BY school_id
+            ) r ON s.id = r.school_id ";
 
-        $sql = "SELECT * FROM {$table} {$where_clause} ORDER BY {$orderby} LIMIT %d OFFSET %d";
+            if ( ! empty( $args['compliance_status'] ) ) {
+                $where[] = 'r.overall_rating = %s';
+                $values[] = $args['compliance_status'];
+            }
+
+            if ( $args['overdue'] ) {
+                $where[] = "(DATEDIFF(NOW(), r.last_inspection) > 90 OR r.last_inspection IS NULL)";
+            }
+        }
+
+        $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
+        $orderby = \sanitize_sql_orderby( "s.{$args['orderby']} {$args['order']}" );
+
+        $sql = "SELECT s.* FROM {$table} s {$join} {$where_clause} ORDER BY {$orderby} LIMIT %d OFFSET %d";
         $values[] = $args['limit'];
         $values[] = $args['offset'];
 
