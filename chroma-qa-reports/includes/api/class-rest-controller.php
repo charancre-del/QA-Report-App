@@ -141,6 +141,19 @@ class REST_Controller {
             'permission_callback' => [ $this, 'check_edit_reports_permission' ],
         ] );
 
+        \register_rest_route( self::NAMESPACE, '/photos/(?P<id>\d+)', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_photo' ],
+                'permission_callback' => [ $this, 'check_read_permission' ], // Simple check for now
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_photo' ],
+                'permission_callback' => [ $this, 'check_read_permission' ], // Simple check for now
+            ],
+        ] );
+
         \register_rest_route( self::NAMESPACE, '/ai/parse-document', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'parse_document' ],
@@ -687,6 +700,42 @@ class REST_Controller {
         }
 
         return new WP_REST_Response( [ 'success' => true, 'photos' => $uploaded_photos ], 200 );
+    }
+
+    public function update_photo( WP_REST_Request $request ) {
+        $photo = Photo::find( $request['id'] );
+        
+        if ( ! $photo ) {
+            return new WP_Error( 'not_found', __( 'Photo not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
+        }
+
+        if ( $request->has_param( 'caption' ) ) {
+            $photo->caption = \sanitize_text_field( $request->get_param( 'caption' ) );
+        }
+        
+        if ( $request->has_param( 'section_key' ) ) {
+            $photo->section_key = \sanitize_text_field( $request->get_param( 'section_key' ) );
+        }
+
+        $photo->save();
+
+        return new WP_REST_Response( [
+            'id'      => $photo->id,
+            'caption' => $photo->caption,
+            'section_key' => $photo->section_key
+        ], 200 );
+    }
+
+    public function delete_photo( WP_REST_Request $request ) {
+        $photo = Photo::find( $request['id'] );
+        
+        if ( ! $photo ) {
+            return new WP_Error( 'not_found', __( 'Photo not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
+        }
+
+        $photo->delete();
+
+        return new WP_REST_Response( [ 'success' => true ], 200 );
     }
 
     // ===== SETTINGS ENDPOINTS =====

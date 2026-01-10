@@ -22,6 +22,7 @@ $school = School::find( $report->school_id );
 $previous_report = $report->previous_report_id ? Report::find( $report->previous_report_id ) : null;
 $photos = Photo::get_by_report( $report_id );
 $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( $report_id, $previous_report->id ) : [];
+$ai_summary = $report->get_ai_summary();
 ?>
 
 <div class="cqa-report-view">
@@ -41,6 +42,70 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
             <?php endif; ?>
         </div>
     </div>
+
+    <?php if ( $ai_summary ) : ?>
+        <div class="cqa-section ai-summary-section">
+            <h2>✨ AI Analysis & Plan of Improvement</h2>
+            
+            <div class="cqa-ai-summary-content">
+                <div class="cqa-ai-executive-summary">
+                    <h3>📊 Executive Summary</h3>
+                    <div class="cqa-ai-text">
+                        <?php echo nl2br( esc_html( $ai_summary['executive_summary'] ) ); ?>
+                    </div>
+                </div>
+
+                <?php if ( ! empty( $ai_summary['issues'] ) ) : ?>
+                    <div class="cqa-ai-issues">
+                        <h3>⚠️ Identified Issues</h3>
+                        <div class="cqa-ai-issues-grid">
+                            <?php foreach ( $ai_summary['issues'] as $issue ) : ?>
+                                <div class="cqa-ai-issue-card severity-<?php echo esc_attr( $issue['severity'] ?? 'medium' ); ?>">
+                                    <div class="cqa-issue-meta">
+                                        <span class="cqa-severity-badge"><?php echo esc_html( ucfirst( $issue['severity'] ?? 'Medium' ) ); ?></span>
+                                        <span class="cqa-issue-section"><?php echo esc_html( $issue['section'] ?? 'General' ); ?></span>
+                                    </div>
+                                    <p><?php echo esc_html( $issue['description'] ?? $issue ); ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ( ! empty( $ai_summary['poi'] ) ) : ?>
+                    <div class="cqa-ai-poi">
+                        <h3>📋 Plan of Improvement</h3>
+                        <div class="cqa-poi-table-wrapper">
+                            <table class="cqa-poi-table">
+                                <thead>
+                                    <tr>
+                                        <th>Priority</th>
+                                        <th>Area</th>
+                                        <th>Action</th>
+                                        <th>Timeline</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ( $ai_summary['poi'] as $poi ) : ?>
+                                        <?php 
+                                        $action = $poi['action'] ?? $poi['recommendation'] ?? '';
+                                        $area = $poi['area'] ?? $poi['section'] ?? 'General';
+                                        ?>
+                                        <tr>
+                                            <td><span class="cqa-priority-label priority-<?php echo esc_attr( $poi['priority'] ?? 'short_term' ); ?>"><?php echo esc_html( str_replace('_', ' ', $poi['priority'] ?? 'Short Term') ); ?></span></td>
+                                            <td><?php echo esc_html( $area ); ?></td>
+                                            <td><?php echo esc_html( $action ); ?></td>
+                                            <td><?php echo esc_html( $poi['timeline'] ?? 'TBD' ); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <?php if ( ! empty( $photo_comparisons ) ) : ?>
         <div class="cqa-section">
@@ -210,6 +275,91 @@ $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( 
     box-shadow: var(--cqa-shadow);
     margin-bottom: 24px;
 }
+
+/* AI Summary Section Styles */
+.ai-summary-section {
+    background: white;
+    padding: 24px;
+    border-radius: var(--cqa-radius);
+    box-shadow: var(--cqa-shadow);
+}
+
+.cqa-ai-summary-content h3 {
+    font-size: 16px;
+    margin: 24px 0 12px;
+    color: var(--cqa-gray-800);
+}
+
+.cqa-ai-text {
+    line-height: 1.6;
+    color: var(--cqa-gray-700);
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--cqa-primary);
+}
+
+.cqa-ai-issues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.cqa-ai-issue-card {
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 4px solid #cbd5e1;
+    background: #f8fafc;
+}
+
+.cqa-ai-issue-card.severity-high { border-left-color: #ef4444; background: #fef2f2; }
+.cqa-ai-issue-card.severity-medium { border-left-color: #f59e0b; background: #fffbeb; }
+.cqa-ai-issue-card.severity-low { border-left-color: #3b82f6; background: #eff6ff; }
+
+.cqa-issue-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cqa-severity-badge { text-transform: uppercase; }
+.cqa-issue-section { color: var(--cqa-gray-500); }
+
+.cqa-poi-table-wrapper {
+    overflow-x: auto;
+    margin-top: 8px;
+}
+
+.cqa-poi-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.cqa-poi-table th {
+    text-align: left;
+    padding: 12px;
+    background: #f1f5f9;
+    color: var(--cqa-gray-600);
+    font-weight: 600;
+}
+
+.cqa-poi-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+}
+
+.cqa-priority-label {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+.priority-immediate { color: #dc2626; }
+.priority-short_term { color: #d97706; }
+.priority-ongoing { color: #2563eb; }
 
 .cqa-badge-lg {
     font-size: 16px;

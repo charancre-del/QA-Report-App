@@ -199,15 +199,10 @@ class School {
         $values[] = $args['limit'];
         $values[] = $args['offset'];
 
-        $prepared_sql = $wpdb->prepare( $sql, $values );
-        error_log( "CQA DEBUG: School::all query: " . $prepared_sql . "\n", 3, "C:/Users/chara/Documents/QA Report App/cqa-debug.log" );
-
         $rows = $wpdb->get_results(
-            $prepared_sql,
+            $wpdb->prepare( $sql, $values ),
             \ARRAY_A
         );
-
-        error_log( "CQA DEBUG: School::all returned " . count($rows) . " rows\n", 3, "C:/Users/chara/Documents/QA Report App/cqa-debug.log" );
 
         return array_map( [ self::class, 'from_row' ], $rows );
     }

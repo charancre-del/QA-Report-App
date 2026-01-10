@@ -105,6 +105,13 @@
                 self.deletePhoto(photoId);
             });
 
+            // Save caption on change
+            $(document).on('change', '.cqa-item-photo-caption', function () {
+                var photoId = $(this).closest('.cqa-item-photo-thumb').data('photo-id');
+                var caption = $(this).val();
+                self.saveCaption(photoId, caption);
+            });
+
             // Drag and drop
             $(document).on('dragover', '#cqa-item-photo-dropzone', function (e) {
                 e.preventDefault();
@@ -277,13 +284,25 @@
                     .cqa-item-photo-thumb {
                         position: relative;
                         border-radius: 8px;
-                        overflow: hidden;
-                        aspect-ratio: 1;
+                        background: #f9fafb;
+                        border: 1px solid #e5e7eb;
+                        display: flex;
+                        flex-direction: column;
                     }
                     .cqa-item-photo-thumb img {
                         width: 100%;
-                        height: 100%;
+                        height: 80px;
                         object-fit: cover;
+                    }
+                    .cqa-item-photo-caption {
+                        width: 100%;
+                        border: none !important;
+                        border-top: 1px solid #e5e7eb !important;
+                        padding: 4px 6px !important;
+                        font-size: 11px !important;
+                        background: transparent !important;
+                        margin: 0 !important;
+                        box-shadow: none !important;
                     }
                     .cqa-item-photo-delete {
                         position: absolute;
@@ -424,6 +443,7 @@
                     var $thumb = $('[data-temp-id="' + tempId + '"]');
                     $thumb.removeClass('uploading');
                     $thumb.attr('data-photo-id', response.id);
+                    $thumb.append('<input type="text" class="cqa-item-photo-caption" placeholder="Caption...">');
                     $thumb.append('<button type="button" class="cqa-item-photo-delete">&times;</button>');
 
                     // Add to local cache
@@ -478,12 +498,37 @@
         },
 
         /**
+         * Save photo caption.
+         */
+        saveCaption: function (photoId, caption) {
+            $.ajax({
+                url: cqaAdmin.restUrl + 'photos/' + photoId,
+                method: 'PATCH',
+                data: {
+                    caption: caption
+                },
+                headers: {
+                    'X-WP-Nonce': cqaAdmin.nonce
+                },
+                success: function () {
+                    // Update local cache if needed
+                    CQA.notify.success('Caption saved');
+                },
+                error: function () {
+                    CQA.notify.error('Failed to save caption');
+                }
+            });
+        },
+
+        /**
          * Add photo to the modal list.
          */
         addPhotoToList: function (photo) {
             var thumbUrl = photo.thumbnail_url || 'https://drive.google.com/thumbnail?id=' + photo.drive_file_id + '&sz=w200';
+            var caption = photo.caption || '';
             var $thumb = $('<div class="cqa-item-photo-thumb" data-photo-id="' + photo.id + '">' +
                 '<img src="' + thumbUrl + '">' +
+                '<input type="text" class="cqa-item-photo-caption" placeholder="Caption..." value="' + caption + '">' +
                 '<button type="button" class="cqa-item-photo-delete">&times;</button>' +
                 '</div>');
             $('#cqa-item-photo-list').append($thumb);

@@ -28,9 +28,7 @@ $responses = Checklist_Response::get_by_report_grouped( $report_id );
 $checklist = Checklist_Manager::get_checklist_for_type( $report->report_type );
 
 // Get AI Summary
-global $wpdb;
-$summary_table = $wpdb->prefix . 'cqa_ai_summaries';
-$ai_summary = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $summary_table WHERE report_id = %d", $report_id ) );
+$ai_summary = $report->get_ai_summary();
 ?>
 
 <div class="cqa-report-final" id="printable-report">
@@ -78,9 +76,72 @@ $ai_summary = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $summary_table WHER
             <div class="cqa-final-section">
                 <h3>📊 Executive Summary</h3>
                 <div class="cqa-final-summary-box">
-                    <?php echo nl2br( esc_html( $ai_summary->executive_summary ) ); ?>
+                    <?php echo nl2br( esc_html( $ai_summary['executive_summary'] ) ); ?>
                 </div>
             </div>
+
+            <?php if ( ! empty( $ai_summary['issues'] ) ) : ?>
+                <div class="cqa-final-section">
+                    <h3>⚠️ Identified Issues</h3>
+                    <table class="cqa-final-table">
+                        <thead>
+                            <tr>
+                                <th width="20%">Severity</th>
+                                <th width="25%">Section</th>
+                                <th width="55%">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ( $ai_summary['issues'] as $issue ) : ?>
+                                <tr>
+                                    <td>
+                                        <span class="cqa-severity-tag severity-<?php echo esc_attr( $issue['severity'] ?? 'medium' ); ?>">
+                                            <?php echo esc_html( strtoupper( $issue['severity'] ?? 'MEDIUM' ) ); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo esc_html( $issue['section'] ?? 'General' ); ?></td>
+                                    <td><?php echo esc_html( $issue['description'] ?? $issue ); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+
+            <?php if ( ! empty( $ai_summary['poi'] ) ) : ?>
+                <div class="cqa-final-section">
+                    <h3>📋 Plan of Improvement (POI)</h3>
+                    <table class="cqa-final-table cqa-poi-table">
+                        <thead>
+                            <tr>
+                                <th width="15%">Priority</th>
+                                <th width="25%">Area</th>
+                                <th width="40%">Action Plan</th>
+                                <th width="20%">Timeline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ( $ai_summary['poi'] as $poi ) : ?>
+                                <?php 
+                                // Support both key mappings
+                                $action = $poi['action'] ?? $poi['recommendation'] ?? '';
+                                $area = $poi['area'] ?? $poi['section'] ?? 'General';
+                                ?>
+                                <tr>
+                                    <td>
+                                        <span class="cqa-priority-tag priority-<?php echo esc_attr( $poi['priority'] ?? 'short_term' ); ?>">
+                                            <?php echo esc_html( str_replace('_', ' ', $poi['priority'] ?? 'Short Term') ); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo esc_html( $area ); ?></td>
+                                    <td><?php echo esc_html( $action ); ?></td>
+                                    <td><?php echo esc_html( $poi['timeline'] ?? 'TBD' ); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
 
         <!-- Photo Comparison -->
@@ -272,6 +333,25 @@ $ai_summary = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $summary_table WHER
 .cqa-rating-exceeds { background: #dcfce7; color: #166534; border: 1px solid #166534; }
 .cqa-rating-meets { background: #eff6ff; color: #1e40af; border: 1px solid #1e40af; }
 .cqa-rating-needs_improvement { background: #fef2f2; color: #991b1b; border: 1px solid #991b1b; }
+
+.cqa-severity-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight : 800;
+}
+.severity-high { background: #fee2e2; color: #991b1b; }
+.severity-medium { background: #fef3c7; color: #92400e; }
+.severity-low { background: #dbeafe; color: #1e40af; }
+
+.cqa-priority-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+.priority-immediate { color: #dc2626; }
+.priority-short_term { color: #d97706; }
+.priority-ongoing { color: #2563eb; }
 
 .cqa-final-section {
     margin-bottom: 40px;

@@ -623,7 +623,9 @@
                         <textarea name="${name}[notes]" placeholder="Add notes..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-height: 60px;"></textarea>
                         <div style="margin-top: 8px;">
                             <input type="file" id="${photoInputId}" class="cqa-item-photo-input" data-section="${sectionKey}" data-item="${item.key}" accept="image/*" multiple style="display: none;">
-                            <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}').click();" style="font-size: 12px;">📷 Attach Photo</button>
+                            <input type="file" id="${photoInputId}-camera" class="cqa-item-photo-input" data-section="${sectionKey}" data-item="${item.key}" accept="image/*" capture="environment" style="display: none;">
+                            <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}').click();" style="font-size: 12px;">📁 Gallery</button>
+                            <button type="button" class="cqa-btn cqa-btn-sm" onclick="document.getElementById('${photoInputId}-camera').click();" style="font-size: 12px;">📸 Camera</button>
                             <span style="font-size: 12px; color: #6b7280; margin-left: 8px;">Optional evidence</span>
                         </div>
                     </div>
@@ -755,6 +757,11 @@
 
                 // File input (Main)
                 $('#cqa-photo-input').on('change', function (e) {
+                    CQA.handleFiles(this.files);
+                });
+
+                // Camera input (Main)
+                $('#cqa-camera-input').on('change', function (e) {
                     CQA.handleFiles(this.files);
                 });
 

@@ -162,7 +162,20 @@ if ( $export_pdf ) {
                         <h4><?php esc_html_e( '📋 Plan of Improvement', 'chroma-qa-reports' ); ?></h4>
                         <ul class="cqa-poi-list">
                             <?php foreach ( $ai_summary['poi'] as $poi ) : ?>
-                                <li><?php echo esc_html( is_array( $poi ) ? $poi['recommendation'] : $poi ); ?></li>
+                                <?php 
+                                if ( is_array( $poi ) ) {
+                                    $action = $poi['action'] ?? $poi['recommendation'] ?? '';
+                                    $area = $poi['area'] ?? $poi['section'] ?? '';
+                                    $priority = $poi['priority'] ?? '';
+                                    echo '<li>';
+                                    if ( $priority ) echo '<strong>[' . esc_html( strtoupper( str_replace('_', ' ', $priority ) ) ) . ']</strong> ';
+                                    if ( $area ) echo esc_html( $area ) . ': ';
+                                    echo esc_html( $action );
+                                    echo '</li>';
+                                } else {
+                                    echo '<li>' . esc_html( $poi ) . '</li>';
+                                }
+                                ?>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
