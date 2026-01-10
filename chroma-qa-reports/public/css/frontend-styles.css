@@ -594,23 +594,80 @@
 }
 
 .cqa-photo-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
     margin-top: 24px;
 }
 
 .cqa-photo-thumb {
     position: relative;
-    aspect-ratio: 1;
-    border-radius: 8px;
+    width: 200px;
+    background: white;
+    border: 1px solid var(--cqa-gray-200);
+    border-radius: var(--cqa-radius);
     overflow: hidden;
+    box-shadow: var(--cqa-shadow);
+    transition: transform 0.2s;
+}
+
+.cqa-photo-thumb:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--cqa-shadow-lg);
 }
 
 .cqa-photo-thumb img {
     width: 100%;
-    height: 100%;
+    height: 120px;
     object-fit: cover;
+    display: block;
+}
+
+.cqa-photo-details {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cqa-photo-section-select,
+.cqa-photo-caption-input {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 11px;
+    border: 1px solid var(--cqa-gray-300);
+    border-radius: 6px;
+    outline: none;
+}
+
+.cqa-photo-section-select:focus,
+.cqa-photo-caption-input:focus {
+    border-color: var(--cqa-primary);
+}
+
+.cqa-remove-photo-btn,
+.cqa-remove-new-photo-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    background: var(--cqa-danger);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cqa-remove-photo-btn:hover,
+.cqa-remove-new-photo-btn:hover {
+    background: #dc2626;
 }
 
 /* Rating Buttons */

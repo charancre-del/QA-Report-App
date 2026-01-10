@@ -214,9 +214,13 @@
                     $('#cqa-camera-input').click();
                 });
 
-                // File Input Changes
-                $('#cqa-photo-input').on('change', this.handlePhotoSelect.bind(this));
-                $('#cqa-camera-input').on('change', this.handlePhotoSelect.bind(this));
+                // File Input Changes (Unified)
+                $('#cqa-photo-input').on('change', function () {
+                    self.handleFiles(this.files);
+                });
+                $('#cqa-camera-input').on('change', function () {
+                    self.handleFiles(this.files);
+                });
             },
 
 
@@ -493,10 +497,16 @@
                             if (data.rating) {
                                 const $container = $(`.cqa-checklist-item[data-section="${sectionKey}"][data-item="${itemKey}"]`);
                                 const $btn = $container.find(`.cqa-item-rating-btn[data-value="${data.rating}"]`);
+                                const $hiddenInput = $container.find('input[type="hidden"]');
 
                                 if ($btn.length) {
                                     $btn.addClass('selected').siblings().removeClass('selected');
                                     $container.attr('data-validation', 'valid');
+
+                                    // CRITICAL FIX: Update the hidden input value so subsequent saves include the rating
+                                    if ($hiddenInput.length) {
+                                        $hiddenInput.val(data.rating);
+                                    }
                                 }
                             }
 
@@ -542,18 +552,16 @@
                             const currentCaption = photo.caption || '';
 
                             const html = `
-                                <div class="cqa-photo-thumb cqa-existing-photo" data-photo-id="${photo.id}" style="display:inline-block; margin:8px; vertical-align:top; width:180px; position:relative; background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden;">
+                                <div class="cqa-photo-thumb cqa-existing-photo" data-photo-id="${photo.id}">
                                     <input type="hidden" name="existing_photos[]" value="${photo.id}">
-                                    <img src="${photo.thumbnail_url}" alt="Photo" style="width:100%; height:100px; object-fit:cover;">
-                                    <div style="padding:8px;">
-                                        <select name="photo_sections[${photo.id}]" style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:6px;">
+                                    <img src="${photo.thumbnail_url}" alt="Photo">
+                                    <div class="cqa-photo-details">
+                                        <select name="photo_sections[${photo.id}]" class="cqa-photo-section-select">
                                             ${sectionOptions.replace(`value="${currentSection}"`, `value="${currentSection}" selected`)}
                                         </select>
-                                        <input type="text" name="photo_captions[${photo.id}]" value="${currentCaption}" placeholder="Caption (optional)"
-                                            style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; box-sizing:border-box;">
+                                        <input type="text" name="photo_captions[${photo.id}]" value="${currentCaption}" placeholder="Caption (optional)" class="cqa-photo-caption-input">
                                     </div>
-                                    <button type="button" class="cqa-remove-photo-btn" data-id="${photo.id}" 
-                                        style="position:absolute; top:4px; right:4px; background:#ef4444; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:12px;">×</button>
+                                    <button type="button" class="cqa-remove-photo-btn" data-id="${photo.id}" title="Remove">×</button>
                                 </div>
                             `;
                             $gallery.append(html);
@@ -711,15 +719,6 @@
                 $('#cqa-overall-rating').val($btn.data('value'));
             },
 
-            handleItemRating: function (e) {
-                const $btn = $(e.currentTarget);
-                const $group = $btn.closest('.cqa-item-ratings');
-                const $hiddenInput = $group.find('input[type="hidden"]');
-
-                $group.find('.cqa-item-rating-btn').removeClass('selected');
-                $btn.addClass('selected');
-                $hiddenInput.val($btn.data('value'));
-            },
 
             toggleSection: function (e) {
                 const $header = $(e.currentTarget);
@@ -839,18 +838,16 @@
                         self.compressImage(file, function (compressedDataUrl) {
                             const uniqueId = photoId + '_' + idx;
                             const html = `
-                            <div class="cqa-photo-thumb cqa-new-photo" style="display:inline-block; margin:8px; vertical-align:top; width:180px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; position:relative;">
-                                <img src="${compressedDataUrl}" alt="Preview" style="width:100%; height:100px; object-fit:cover;">
+                            <div class="cqa-photo-thumb cqa-new-photo">
+                                <img src="${compressedDataUrl}" alt="Preview">
                                 <input type="hidden" name="new_photos[]" value="${compressedDataUrl}">
-                                <div style="padding:8px;">
-                                    <select name="new_photos_sections[]" style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:6px;">
+                                <div class="cqa-photo-details">
+                                    <select name="new_photos_sections[]" class="cqa-photo-section-select">
                                         ${sectionOptions}
                                     </select>
-                                    <input type="text" name="new_photos_captions[]" placeholder="Caption (optional)" 
-                                        style="width:100%; padding:4px; font-size:11px; border:1px solid #d1d5db; border-radius:4px; box-sizing:border-box;">
+                                    <input type="text" name="new_photos_captions[]" placeholder="Caption (optional)" class="cqa-photo-caption-input">
                                 </div>
-                                <button type="button" class="cqa-remove-new-photo-btn" 
-                                    style="position:absolute; top:4px; right:4px; background:#ef4444; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:12px;">×</button>
+                                <button type="button" class="cqa-remove-new-photo-btn" title="Remove">×</button>
                             </div>
                         `;
                             $gallery.append(html);
@@ -1334,7 +1331,7 @@
             },
 
             initAutosave: function () {
-                // Simple autosave every 60 seconds
+                // Simple autosave every 5 seconds (updated per user request)
                 const self = this;
                 setInterval(function () {
                     if (self.$wizard.data('report-id')) {
@@ -1342,37 +1339,9 @@
                         // console.log('Autosaving draft...');
                         self.submitToRestApi('draft', true);
                     }
-                }, 60000);
+                }, 5000);
             },
 
-            handlePhotoSelect: function (e) {
-                const files = e.target.files;
-                if (!files || files.length === 0) return;
-
-                const $gallery = $('#message-photo-gallery, #photo-gallery'); // Fallback
-
-                Array.from(files).forEach(file => {
-                    this.photoQueue.push(file);
-
-                    // Create object URL for preview
-                    const url = URL.createObjectURL(file);
-
-                    const html = `
-                        <div class="cqa-photo-thumb local-file">
-                            <img src="${url}" alt="${file.name}" style="object-fit: contain; padding: 10px;">
-                            <div class="photo-caption">${file.name}</div>
-                            <button type="button" class="remove-photo" onclick="$(this).parent().remove()">×</button>
-                        </div>
-                    `;
-
-                    // Simple append
-                    if ($gallery.length) {
-                        $gallery.append(html);
-                    } else {
-                        $('.cqa-photo-gallery').append(html);
-                    }
-                });
-            },
 
             // --- Google Drive Picker ---
 
