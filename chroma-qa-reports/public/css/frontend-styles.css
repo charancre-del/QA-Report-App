@@ -596,48 +596,57 @@
 .cqa-photo-gallery {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 20px;
     margin-top: 24px;
+    align-items: flex-start;
 }
 
 .cqa-photo-thumb {
     position: relative;
     width: 200px;
+    flex: 0 0 200px;
+    /* Prevent squashing */
     background: white;
     border: 1px solid var(--cqa-gray-200);
     border-radius: var(--cqa-radius);
     overflow: hidden;
     box-shadow: var(--cqa-shadow);
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
 }
 
 .cqa-photo-thumb:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--cqa-shadow-lg);
 }
 
 .cqa-photo-thumb img {
     width: 100%;
-    height: 120px;
+    height: 140px;
     object-fit: cover;
     display: block;
+    border-bottom: 1px solid var(--cqa-gray-100);
 }
 
 .cqa-photo-details {
-    padding: 10px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    flex: 1;
+    /* Allow details to grow if needed */
 }
 
 .cqa-photo-section-select,
 .cqa-photo-caption-input {
     width: 100%;
-    padding: 6px 8px;
-    font-size: 11px;
+    padding: 8px 10px;
+    font-size: 12px;
     border: 1px solid var(--cqa-gray-300);
     border-radius: 6px;
     outline: none;
+    background: #fff;
 }
 
 .cqa-photo-section-select:focus,
@@ -648,26 +657,30 @@
 .cqa-remove-photo-btn,
 .cqa-remove-new-photo-btn {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 24px;
-    height: 24px;
-    background: var(--cqa-danger);
-    color: white;
-    border: none;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: var(--cqa-danger) !important;
+    color: white !important;
+    border: 2px solid white;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 100 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .cqa-remove-photo-btn:hover,
 .cqa-remove-new-photo-btn:hover {
-    background: #dc2626;
+    background: #dc2626 !important;
+    transform: scale(1.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
 }
 
 /* Rating Buttons */

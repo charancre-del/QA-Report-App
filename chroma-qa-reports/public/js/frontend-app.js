@@ -174,6 +174,7 @@
             },
 
             bindWizardEvents: function () {
+                const self = this;
                 // Navigation with delegation
                 $(document).on('click', '.cqa-wizard-next', this.nextStep.bind(this));
                 $(document).on('click', '.cqa-wizard-prev', this.prevStep.bind(this));
@@ -809,6 +810,14 @@
                     }
 
                     // Remove from UI
+                    $thumb.fadeOut(200, function () { $(this).remove(); });
+                });
+
+                // New Photo Remove Button
+                $(document).on('click', '.cqa-remove-new-photo-btn', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const $thumb = $(this).closest('.cqa-photo-thumb');
                     $thumb.fadeOut(200, function () { $(this).remove(); });
                 });
             },
