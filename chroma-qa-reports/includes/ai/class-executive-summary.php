@@ -68,8 +68,9 @@ class Executive_Summary {
         $report_type = $report->get_type_label();
         $date = \date_i18n( 'F j, Y', \strtotime( $report->inspection_date ) );
 
-        $prompt = "You are a QA analyst for Chroma Early Learning Academy, a childcare organization. ";
-        $prompt .= "Analyze the following QA inspection report and generate an executive summary.\n\n";
+        $prompt = "You are a Supportive QA Coach and Mentor for Chroma Early Learning Academy, a childcare organization. ";
+        $prompt .= "Your goal is to provide constructive, encouraging feedback that empowers School Directors to achieve excellence. ";
+        $prompt .= "Analyze the single following QA inspection report and generate a professional, supportive executive summary.\n\n";
 
         $prompt .= "## Report Information\n";
         $prompt .= "- School: {$school_name}\n";
@@ -112,26 +113,26 @@ class Executive_Summary {
             $prompt .= "Highlight any improvements or regressions.\n\n";
         }
 
-        $prompt .= "## Instructions\n";
+        $prompt = "## Instructions\n";
         $prompt .= "Generate a structured JSON response with the following format:\n";
         $prompt .= "{\n";
-        $prompt .= '  "executive_summary": "A 2-3 paragraph professional summary of the inspection findings...",';
+        $prompt .= '  "executive_summary": "A 2-3 paragraph professional and encouraging summary. Start by celebrating successes and strengths, then bridge into areas for partnership and growth...",';
         $prompt .= "\n";
-        $prompt .= '  "issues": [';
+        $prompt .= '  "growth_opportunities": [';
         $prompt .= "\n";
-        $prompt .= '    { "severity": "high|medium|low", "section": "section name", "description": "issue description" }';
+        $prompt .= '    { "severity": "high|medium|low", "section": "section name", "description": "specific area for improvement framed constructively" }';
         $prompt .= "\n";
         $prompt .= "  ],\n";
-        $prompt .= '  "plan_of_improvement": [';
+        $prompt .= '  "support_and_growth_plan": [';
         $prompt .= "\n";
-        $prompt .= '    { "priority": "immediate|short_term|ongoing", "area": "section/area name", "action": "specific actionable step", "timeline": "timeframe for completion" }';
+        $prompt .= '    { "priority": "immediate|short_term|ongoing", "area": "section/area name", "action": "supportive coaching step or action", "timeline": "collaborative timeframe" }';
         $prompt .= "\n";
         $prompt .= "  ],\n";
         $prompt .= '  "comparison": {';
         $prompt .= "\n";
-        $prompt .= '    "improvements": ["list of improved items"],';
+        $prompt .= '    "celebrations": ["list of improved items or sustained excellence"],';
         $prompt .= "\n";
-        $prompt .= '    "regressions": ["list of regressed items"]';
+        $prompt .= '    "focus_areas": ["list of items needing further focus"]';
         $prompt .= "\n";
         $prompt .= "  },\n";
         $prompt .= '  "suggested_rating": "exceeds|meets|needs_improvement"';
@@ -139,11 +140,11 @@ class Executive_Summary {
         $prompt .= "}\n\n";
 
         $prompt .= "Focus on:\n";
-        $prompt .= "1. Critical safety and compliance issues (mark as HIGH severity)\n";
-        $prompt .= "2. Areas that need immediate attention\n";
-        $prompt .= "3. Positive observations and strengths\n";
-        $prompt .= "4. Generate a comprehensive Plan of Improvement with specific, actionable steps, priorities (immediate/short-term/ongoing), and realistic timelines\n";
-        $prompt .= "5. Overall assessment and suggested rating based on the responses\n";
+        $prompt .= "1. Highlighting and celebrating positive observations and leadership strengths first.\n";
+        $prompt .= "2. Framing critical safety and compliance as 'Critical Growth Areas' (mark as HIGH severity).\n";
+        $prompt .= "3. Providing specific, actionable coaching steps in the Support & Growth Plan.\n";
+        $prompt .= "4. Ensuring the overall tone is that of a partner invested in the school's success.\n";
+        $prompt .= "5. Overall assessment and suggested rating based on the balanced view of the inspection.\n";
 
         return $prompt;
     }
@@ -167,8 +168,8 @@ class Executive_Summary {
             [
                 'report_id'         => $report_id,
                 'executive_summary' => $summary['executive_summary'] ?? '',
-                'issues_json'       => \wp_json_encode( $summary['issues'] ?? [] ),
-                'poi_json'          => \wp_json_encode( $summary['plan_of_improvement'] ?? $summary['poi'] ?? [] ),
+                'issues_json'       => \wp_json_encode( $summary['growth_opportunities'] ?? $summary['issues'] ?? [] ),
+                'poi_json'          => \wp_json_encode( $summary['support_and_growth_plan'] ?? $summary['plan_of_improvement'] ?? $summary['poi'] ?? [] ),
                 'comparison_json'   => \wp_json_encode( $summary['comparison'] ?? [] ),
                 'generated_at'      => \current_time( 'mysql' ),
             ],
@@ -267,12 +268,13 @@ class Executive_Summary {
      */
     private static function generate_ai_suggestion( $item_label, $rating, $section_key ) {
         $prompt = sprintf(
-            'You are a QA officer for a childcare facility. A checklist item "%s" in the "%s" section was marked as "%s". ' .
-            'Generate a brief, professional note (1-2 sentences) that could be added to the inspection report explaining the issue and recommending action. ' .
-            'Be specific and actionable. Return only the note text, no other formatting.',
+            'You are a supportive QA Coach for a childcare facility. A checklist item "%s" in the "%s" section was marked as "%s". ' .
+            'Generate a brief, professional, and encouraging coaching note (1-2 sentences) for the School Director. ' .
+            'Explain the growth opportunity and recommend a helpful action step. ' .
+            'The tone should be supportive, not punitive. Return only the note text, no other formatting.',
             $item_label,
             str_replace( '_', ' ', $section_key ),
-            $rating === 'no' ? 'NOT compliant/No' : 'partially compliant/Sometimes'
+            $rating === 'no' ? 'needs focus/No' : 'partially meeting standards/Sometimes'
         );
 
         $result = Gemini_Service::generate( $prompt, [ 'temperature' => 0.3, 'maxTokens' => 200 ] );

@@ -176,7 +176,9 @@ class Comparative_Insights {
         $attention_list = implode( ', ', array_column( array_slice( $data['needs_attention'], 0, 5 ), 'name' ) );
 
         return <<<PROMPT
-You are a QA Director analyzing patterns across multiple childcare facilities. Based on the following data from the last 90 days:
+You are a Strategic QA Partner and Director-level Mentor analyzing patterns across multiple childcare facilities. Your goal is to identify collective strengths and frame areas of focus as collaborative growth and training opportunities for the organization.
+
+Based on the following data from the last 90 days:
 
 **Common Issues (items marked 'No' across multiple schools):**
 {$issues_list}
@@ -197,12 +199,12 @@ Generate executive insights for leadership. Respond in JSON format:
             "recommendation": "Action to take"
         }
     ],
-    "systemic_issues": [
+    "collective_growth_opportunities": [
         {
-            "issue": "Issue appearing across multiple schools",
+            "focus_area": "Trend appearing across multiple schools",
             "affected_schools": "X schools",
-            "root_cause_hypothesis": "Possible cause",
-            "recommended_action": "What to do"
+            "coaching_insight": "Supportive hypothesis on the root cause",
+            "recommended_support": "How to support directors in this area"
         }
     ],
     "best_practices": [
