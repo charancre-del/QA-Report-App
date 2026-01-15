@@ -1236,6 +1236,13 @@
                 // We need to parse inputs like name="responses[classroom_infant][ratios][rating]"
                 // into a structured object: { "classroom_infant": { "ratios": { "rating": "yes", "notes": "..." } } }
 
+                // Safety Check: If checklist hasn't been loaded into DOM, DO NOT SAVE.
+                // This prevents autosave from wiping data when on Step 1.
+                if ($('#cqa-checklist-container .cqa-checklist-item').length === 0) {
+                    console.warn('CQA: Checklist not loaded, skipping response save to prevent data loss.');
+                    return $.Deferred().resolve().promise();
+                }
+
                 const responses = {};
 
                 this.$form.find('input[name^="responses"], textarea[name^="responses"]').each(function () {
