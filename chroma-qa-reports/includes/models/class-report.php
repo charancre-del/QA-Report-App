@@ -103,6 +103,7 @@ class Report {
 
         $defaults = [
             'school_id'    => 0,
+            'school_ids'   => null,
             'user_id'      => 0,
             'report_type'  => '',
             'status'       => '',
@@ -120,6 +121,16 @@ class Report {
         if ( $args['school_id'] ) {
             $where[] = 'school_id = %d';
             $values[] = $args['school_id'];
+        }
+
+        if ( is_array( $args['school_ids'] ) ) {
+            $school_ids = array_values( array_filter( array_map( 'absint', $args['school_ids'] ) ) );
+            if ( empty( $school_ids ) ) {
+                $where[] = '1 = 0';
+            } else {
+                $where[] = 'school_id IN (' . implode( ', ', array_fill( 0, count( $school_ids ), '%d' ) ) . ')';
+                $values = array_merge( $values, $school_ids );
+            }
         }
 
         if ( $args['user_id'] ) {
@@ -170,6 +181,16 @@ class Report {
             $values[] = $args['school_id'];
         }
 
+        if ( isset( $args['school_ids'] ) && is_array( $args['school_ids'] ) ) {
+            $school_ids = array_values( array_filter( array_map( 'absint', $args['school_ids'] ) ) );
+            if ( empty( $school_ids ) ) {
+                $where[] = '1 = 0';
+            } else {
+                $where[] = 'school_id IN (' . implode( ', ', array_fill( 0, count( $school_ids ), '%d' ) ) . ')';
+                $values = array_merge( $values, $school_ids );
+            }
+        }
+
         if ( ! empty( $args['user_id'] ) ) {
             $where[] = 'user_id = %d';
             $values[] = $args['user_id'];
@@ -182,11 +203,9 @@ class Report {
 
         $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
 
-        if ( ! empty( $values ) ) {
-            return (int) $wpdb->get_var( $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$table} {$where_clause}",
-                $values
-            ) );
+        if ( ! empty( $where ) ) {
+            $sql = "SELECT COUNT(*) FROM {$table} {$where_clause}";
+            return (int) $wpdb->get_var( empty( $values ) ? $sql : $wpdb->prepare( $sql, $values ) );
         }
 
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );

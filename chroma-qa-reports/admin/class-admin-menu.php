@@ -177,12 +177,14 @@ class Admin_Menu {
             true
         );
 
+        $picker_enabled = strpos( $hook, 'create' ) !== false || strpos( $hook, 'settings' ) !== false;
+
         wp_localize_script( 'cqa-admin-scripts', 'cqaAdmin', [
             'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
             'restUrl'        => rest_url( 'cqa/v1/' ),
             'nonce'          => wp_create_nonce( 'wp_rest' ),
-            'googleClientId' => get_option( 'cqa_google_client_id' ),
-            'developerKey'   => get_option( 'cqa_google_developer_key' ),
+            'googleClientId' => $picker_enabled ? get_option( 'cqa_google_client_id' ) : '',
+            'developerKey'   => $picker_enabled ? get_option( 'cqa_google_developer_key' ) : '',
             'strings'        => [
                 'confirm_delete' => __( 'Are you sure you want to delete this?', 'chroma-qa-reports' ),
                 'saving'         => __( 'Saving...', 'chroma-qa-reports' ),
@@ -270,8 +272,10 @@ class Admin_Menu {
             ] );
         }
 
-        // Phase 15: School map on dashboard
-        if ( strpos( $hook, self::MENU_SLUG ) !== false && strpos( $hook, 'create' ) === false ) {
+        // Phase 15: School map on dashboard/school pages only.
+        $map_enabled = 'toplevel_page_' . self::MENU_SLUG === $hook
+            || false !== strpos( $hook, self::MENU_SLUG . '-schools' );
+        if ( $map_enabled ) {
             // Google Maps API (only if key configured)
             $maps_key = get_option( 'cqa_google_maps_api_key', '' );
             if ( $maps_key ) {
@@ -354,6 +358,10 @@ class Admin_Menu {
      * Render settings page.
      */
     public function render_settings() {
+        if ( ! \ChromaQA\Auth\Access_Policy::can_manage_settings() ) {
+            wp_die( __( 'You do not have permission to access settings.', 'chroma-qa-reports' ) );
+        }
+
         // Handle form submission
         if ( isset( $_POST['cqa_settings_nonce'] ) && wp_verify_nonce( $_POST['cqa_settings_nonce'], 'cqa_save_settings' ) ) {
             $this->save_settings();
@@ -380,12 +388,21 @@ class Admin_Menu {
 
         foreach ( $fields as $field ) {
             if ( isset( $_POST[ "cqa_{$field}" ] ) ) {
-                $value = sanitize_text_field( $_POST[ "cqa_{$field}" ] );
+                $value = sanitize_text_field( wp_unslash( $_POST[ "cqa_{$field}" ] ) );
+
+                $sensitive_fields = [ 'google_client_secret', 'google_developer_key', 'gemini_api_key', 'google_maps_api_key' ];
+                if ( in_array( $field, $sensitive_fields, true ) && '' === trim( $value ) ) {
+                    continue;
+                }
                 
                 // Special handling for domain
                 if ( $field === 'sso_domain' ) {
                     $value = preg_replace( '#^https?://(?:www\.)?#i', '', $value );
                     $value = rtrim( $value, '/' );
+                }
+
+                if ( $field === 'sso_default_role' ) {
+                    $value = 'cqa_program_manager';
                 }
 
                 // Special handling for Drive Folder (URL to ID)

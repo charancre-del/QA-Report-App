@@ -11,17 +11,21 @@ use ChromaQA\Models\Photo;
 use ChromaQA\Utils\Photo_Comparison;
 use ChromaQA\Models\Checklist_Response;
 use ChromaQA\Checklists\Checklist_Manager;
+use ChromaQA\Auth\Access_Policy;
 
 $report_id = get_query_var( 'cqa_report_id' );
 $report = Report::find( $report_id );
 
-if ( ! $report ) {
+if ( ! $report || ! Access_Policy::can_view_report( $report ) ) {
     include CQA_PLUGIN_DIR . 'public/views/404.php';
     return;
 }
 
 $school = School::find( $report->school_id );
 $previous_report = $report->previous_report_id ? Report::find( $report->previous_report_id ) : null;
+if ( $previous_report && ! Access_Policy::can_view_report( $previous_report ) ) {
+    $previous_report = null;
+}
 $photos = Photo::get_by_report( $report_id );
 $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( $report_id, $previous_report->id ) : [];
 $responses = Checklist_Response::get_by_report_grouped( $report_id );

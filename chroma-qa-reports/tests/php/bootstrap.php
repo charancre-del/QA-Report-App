@@ -9,12 +9,73 @@
 define('CQA_TESTS_DIR', __DIR__);
 define('CQA_PLUGIN_DIR', dirname(dirname(__DIR__)) . '/');
 define('CQA_VERSION', '1.0.1');
+define('ARRAY_A', 'ARRAY_A');
 
 // Load Composer autoloader
 require_once CQA_PLUGIN_DIR . 'vendor/autoload.php';
 
-// Bootstrap Brain Monkey for WordPress function mocking
-\Brain\Monkey\setUp();
+if (!class_exists('WP_Error')) {
+    class WP_Error {
+        private $code;
+        private $message;
+        private $data;
+
+        public function __construct($code = '', $message = '', $data = []) {
+            $this->code = $code;
+            $this->message = $message;
+            $this->data = $data;
+        }
+
+        public function get_error_code() { return $this->code; }
+        public function get_error_message() { return $this->message; }
+        public function get_error_data() { return $this->data; }
+    }
+}
+
+if (!class_exists('WP_REST_Response')) {
+    class WP_REST_Response {
+        private $data;
+        private $status;
+
+        public function __construct($data = null, $status = 200) {
+            $this->data = $data;
+            $this->status = $status;
+        }
+
+        public function get_data() { return $this->data; }
+        public function get_status() { return $this->status; }
+    }
+}
+
+if (!class_exists('WP_REST_Request')) {
+    class WP_REST_Request implements ArrayAccess {
+        private $params;
+        private $files;
+
+        public function __construct($params = [], $files = []) {
+            $this->params = $params;
+            $this->files = $files;
+        }
+
+        public function get_param($key) { return $this->params[$key] ?? null; }
+        public function get_params() { return $this->params; }
+        public function has_param($key) { return array_key_exists($key, $this->params); }
+        public function get_file_params() { return $this->files; }
+        public function offsetExists($offset): bool { return array_key_exists($offset, $this->params); }
+        public function offsetGet($offset): mixed { return $this->params[$offset] ?? null; }
+        public function offsetSet($offset, $value): void { $this->params[$offset] = $value; }
+        public function offsetUnset($offset): void { unset($this->params[$offset]); }
+    }
+}
+
+if (!class_exists('WP_REST_Server')) {
+    class WP_REST_Server {
+        public const READABLE = 'GET';
+        public const CREATABLE = 'POST';
+        public const EDITABLE = 'PUT,PATCH';
+        public const DELETABLE = 'DELETE';
+    }
+}
 
 // Mock WordPress functions that are commonly used
 if (!function_exists('__')) {
@@ -64,7 +125,23 @@ if (!function_exists('wp_parse_args')) {
     }
 }
 
-// Register shutdown function to tear down Brain Monkey
-register_shutdown_function(function() {
-    \Brain\Monkey\tearDown();
-});
+if (!function_exists('absint')) {
+    function absint($value) {
+        return abs((int) $value);
+    }
+}
+
+if (!function_exists('wp_list_pluck')) {
+    function wp_list_pluck($list, $field) {
+        return array_map(static function($item) use ($field) {
+            return is_object($item) ? $item->{$field} : $item[$field];
+        }, $list);
+    }
+}
+
+require_once CQA_PLUGIN_DIR . 'includes/models/class-school.php';
+require_once CQA_PLUGIN_DIR . 'includes/models/class-report.php';
+require_once CQA_PLUGIN_DIR . 'includes/models/class-checklist-response.php';
+require_once CQA_PLUGIN_DIR . 'includes/models/class-photo.php';
+require_once CQA_PLUGIN_DIR . 'includes/auth/class-access-policy.php';
+require_once CQA_PLUGIN_DIR . 'includes/api/class-rest-controller.php';

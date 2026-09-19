@@ -6,8 +6,9 @@
  */
 
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
-$schools = School::all(['orderby' => 'name', 'order' => 'ASC']);
+$schools = School::all( Access_Policy::scope_school_args( [ 'orderby' => 'name', 'order' => 'ASC', 'limit' => 10000 ] ) );
 ?>
 
 <div class="wrap cqa-import-wrap">

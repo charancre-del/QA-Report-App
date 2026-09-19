@@ -10,6 +10,7 @@ namespace ChromaQA\Admin;
 use ChromaQA\Models\Report;
 use ChromaQA\Models\Checklist_Response;
 use ChromaQA\Checklists\Checklist_Manager;
+use ChromaQA\Auth\Access_Policy;
 
 $report_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $compare_mode = isset( $_GET['compare'] ) && $_GET['compare'];
@@ -20,12 +21,15 @@ if ( ! $report_id ) {
 }
 
 $report = Report::find( $report_id );
-if ( ! $report ) {
+if ( ! $report || ! Access_Policy::can_view_report( $report ) ) {
     wp_die( __( 'Report not found.', 'chroma-qa-reports' ) );
 }
 
 $school = $report->get_school();
 $previous_report = $report->get_previous_report();
+if ( $previous_report && ! Access_Policy::can_view_report( $previous_report ) ) {
+    $previous_report = null;
+}
 $responses = Checklist_Response::get_by_report_grouped( $report_id );
 $photos = $report->get_photos();
 $ai_summary = $report->get_ai_summary();
@@ -33,7 +37,7 @@ $checklist = Checklist_Manager::get_checklist_for_type( $report->report_type );
 $stats = Checklist_Manager::get_progress_stats( $report_id, $report->report_type );
 
 // Handle PDF export
-if ( $export_pdf ) {
+if ( $export_pdf && Access_Policy::can_export_report( $report ) ) {
     // Redirect to PDF generation endpoint
     wp_redirect( rest_url( 'cqa/v1/reports/' . $report_id . '/pdf' ) );
     exit;

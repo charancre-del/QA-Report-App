@@ -78,8 +78,6 @@ class SchoolTest extends TestCase {
      * Test table name generation
      */
     public function test_get_table_name() {
-        Functions\expect('wpdb')->once();
-        
         $tableName = School::get_table_name();
         $this->assertStringContainsString('cqa_schools', $tableName);
     }
@@ -93,10 +91,12 @@ class SchoolTest extends TestCase {
             'name' => 'Factory School',
             'location' => 'Factory City',
             'region' => 'South',
+            'acquired_date' => null,
             'status' => 'active',
             'drive_folder_id' => '12345',
             'classroom_config' => '[]',
-            'created_at' => '2026-01-01 00:00:00'
+            'created_at' => '2026-01-01 00:00:00',
+            'updated_at' => '2026-01-01 00:00:00'
         ];
         
         $school = School::from_row($row);

@@ -5,15 +5,14 @@
  * @package ChromaQAReports
  */
 
-if ( ! current_user_can( 'cqa_create_reports' ) ) {
+if ( ! \ChromaQA\Auth\Access_Policy::can_manage_settings() ) {
     wp_die( __( 'You do not have permission to access settings.', 'chroma-qa-reports' ) );
 }
 
-// Pre-fill values
 $google_client_id = get_option( 'cqa_google_client_id' );
-$google_client_secret = get_option( 'cqa_google_client_secret' );
-$google_developer_key = get_option( 'cqa_google_developer_key' );
-$gemini_api_key = get_option( 'cqa_gemini_api_key' );
+$google_client_secret_configured = '' !== (string) get_option( 'cqa_google_client_secret', '' );
+$google_developer_key_configured = '' !== (string) get_option( 'cqa_google_developer_key', '' );
+$gemini_api_key_configured = '' !== (string) get_option( 'cqa_gemini_api_key', '' );
 $enable_ai = get_option( 'cqa_enable_ai', 'yes' );
 ?>
 
@@ -43,12 +42,12 @@ $enable_ai = get_option( 'cqa_enable_ai', 'yes' );
 
                 <div class="cqa-form-group">
                     <label for="google_client_secret">OAuth Client Secret</label>
-                    <input type="password" id="google_client_secret" name="google_client_secret" value="<?php echo esc_attr( $google_client_secret ); ?>" class="cqa-input">
+                    <input type="password" id="google_client_secret" name="google_client_secret" value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $google_client_secret_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="cqa-input">
                 </div>
 
                 <div class="cqa-form-group">
                     <label for="google_developer_key">Developer API Key (Picker API)</label>
-                    <input type="text" id="google_developer_key" name="google_developer_key" value="<?php echo esc_attr( $google_developer_key ); ?>" class="cqa-input">
+                    <input type="password" id="google_developer_key" name="google_developer_key" value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $google_developer_key_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="cqa-input">
                 </div>
             </div>
 
@@ -67,7 +66,7 @@ $enable_ai = get_option( 'cqa_enable_ai', 'yes' );
 
                 <div class="cqa-form-group">
                     <label for="gemini_api_key">Gemini API Key</label>
-                    <input type="password" id="gemini_api_key" name="gemini_api_key" value="<?php echo esc_attr( $gemini_api_key ); ?>" class="cqa-input">
+                    <input type="password" id="gemini_api_key" name="gemini_api_key" value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $gemini_api_key_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="cqa-input">
                 </div>
             </div>
 

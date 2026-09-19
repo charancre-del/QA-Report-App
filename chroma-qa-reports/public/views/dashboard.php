@@ -7,19 +7,32 @@
 
 use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
 $current_user = wp_get_current_user();
 
-// Show global activity if user has permission
-$recent_args = [ 'limit' => 5 ];
-if ( ! current_user_can( 'cqa_view_all_reports' ) ) {
-    $recent_args['user_id'] = $current_user->ID;
-}
+$recent_args = Access_Policy::scope_report_args( [ 'limit' => 5 ] );
 $recent_reports = Report::all( $recent_args );
 
-$schools = School::all();
-$overdue_schools = School::get_overdue_schools();
-$compliance_stats = School::get_compliance_stats();
+$schools = School::all( Access_Policy::scope_school_args( [ 'limit' => 10000 ] ) );
+$overdue_schools = [];
+$compliance_stats = [ 'exceeds' => 0, 'meets' => 0, 'needs_improvement' => 0 ];
+$overdue_cutoff = strtotime( '-90 days' );
+
+foreach ( $schools as $visible_school ) {
+    $latest_report = Report::get_latest_for_school( $visible_school->id );
+    if ( $latest_report && isset( $compliance_stats[ $latest_report->overall_rating ] ) ) {
+        ++$compliance_stats[ $latest_report->overall_rating ];
+    }
+    if ( ! $latest_report || strtotime( $latest_report->inspection_date ) < $overdue_cutoff ) {
+        $visible_school->last_inspection_date = $latest_report ? $latest_report->inspection_date : null;
+        $visible_school->days_since_last_report = $latest_report
+            ? (int) floor( ( time() - strtotime( $latest_report->inspection_date ) ) / DAY_IN_SECONDS )
+            : null;
+        $overdue_schools[] = $visible_school;
+    }
+}
+$overdue_schools = array_slice( $overdue_schools, 0, 5 );
 
 // Calculate my stats using the new count methodology
 $my_total_reports = Report::count(['user_id' => $current_user->ID]);
@@ -31,9 +44,11 @@ $my_total_reports = Report::count(['user_id' => $current_user->ID]);
             <h1>👋 Welcome, <?php echo esc_html( $current_user->display_name ); ?></h1>
             <p class="cqa-subtitle">Here's what's happening today.</p>
         </div>
-        <a href="<?php echo home_url( '/qa-reports/new/' ); ?>" class="cqa-btn cqa-btn-primary">
-            ➕ New Report
-        </a>
+        <?php if ( current_user_can( 'cqa_create_reports' ) ) : ?>
+            <a href="<?php echo home_url( '/qa-reports/new/' ); ?>" class="cqa-btn cqa-btn-primary">
+                ➕ New Report
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Top Stats Row -->
@@ -131,12 +146,16 @@ $my_total_reports = Report::count(['user_id' => $current_user->ID]);
                                     <a href="<?php echo home_url( '/qa-reports/report/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm">
                                         View
                                     </a>
-                                    <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm cqa-btn-primary">
-                                        <?php echo $report->status === 'draft' ? 'Continue' : 'Edit'; ?>
-                                    </a>
-                                    <button type="button" class="cqa-btn cqa-btn-sm cqa-btn-danger cqa-delete-report" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="if(window.CQA) CQA.deleteReport(<?php echo esc_attr( $report->id ); ?>)">
-                                        🗑️
-                                    </button>
+                                    <?php if ( Access_Policy::can_edit_report( $report ) ) : ?>
+                                        <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn cqa-btn-sm cqa-btn-primary">
+                                            <?php echo $report->status === 'draft' ? 'Continue' : 'Edit'; ?>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if ( Access_Policy::can_delete_report( $report ) ) : ?>
+                                        <button type="button" class="cqa-btn cqa-btn-sm cqa-btn-danger cqa-delete-report" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="if(window.CQA) CQA.deleteReport(<?php echo esc_attr( $report->id ); ?>)">
+                                            🗑️
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>

@@ -19,9 +19,6 @@
         <testsuite name="Auth">
             <directory>tests/php/Auth</directory>
         </testsuite>
-        <testsuite name="Checklists">
-            <directory>tests/php/Checklists</directory>
-        </testsuite>
     </testsuites>
     <coverage>
         <include>

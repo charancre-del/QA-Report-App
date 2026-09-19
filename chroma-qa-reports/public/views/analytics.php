@@ -7,14 +7,15 @@
 
 use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
-if ( ! current_user_can( 'cqa_view_all_reports' ) ) {
+if ( ! Access_Policy::can_list_reports() ) {
     wp_die( __( 'You do not have permission to view analytics.', 'chroma-qa-reports' ) );
 }
 
 // Get Data for Charts
-$reports_all = Report::all( [ 'limit' => 200, 'status' => 'approved' ] );
-$schools = School::all();
+$reports_all = Report::all( Access_Policy::scope_report_args( [ 'limit' => 200, 'status' => 'approved' ] ) );
+$schools = School::all( Access_Policy::scope_school_args( [ 'limit' => 10000 ] ) );
 
 // 1. Compliance Trends (Last 6 Months)
 // Group reports by Month and Rating

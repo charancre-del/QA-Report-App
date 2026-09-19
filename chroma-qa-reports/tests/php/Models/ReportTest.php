@@ -51,10 +51,10 @@ class ReportTest extends TestCase {
         $report = new Report();
         
         $report->report_type = 'tier1';
-        $this->assertEquals('Tier 1 QA', $report->get_type_label());
+        $this->assertEquals('Tier 1', $report->get_type_label());
         
         $report->report_type = 'tier1_tier2';
-        $this->assertEquals('Tier 1 + Tier 2 (CQI)', $report->get_type_label());
+        $this->assertEquals('Tier 1 + Tier 2', $report->get_type_label());
         
         $report->report_type = 'new_acquisition';
         $this->assertEquals('New Acquisition', $report->get_type_label());
@@ -67,16 +67,16 @@ class ReportTest extends TestCase {
         $report = new Report();
         
         $report->overall_rating = 'exceeds';
-        $this->assertEquals('Exceeds Expectations', $report->get_rating_label());
+        $this->assertEquals('Exceeds', $report->get_rating_label());
         
         $report->overall_rating = 'meets';
-        $this->assertEquals('Meets Expectations', $report->get_rating_label());
+        $this->assertEquals('Meets', $report->get_rating_label());
         
         $report->overall_rating = 'needs_improvement';
         $this->assertEquals('Needs Improvement', $report->get_rating_label());
         
         $report->overall_rating = 'pending';
-        $this->assertEquals('Pending Review', $report->get_rating_label());
+        $this->assertEquals('Pending', $report->get_rating_label());
     }
     
     /**

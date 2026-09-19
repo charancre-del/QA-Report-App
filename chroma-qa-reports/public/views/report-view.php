@@ -9,17 +9,21 @@ use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
 use ChromaQA\Models\Photo;
 use ChromaQA\Utils\Photo_Comparison;
+use ChromaQA\Auth\Access_Policy;
 
 $report_id = get_query_var( 'cqa_report_id' );
 $report = Report::find( $report_id );
 
-if ( ! $report ) {
+if ( ! $report || ! Access_Policy::can_view_report( $report ) ) {
     include CQA_PLUGIN_DIR . 'public/views/404.php';
     return;
 }
 
 $school = School::find( $report->school_id );
 $previous_report = $report->previous_report_id ? Report::find( $report->previous_report_id ) : null;
+if ( $previous_report && ! Access_Policy::can_view_report( $previous_report ) ) {
+    $previous_report = null;
+}
 $photos = Photo::get_by_report( $report_id );
 $photo_comparisons = $previous_report ? Photo_Comparison::get_comparison_pairs( $report_id, $previous_report->id ) : [];
 $ai_summary = $report->get_ai_summary();
@@ -238,25 +242,25 @@ $ai_summary = $report->get_ai_summary();
             📄 View Final Report
         </a>
 
-        <?php if ( current_user_can( 'cqa_edit_reports' ) ) : ?>
+        <?php if ( Access_Policy::can_edit_report( $report ) ) : ?>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=chroma-qa-reports-create&id=' . $report_id ) ); ?>" class="cqa-btn">
                 ✏️ Edit
             </a>
         <?php endif; ?>
 
-        <?php if ( current_user_can( 'cqa_delete_reports' ) ) : ?>
+        <?php if ( Access_Policy::can_delete_report( $report ) ) : ?>
             <button type="button" class="cqa-btn cqa-delete-report" data-id="<?php echo esc_attr( $report_id ); ?>" style="color: #ef4444; border-color: #ef4444;">
                 🗑️ Delete
             </button>
         <?php endif; ?>
 
-        <?php if ( current_user_can( 'cqa_manage_settings' ) ) : ?>
+        <?php if ( Access_Policy::can_manage_settings() ) : ?>
              <button type="button" class="cqa-btn" id="cqa-regenerate-ai-btn" data-id="<?php echo esc_attr( $report_id ); ?>">
                 🤖 Regenerate AI
             </button>
         <?php endif; ?>
 
-        <?php if ( $report->status === 'submitted' && current_user_can('cqa_edit_all_reports') ) : ?>
+        <?php if ( $report->status === 'submitted' && current_user_can( 'cqa_edit_all_reports' ) && Access_Policy::can_edit_report( $report ) ) : ?>
             <button type="button" class="cqa-btn cqa-btn-success" id="cqa-approve-report-btn" data-id="<?php echo esc_attr($report->id); ?>" style="background-color: #10b981; color: white;">
                 ✅ Approve Report
             </button>

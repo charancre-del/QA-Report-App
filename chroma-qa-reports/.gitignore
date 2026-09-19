@@ -3,4 +3,5 @@
 /node_modules/
 /coverage/
 /.phpunit.cache/
+/.phpunit.result.cache
 /tests/php/coverage/

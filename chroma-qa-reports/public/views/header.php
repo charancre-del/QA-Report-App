@@ -20,9 +20,11 @@
                     <a href="<?php echo home_url( '/qa-reports/' ); ?>" class="cqa-nav-link">
                         <span class="cqa-nav-icon">🏠</span> Dashboard
                     </a>
-                    <a href="<?php echo home_url( '/qa-reports/new/' ); ?>" class="cqa-nav-link cqa-nav-primary">
-                        <span class="cqa-nav-icon">➕</span> New Report
-                    </a>
+                    <?php if ( current_user_can( 'cqa_create_reports' ) ) : ?>
+                        <a href="<?php echo home_url( '/qa-reports/new/' ); ?>" class="cqa-nav-link cqa-nav-primary">
+                            <span class="cqa-nav-icon">➕</span> New Report
+                        </a>
+                    <?php endif; ?>
                 </nav>
                 <div class="cqa-user-menu">
                     <img src="<?php echo esc_url( get_avatar_url( get_current_user_id() ) ); ?>" alt="" class="cqa-avatar">
