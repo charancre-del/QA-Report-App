@@ -9,12 +9,13 @@ namespace ChromaQA\Admin;
 
 use ChromaQA\Models\School;
 use ChromaQA\Models\Report;
+use ChromaQA\Auth\Access_Policy;
 
 // Get stats
-$total_schools = School::count( [ 'status' => 'active' ] );
-$total_reports = count( Report::all( [ 'limit' => 1000 ] ) );
-$recent_reports = Report::all( [ 'limit' => 10, 'orderby' => 'created_at', 'order' => 'DESC' ] );
-$pending_reports = Report::all( [ 'status' => 'draft', 'limit' => 5 ] );
+$total_schools = School::count( Access_Policy::scope_school_args( [ 'status' => 'active' ] ) );
+$total_reports = Report::count( Access_Policy::scope_report_args() );
+$recent_reports = Report::all( Access_Policy::scope_report_args( [ 'limit' => 10, 'orderby' => 'created_at', 'order' => 'DESC' ] ) );
+$pending_reports = Report::all( Access_Policy::scope_report_args( [ 'status' => 'draft', 'limit' => 5 ] ) );
 ?>
 
 <div class="wrap cqa-wrap">

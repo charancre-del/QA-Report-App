@@ -178,20 +178,62 @@ class Frontend_Controller {
         }
 
         // Check authentication for protected pages
-        $public_pages = [ 'login' ];
+        $public_pages = [ 'login', 'oauth_callback' ];
         if ( ! in_array( $page, $public_pages ) && ! is_user_logged_in() ) {
             wp_redirect( home_url( '/qa-reports/login/' ) );
             exit;
         }
 
-        // Check capabilities
-        if ( ! in_array( $page, $public_pages ) && ! current_user_can( 'cqa_create_reports' ) ) {
+        if ( ! in_array( $page, $public_pages, true ) && ! self::authorize_page( $page ) ) {
             wp_die( __( 'You do not have permission to access this page.', 'chroma-qa-reports' ) );
         }
 
         // Load the appropriate template
         self::load_template( $page );
         exit;
+    }
+
+    /**
+     * Authorize a front-end route against the object or school in the URL.
+     *
+     * @param string $page Route name.
+     * @return bool
+     */
+    private static function authorize_page( $page ) {
+        $policy = '\ChromaQA\Auth\Access_Policy';
+
+        switch ( $page ) {
+            case 'dashboard':
+            case 'reports-list':
+            case 'analytics':
+                return $policy::can_list_reports();
+
+            case 'new-report':
+            case 'import':
+                return current_user_can( 'cqa_create_reports' );
+
+            case 'edit-report':
+                return $policy::can_edit_report( \ChromaQA\Models\Report::find( get_query_var( 'cqa_report_id' ) ) );
+
+            case 'view-report':
+            case 'final-report':
+                return $policy::can_view_report( \ChromaQA\Models\Report::find( get_query_var( 'cqa_report_id' ) ) );
+
+            case 'schools-list':
+                return $policy::can_list_schools();
+
+            case 'school-form':
+                $school_id = absint( get_query_var( 'cqa_school_id' ) );
+                return $school_id
+                    ? $policy::can_manage_school( \ChromaQA\Models\School::find( $school_id ) )
+                    : $policy::can_manage_any_school();
+
+            case 'settings':
+                return $policy::can_manage_settings();
+
+            default:
+                return false;
+        }
     }
 
     /**
@@ -286,14 +328,16 @@ class Frontend_Controller {
             true
         );
 
+        $picker_enabled = in_array( $cqa_page, [ 'new-report', 'edit-report' ], true );
+
         wp_localize_script( 'cqa-frontend', 'cqaFrontend', [
             'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
             'restUrl'        => rest_url( 'cqa/v1/' ),
             'nonce'          => wp_create_nonce( 'wp_rest' ),
             'loginUrl'       => home_url( '/qa-reports/login/' ),
             'homeUrl'        => home_url( '/qa-reports/' ),
-            'googleClientId' => get_option( 'cqa_google_client_id' ),
-            'developerKey'   => get_option( 'cqa_google_developer_key' ), // Needed for Picker API
+            'googleClientId' => $picker_enabled ? get_option( 'cqa_google_client_id' ) : '',
+            'developerKey'   => $picker_enabled ? get_option( 'cqa_google_developer_key' ) : '',
             'strings'        => [
                 'loading'     => __( 'Loading...', 'chroma-qa-reports' ),
                 'saving'      => __( 'Saving...', 'chroma-qa-reports' ),

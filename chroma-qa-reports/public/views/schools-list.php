@@ -7,9 +7,10 @@
 
 use ChromaQA\Models\School;
 use ChromaQA\Models\Report;
+use ChromaQA\Auth\Access_Policy;
 
-if ( ! current_user_can( 'cqa_manage_schools' ) && ! current_user_can( 'cqa_regional_director' ) && ! current_user_can( 'cqa_create_reports' ) ) {
-    wp_die( __( 'You do not have permission to manage schools.', 'chroma-qa-reports' ) );
+if ( ! Access_Policy::can_list_schools() ) {
+    wp_die( __( 'You do not have permission to view schools.', 'chroma-qa-reports' ) );
 }
 
 $filter_compliance = isset( $_GET['compliance'] ) ? sanitize_text_field( $_GET['compliance'] ) : '';
@@ -32,7 +33,7 @@ if ( $filter_compliance ) {
     $args['compliance_status'] = $filter_compliance; 
 }
 
-$schools = School::all($args);
+$schools = School::all( Access_Policy::scope_school_args( $args ) );
 
 // Post-filter for 'compliant' if specified
 if ( $filter_compliance === 'compliant' ) {
@@ -49,9 +50,11 @@ if ( $filter_compliance === 'compliant' ) {
             <h1>🏫 School Management</h1>
             <p class="cqa-subtitle">Manage school profiles and configurations.</p>
         </div>
-        <a href="<?php echo home_url( '/qa-reports/schools/new/' ); ?>" class="cqa-btn cqa-btn-primary">
-            ➕ Add School
-        </a>
+        <?php if ( Access_Policy::can_manage_any_school() ) : ?>
+            <a href="<?php echo home_url( '/qa-reports/schools/new/' ); ?>" class="cqa-btn cqa-btn-primary">
+                ➕ Add School
+            </a>
+        <?php endif; ?>
     </div>
 
     <div class="cqa-section">
@@ -88,8 +91,12 @@ if ( $filter_compliance === 'compliant' ) {
                             </td>
                             <td>
                                 <div class="cqa-table-actions">
-                                    <a href="<?php echo home_url( '/qa-reports/schools/edit/' . $school->id ); ?>" class="cqa-btn-icon" title="Edit">✏️</a>
-                                    <a href="<?php echo home_url( '/qa-reports/new/?school_id=' . $school->id ); ?>" class="cqa-btn-icon" title="New Report">📝</a>
+                                    <?php if ( Access_Policy::can_manage_school( $school ) ) : ?>
+                                        <a href="<?php echo home_url( '/qa-reports/schools/edit/' . $school->id ); ?>" class="cqa-btn-icon" title="Edit">✏️</a>
+                                    <?php endif; ?>
+                                    <?php if ( Access_Policy::can_create_report_for_school( $school ) ) : ?>
+                                        <a href="<?php echo home_url( '/qa-reports/new/?school_id=' . $school->id ); ?>" class="cqa-btn-icon" title="New Report">📝</a>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>

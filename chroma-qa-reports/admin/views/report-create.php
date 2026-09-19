@@ -10,17 +10,22 @@ namespace ChromaQA\Admin;
 use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
 use ChromaQA\Checklists\Checklist_Manager;
+use ChromaQA\Auth\Access_Policy;
 
 // Get existing report if editing
 $report_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $report = $report_id ? Report::find( $report_id ) : new Report();
 $is_edit = (bool) $report_id;
 
+if ( $is_edit && ( ! $report || ! Access_Policy::can_edit_report( $report ) ) ) {
+    wp_die( __( 'You do not have permission to edit this report.', 'chroma-qa-reports' ) );
+}
+
 // Pre-select school from URL
 $selected_school_id = isset( $_GET['school_id'] ) ? intval( $_GET['school_id'] ) : ( $report->school_id ?? 0 );
 
 // Get all active schools
-$schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
+$schools = School::all( Access_Policy::scope_school_args( [ 'status' => 'active', 'limit' => 10000 ] ) );
 ?>
 
 <div class="wrap cqa-wrap">

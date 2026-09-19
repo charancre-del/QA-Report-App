@@ -15,6 +15,7 @@ use ChromaQA\Integrations\Google_Drive;
 use ChromaQA\Checklists\Checklist_Manager;
 use ChromaQA\Utils\Docx_Parser;
 use ChromaQA\AI\Gemini_Service;
+use ChromaQA\Auth\Access_Policy;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -41,12 +42,12 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_schools' ],
-                'permission_callback' => [ $this, 'check_read_permission' ],
+                'permission_callback' => [ $this, 'check_list_schools_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_school' ],
-                'permission_callback' => [ $this, 'check_manage_schools_permission' ],
+                'permission_callback' => [ $this, 'check_create_school_permission' ],
             ],
         ] );
 
@@ -54,17 +55,17 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_school' ],
-                'permission_callback' => [ $this, 'check_read_permission' ],
+                'permission_callback' => [ $this, 'check_view_school_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_school' ],
-                'permission_callback' => [ $this, 'check_manage_schools_permission' ],
+                'permission_callback' => [ $this, 'check_manage_school_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_school' ],
-                'permission_callback' => [ $this, 'check_manage_schools_permission' ],
+                'permission_callback' => [ $this, 'check_manage_school_permission' ],
             ],
         ] );
 
@@ -73,7 +74,7 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_reports' ],
-                'permission_callback' => [ $this, 'check_read_permission' ],
+                'permission_callback' => [ $this, 'check_view_report_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -86,7 +87,7 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_report' ],
-                'permission_callback' => [ $this, 'check_read_permission' ],
+                'permission_callback' => [ $this, 'check_view_report_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
@@ -105,7 +106,7 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_report_responses' ],
-                'permission_callback' => [ $this, 'check_read_permission' ],
+                'permission_callback' => [ $this, 'check_view_report_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -125,13 +126,13 @@ class REST_Controller {
         \register_rest_route( self::NAMESPACE, '/reports/(?P<id>\d+)/generate-summary', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'generate_ai_summary' ],
-            'permission_callback' => [ $this, 'check_ai_permission' ],
+            'permission_callback' => [ $this, 'check_report_ai_permission' ],
         ] );
 
         \register_rest_route( self::NAMESPACE, '/reports/upload-doc', [
             'methods'             => 'POST',
             'callback'            => [ $this, 'upload_report_doc' ],
-            'permission_callback' => [ $this, 'check_create_reports_permission' ],
+            'permission_callback' => [ $this, 'check_document_ai_permission' ],
         ] );
 
         // Upload Report Photos (New)
@@ -145,19 +146,19 @@ class REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_photo' ],
-                'permission_callback' => [ $this, 'check_read_permission' ], // Simple check for now
+                'permission_callback' => [ $this, 'check_edit_photo_permission' ],
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_photo' ],
-                'permission_callback' => [ $this, 'check_read_permission' ], // Simple check for now
+                'permission_callback' => [ $this, 'check_edit_photo_permission' ],
             ],
         ] );
 
         \register_rest_route( self::NAMESPACE, '/ai/parse-document', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [ $this, 'parse_document' ],
-            'permission_callback' => [ $this, 'check_ai_permission' ],
+            'permission_callback' => [ $this, 'check_document_ai_permission' ],
         ] );
 
         // Checklists
@@ -171,7 +172,7 @@ class REST_Controller {
         \register_rest_route( self::NAMESPACE, '/schools/(?P<id>\d+)/reports', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'get_school_reports' ],
-            'permission_callback' => [ $this, 'check_read_permission' ],
+            'permission_callback' => [ $this, 'check_view_school_permission' ],
         ] );
 
         // Settings
@@ -191,41 +192,75 @@ class REST_Controller {
 
     // ===== PERMISSION CALLBACKS =====
 
+    private function forbidden() {
+        return new WP_Error( 'forbidden', __( 'You do not have permission to perform this action.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+    }
+
     public function check_read_permission() {
-        return \current_user_can( 'cqa_view_own_reports' ) || \current_user_can( 'cqa_view_all_reports' );
+        return Access_Policy::can_list_reports() ?: $this->forbidden();
+    }
+
+    public function check_list_schools_permission() {
+        return Access_Policy::can_list_schools() ?: $this->forbidden();
+    }
+
+    public function check_view_school_permission( $request ) {
+        $school = School::find( $request['id'] );
+        return Access_Policy::can_access_school( $school ) ?: $this->forbidden();
+    }
+
+    public function check_create_school_permission( $request ) {
+        return Access_Policy::can_create_school( $request->get_param( 'region' ) ) ?: $this->forbidden();
+    }
+
+    public function check_manage_school_permission( $request ) {
+        $school = School::find( $request['id'] );
+        return Access_Policy::can_manage_school( $school ) ?: $this->forbidden();
     }
 
     public function check_manage_schools_permission() {
-        return \current_user_can( 'cqa_manage_schools' );
+        return Access_Policy::can_manage_any_school() ?: $this->forbidden();
     }
 
-    public function check_create_reports_permission() {
-        return \current_user_can( 'cqa_create_reports' );
+    public function check_create_reports_permission( $request ) {
+        $school_id = absint( $request->get_param( 'school_id' ) );
+        $school = $school_id ? School::find( $school_id ) : null;
+        return Access_Policy::can_create_report_for_school( $school ) ?: $this->forbidden();
+    }
+
+    public function check_view_report_permission( $request ) {
+        $report = Report::find( $request['id'] );
+        return Access_Policy::can_view_report( $report ) ?: $this->forbidden();
     }
 
     public function check_edit_reports_permission( $request ) {
-        if ( \current_user_can( 'cqa_edit_all_reports' ) ) {
-            return true;
-        }
-
-        if ( \current_user_can( 'cqa_edit_own_reports' ) ) {
-            $report = Report::find( $request['id'] );
-            return $report && $report->user_id === \get_current_user_id();
-        }
-
-        return false;
+        $report = Report::find( $request['id'] );
+        return Access_Policy::can_edit_report( $report ) ?: $this->forbidden();
     }
 
-    public function check_delete_reports_permission() {
-        return \current_user_can( 'cqa_delete_reports' ) || \current_user_can( 'cqa_delete_own_reports' );
+    public function check_delete_reports_permission( $request ) {
+        $report = Report::find( $request['id'] );
+        return Access_Policy::can_delete_report( $report ) ?: $this->forbidden();
     }
 
-    public function check_export_permission() {
-        return \current_user_can( 'cqa_export_reports' );
+    public function check_export_permission( $request ) {
+        $report = Report::find( $request['id'] );
+        return Access_Policy::can_export_report( $report ) ?: $this->forbidden();
     }
 
-    public function check_ai_permission() {
-        return \current_user_can( 'cqa_use_ai_features' );
+    public function check_report_ai_permission( $request ) {
+        $report = Report::find( $request['id'] );
+        return Access_Policy::can_use_ai_for_report( $report ) ?: $this->forbidden();
+    }
+
+    public function check_document_ai_permission() {
+        return Access_Policy::can_parse_document() ?: $this->forbidden();
+    }
+
+    public function check_edit_photo_permission( $request ) {
+        $photo = Photo::find( $request['id'] );
+        $report = $photo ? Report::find( $photo->report_id ) : null;
+        return Access_Policy::can_edit_report( $report ) ?: $this->forbidden();
     }
 
     public function check_manage_options_permission() {
@@ -233,8 +268,7 @@ class REST_Controller {
     }
 
     public function check_settings_permission() {
-        // Allow anyone who can create reports to also configure the app (for now)
-        return \current_user_can( 'cqa_create_reports' ) || \current_user_can( 'manage_options' );
+        return Access_Policy::can_manage_settings() ?: $this->forbidden();
     }
 
     // ===== SCHOOLS ENDPOINTS =====
@@ -247,6 +281,7 @@ class REST_Controller {
             'offset' => ( ( $request->get_param( 'page' ) ?: 1 ) - 1 ) * 100,
         ];
 
+        $args = Access_Policy::scope_school_args( $args );
         $schools = School::all( $args );
         $data = array_map( [ $this, 'prepare_school_response' ], $schools );
 
@@ -260,20 +295,27 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'School not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_access_school( $school ) ) {
+            return $this->forbidden();
+        }
+
         return new WP_REST_Response( $this->prepare_school_response( $school ), 200 );
     }
 
     public function create_school( WP_REST_Request $request ) {
+        $requested_region = \sanitize_text_field( $request->get_param( 'region' ) );
+        if ( ! Access_Policy::can_create_school( $requested_region ) ) {
+            return $this->forbidden();
+        }
+
         $school = new School();
         $school->name = \sanitize_text_field( $request->get_param( 'name' ) );
         $school->location = \sanitize_text_field( $request->get_param( 'location' ) );
-        $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
+        $school->region = $requested_region;
         $school->acquired_date = \sanitize_text_field( $request->get_param( 'acquired_date' ) );
         $school->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'active';
         $school->drive_folder_id = \sanitize_text_field( $request->get_param( 'drive_folder_id' ) );
         $school->classroom_config = $request->get_param( 'classroom_config' ) ?: [];
-
-        error_log( 'REST_Controller: create_school - Data: ' . print_r( $request->get_params(), true ) );
 
         $result = $school->save();
 
@@ -292,6 +334,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'School not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_manage_school( $school ) ) {
+            return $this->forbidden();
+        }
+
         if ( $request->has_param( 'name' ) ) {
             $school->name = \sanitize_text_field( $request->get_param( 'name' ) );
         }
@@ -299,7 +345,11 @@ class REST_Controller {
             $school->location = \sanitize_text_field( $request->get_param( 'location' ) );
         }
         if ( $request->has_param( 'region' ) ) {
-            $school->region = \sanitize_text_field( $request->get_param( 'region' ) );
+            $requested_region = \sanitize_text_field( $request->get_param( 'region' ) );
+            if ( ! Access_Policy::can_create_school( $requested_region ) ) {
+                return $this->forbidden();
+            }
+            $school->region = $requested_region;
         }
         if ( $request->has_param( 'acquired_date' ) ) {
             $school->acquired_date = \sanitize_text_field( $request->get_param( 'acquired_date' ) );
@@ -326,6 +376,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'School not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_manage_school( $school ) ) {
+            return $this->forbidden();
+        }
+
         $school->delete();
 
         return new WP_REST_Response( null, 204 );
@@ -342,6 +396,7 @@ class REST_Controller {
             'offset'      => ( ( $request->get_param( 'page' ) ?: 1 ) - 1 ) * 50,
         ];
 
+        $args = Access_Policy::scope_report_args( $args );
         $reports = Report::all( $args );
         $data = array_map( [ $this, 'prepare_report_response' ], $reports );
 
@@ -355,34 +410,27 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_view_report( $report ) ) {
+            return $this->forbidden();
+        }
+
         return new WP_REST_Response( $this->prepare_report_response( $report, true ), 200 );
     }
 
     public function create_report( WP_REST_Request $request ) {
-        // Initialize Report
         $report = new Report();
-        $school_id = intval( $request->get_param( 'school_id' ) );
-
-        // FALLBACK 1: Check $_GET (The Nuclear Option)
-        if ( empty( $school_id ) && isset( $_GET['school_id'] ) ) {
-            $school_id = intval( $_GET['school_id'] );
-            error_log( 'create_report: Recovered school_id from $_GET: ' . $school_id );
+        $school_id = absint( $request->get_param( 'school_id' ) );
+        if ( ! $school_id ) {
+            return new WP_Error( 'invalid_school', __( 'A school is required.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
         }
 
-        // FALLBACK 2: Check Raw PHP Input (The Double Nuclear Option)
-        if ( empty( $school_id ) ) {
-             $raw_input = file_get_contents( 'php://input' );
-             $json = json_decode( $raw_input, true );
-             if ( isset( $json['school_id'] ) ) {
-                 $school_id = intval( $json['school_id'] );
-                 error_log( 'create_report: Recovered school_id from php://input: ' . $school_id );
-             }
+        $school = School::find( $school_id );
+        if ( ! $school ) {
+            return new WP_Error( 'not_found', __( 'School not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
-        // FALLBACK 3: Check Cookies (The Triple Nuclear Option)
-        if ( empty( $school_id ) && isset( $_COOKIE['cqa_temp_school_id'] ) ) {
-            $school_id = intval( $_COOKIE['cqa_temp_school_id'] );
-            error_log( 'create_report: Recovered school_id from COOKIE: ' . $school_id );
+        if ( ! Access_Policy::can_create_report_for_school( $school ) ) {
+            return $this->forbidden();
         }
 
         $report->school_id = $school_id;
@@ -390,6 +438,13 @@ class REST_Controller {
         $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         $report->previous_report_id = intval( $request->get_param( 'previous_report_id' ) ) ?: null;
+
+        if ( $report->previous_report_id ) {
+            $previous_report = Report::find( $report->previous_report_id );
+            if ( ! $previous_report || (int) $previous_report->school_id !== $school_id || ! Access_Policy::can_view_report( $previous_report ) ) {
+                return new WP_Error( 'invalid_previous_report', __( 'The previous report is not available for this school.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+            }
+        }
         
         // Auto-link previous report if not provided
         if ( ! $report->previous_report_id && $school_id ) {
@@ -401,13 +456,19 @@ class REST_Controller {
                 'order'     => 'DESC',
             ] );
 
-            if ( ! empty( $previous_reports ) ) {
+            if ( ! empty( $previous_reports ) && Access_Policy::can_view_report( $previous_reports[0] ) ) {
                 $report->previous_report_id = $previous_reports[0]->id;
             }
         }
         $report->overall_rating = \sanitize_text_field( $request->get_param( 'overall_rating' ) ) ?: 'pending';
         $report->closing_notes = \sanitize_textarea_field( $request->get_param( 'closing_notes' ) );
         $report->status = \sanitize_text_field( $request->get_param( 'status' ) ) ?: 'draft';
+        if ( ! in_array( $report->status, [ Report::STATUS_DRAFT, Report::STATUS_SUBMITTED, Report::STATUS_APPROVED ], true ) ) {
+            return new WP_Error( 'invalid_status', __( 'Invalid report status.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+        }
+        if ( Report::STATUS_APPROVED === $report->status && ! \current_user_can( 'cqa_edit_all_reports' ) ) {
+            return new WP_Error( 'forbidden', __( 'You do not have permission to approve reports.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+        }
 
         $result = $report->save();
 
@@ -431,30 +492,38 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_edit_report( $report ) ) {
+            return $this->forbidden();
+        }
+
         if ( $request->has_param( 'report_type' ) ) {
             $report->report_type = \sanitize_text_field( $request->get_param( 'report_type' ) );
         }
         
-        // Allow updating School ID (Vital for fixing Unknown Schools)
         if ( $request->has_param( 'school_id' ) ) {
-            $school_id = intval( $request->get_param( 'school_id' ) );
-             // Fallback 1: $_GET
-            if ( empty( $school_id ) && isset( $_GET['school_id'] ) ) {
-                $school_id = intval( $_GET['school_id'] );
+            $school_id = absint( $request->get_param( 'school_id' ) );
+            $school = $school_id ? School::find( $school_id ) : null;
+            if ( ! $school ) {
+                return new WP_Error( 'invalid_school', __( 'A valid school is required.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
             }
-             // Fallback 2: POST/JSON handled by has_param generally, but if param is strict...
-             // Just take the param if it exists.
-            
-            if ( $school_id > 0 ) {
-                $report->school_id = $school_id;
+            if ( ! Access_Policy::can_create_report_for_school( $school ) ) {
+                return $this->forbidden();
             }
+            $report->school_id = $school_id;
         }
         
         if ( $request->has_param( 'inspection_date' ) ) {
             $report->inspection_date = \sanitize_text_field( $request->get_param( 'inspection_date' ) );
         }
         if ( $request->has_param( 'previous_report_id' ) ) {
-            $report->previous_report_id = intval( $request->get_param( 'previous_report_id' ) ) ?: null;
+            $previous_report_id = absint( $request->get_param( 'previous_report_id' ) );
+            if ( $previous_report_id ) {
+                $previous_report = Report::find( $previous_report_id );
+                if ( ! $previous_report || (int) $previous_report->school_id !== (int) $report->school_id || ! Access_Policy::can_view_report( $previous_report ) ) {
+                    return new WP_Error( 'invalid_previous_report', __( 'The previous report is not available for this school.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+                }
+            }
+            $report->previous_report_id = $previous_report_id ?: null;
         }
         if ( $request->has_param( 'overall_rating' ) ) {
             $report->overall_rating = \sanitize_text_field( $request->get_param( 'overall_rating' ) );
@@ -464,6 +533,10 @@ class REST_Controller {
         }
         if ( $request->has_param( 'status' ) ) {
             $new_status = \sanitize_text_field( $request->get_param( 'status' ) );
+
+            if ( ! in_array( $new_status, [ Report::STATUS_DRAFT, Report::STATUS_SUBMITTED, Report::STATUS_APPROVED ], true ) ) {
+                return new WP_Error( 'invalid_status', __( 'Invalid report status.', 'chroma-qa-reports' ), [ 'status' => 400 ] );
+            }
 
             // Permission check for approval
             if ( $new_status === 'approved' && $report->status !== 'approved' ) {
@@ -517,11 +590,8 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
-        // Check ownership if user only has delete_own_reports capability
-        if ( ! \current_user_can( 'cqa_delete_reports' ) ) {
-            if ( $report->user_id !== \get_current_user_id() ) {
-                return new WP_Error( 'forbidden', __( 'You can only delete your own reports.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
-            }
+        if ( ! Access_Policy::can_delete_report( $report ) ) {
+            return $this->forbidden();
         }
 
         $report->delete();
@@ -532,12 +602,21 @@ class REST_Controller {
     // ===== REPORT RESPONSES =====
 
     public function get_report_responses( WP_REST_Request $request ) {
+        $report = Report::find( $request['id'] );
+        if ( ! Access_Policy::can_view_report( $report ) ) {
+            return $this->forbidden();
+        }
+
         $responses = Checklist_Response::get_by_report_grouped( $request['id'] );
         return new WP_REST_Response( $responses, 200 );
     }
 
     public function save_report_responses( WP_REST_Request $request ) {
         $report_id = $request['id'];
+        if ( ! Access_Policy::can_edit_report( Report::find( $report_id ) ) ) {
+            return $this->forbidden();
+        }
+
         $responses = $request->get_param( 'responses' );
 
         if ( ! is_array( $responses ) ) {
@@ -558,12 +637,18 @@ class REST_Controller {
     }
 
     public function get_school_reports( WP_REST_Request $request ) {
-        $reports = Report::all( [
+        $school = School::find( $request['id'] );
+        if ( ! Access_Policy::can_access_school( $school ) ) {
+            return $this->forbidden();
+        }
+
+        $args = Access_Policy::scope_report_args( [
             'school_id' => $request['id'],
             'limit'     => 10,
             'orderby'   => 'inspection_date',
             'order'     => 'DESC',
         ] );
+        $reports = Report::all( $args );
 
         $data = array_map( function( $report ) {
             return [
@@ -587,6 +672,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_use_ai_for_report( $report ) ) {
+            return $this->forbidden();
+        }
+
         // Use the AI Summary generator
         $ai = new \ChromaQA\AI\Executive_Summary();
         $result = $ai->generate( $report );
@@ -599,6 +688,10 @@ class REST_Controller {
     }
 
     public function parse_document( WP_REST_Request $request ) {
+        if ( ! Access_Policy::can_parse_document() ) {
+            return $this->forbidden();
+        }
+
         $files = $request->get_file_params();
         
         if ( empty( $files['document'] ) ) {
@@ -632,9 +725,8 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
-        // Check permissions
-        if ( ! \current_user_can( 'cqa_edit_reports' ) ) {
-             return new WP_Error( 'forbidden', __( 'Permission denied.', 'chroma-qa-reports' ), [ 'status' => 403 ] );
+        if ( ! Access_Policy::can_edit_report( $report ) ) {
+            return $this->forbidden();
         }
 
         require_once( ABSPATH . 'wp-admin/includes/image.php' );
@@ -709,6 +801,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Photo not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_edit_report( Report::find( $photo->report_id ) ) ) {
+            return $this->forbidden();
+        }
+
         if ( $request->has_param( 'caption' ) ) {
             $photo->caption = \sanitize_text_field( $request->get_param( 'caption' ) );
         }
@@ -733,6 +829,10 @@ class REST_Controller {
             return new WP_Error( 'not_found', __( 'Photo not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
         }
 
+        if ( ! Access_Policy::can_edit_report( Report::find( $photo->report_id ) ) ) {
+            return $this->forbidden();
+        }
+
         $photo->delete();
 
         return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -741,33 +841,42 @@ class REST_Controller {
     // ===== SETTINGS ENDPOINTS =====
 
     public function get_settings( WP_REST_Request $request ) {
+        if ( ! Access_Policy::can_manage_settings() ) {
+            return $this->forbidden();
+        }
+
         $settings = [
             'google_client_id'     => \get_option( 'cqa_google_client_id' ),
-            'google_client_secret' => \get_option( 'cqa_google_client_secret' ),
-            'google_developer_key' => \get_option( 'cqa_google_developer_key' ),
-            'gemini_api_key'       => \get_option( 'cqa_gemini_api_key' ),
             'enable_ai'            => \get_option( 'cqa_enable_ai', 'yes' ),
+            'google_client_secret_configured' => '' !== (string) \get_option( 'cqa_google_client_secret', '' ),
+            'google_developer_key_configured' => '' !== (string) \get_option( 'cqa_google_developer_key', '' ),
+            'gemini_api_key_configured'       => '' !== (string) \get_option( 'cqa_gemini_api_key', '' ),
         ];
         return new WP_REST_Response( $settings, 200 );
     }
 
     public function update_settings( WP_REST_Request $request ) {
+        if ( ! Access_Policy::can_manage_settings() ) {
+            return $this->forbidden();
+        }
+
         $params = $request->get_params();
 
         if ( isset( $params['google_client_id'] ) ) {
             \update_option( 'cqa_google_client_id', \sanitize_text_field( $params['google_client_id'] ) );
         }
-        if ( isset( $params['google_client_secret'] ) ) {
+        if ( isset( $params['google_client_secret'] ) && '' !== trim( (string) $params['google_client_secret'] ) ) {
             \update_option( 'cqa_google_client_secret', \sanitize_text_field( $params['google_client_secret'] ) );
         }
-        if ( isset( $params['google_developer_key'] ) ) {
+        if ( isset( $params['google_developer_key'] ) && '' !== trim( (string) $params['google_developer_key'] ) ) {
             \update_option( 'cqa_google_developer_key', \sanitize_text_field( $params['google_developer_key'] ) );
         }
-        if ( isset( $params['gemini_api_key'] ) ) {
+        if ( isset( $params['gemini_api_key'] ) && '' !== trim( (string) $params['gemini_api_key'] ) ) {
             \update_option( 'cqa_gemini_api_key', \sanitize_text_field( $params['gemini_api_key'] ) );
         }
         if ( isset( $params['enable_ai'] ) ) {
-            \update_option( 'cqa_enable_ai', \sanitize_text_field( $params['enable_ai'] ) );
+            $enable_ai = 'yes' === \sanitize_text_field( $params['enable_ai'] ) ? 'yes' : 'no';
+            \update_option( 'cqa_enable_ai', $enable_ai );
         }
 
         return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -778,6 +887,10 @@ class REST_Controller {
         
         if ( ! $report ) {
             return new WP_Error( 'not_found', __( 'Report not found.', 'chroma-qa-reports' ), [ 'status' => 404 ] );
+        }
+
+        if ( ! Access_Policy::can_export_report( $report ) ) {
+            return $this->forbidden();
         }
 
         // Nuclear Option: Disable all error reporting for PDF generation
@@ -1134,6 +1247,10 @@ class REST_Controller {
      * @return WP_REST_Response|WP_Error
      */
     public function upload_report_doc( WP_REST_Request $request ) {
+        if ( ! Access_Policy::can_parse_document() ) {
+            return $this->forbidden();
+        }
+
         $files = $request->get_file_params();
 
         if ( empty( $files['file'] ) ) {

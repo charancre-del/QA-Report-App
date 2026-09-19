@@ -9,20 +9,25 @@ use ChromaQA\Models\School;
 use ChromaQA\Models\Report;
 use ChromaQA\Checklists\Checklist_Manager;
 use ChromaQA\Checklists\Classroom_Checklist;
+use ChromaQA\Auth\Access_Policy;
 
 $report_id = get_query_var( 'cqa_report_id' );
 $school_id = isset( $_GET['school_id'] ) ? intval( $_GET['school_id'] ) : 0;
 $report = null;
-$schools = School::all();
+$schools = School::all( Access_Policy::scope_school_args( [ 'status' => 'active', 'limit' => 10000 ] ) );
 
 if ( $report_id ) {
     $report = Report::find( $report_id );
-    if ( $report ) {
-        $school_id = $report->school_id;
+    if ( ! $report || ! Access_Policy::can_edit_report( $report ) ) {
+        wp_die( __( 'You do not have permission to edit this report.', 'chroma-qa-reports' ) );
     }
+    $school_id = $report->school_id;
 }
 
 $school = $school_id ? School::find( $school_id ) : null;
+if ( $school && ! Access_Policy::can_access_school( $school ) ) {
+    wp_die( __( 'You do not have permission to use this school.', 'chroma-qa-reports' ) );
+}
 ?>
 
 <form id="cqa-report-form" class="cqa-report-form">

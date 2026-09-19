@@ -8,16 +8,38 @@
 namespace ChromaQA\Admin;
 
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
 $school_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $school = $school_id ? School::find( $school_id ) : new School();
 $is_new = ! $school_id;
 
+if ( ! $is_new && ( ! $school || ! Access_Policy::can_manage_school( $school ) ) ) {
+    wp_die( __( 'You do not have permission to edit this school.', 'chroma-qa-reports' ) );
+}
+
+$visible_schools = School::all( Access_Policy::scope_school_args( [ 'limit' => 10000 ] ) );
+$visible_regions = array_values( array_unique( array_filter( wp_list_pluck( $visible_schools, 'region' ) ) ) );
+$visible_locations = array_values( array_unique( array_filter( wp_list_pluck( $visible_schools, 'location' ) ) ) );
+
+if ( $is_new && ! Access_Policy::has_global_scope() && Access_Policy::get_region_scope() ) {
+    $visible_regions = [ Access_Policy::get_region_scope() ];
+}
+
 // Handle form submission
 if ( isset( $_POST['cqa_school_nonce'] ) && wp_verify_nonce( $_POST['cqa_school_nonce'], 'cqa_save_school' ) ) {
+    $submitted_region = sanitize_text_field( wp_unslash( $_POST['region'] ?? '' ) );
+    if ( $is_new ) {
+        if ( ! Access_Policy::can_create_school( $submitted_region ) ) {
+            wp_die( __( 'You do not have permission to create a school in this region.', 'chroma-qa-reports' ) );
+        }
+    } elseif ( ! Access_Policy::has_global_scope() && $submitted_region !== $school->region ) {
+        wp_die( __( 'You do not have permission to move this school to another region.', 'chroma-qa-reports' ) );
+    }
+
     $school->name = sanitize_text_field( $_POST['name'] );
     $school->location = sanitize_text_field( $_POST['location'] );
-    $school->region = sanitize_text_field( $_POST['region'] );
+    $school->region = $submitted_region;
     $school->acquired_date = sanitize_text_field( $_POST['acquired_date'] );
     $school->status = sanitize_text_field( $_POST['status'] );
     $school->drive_folder_id = sanitize_text_field( $_POST['drive_folder_id'] );
@@ -102,7 +124,7 @@ $classroom_types = [
                             <td>
                                 <input type="text" id="location" name="location" value="<?php echo esc_attr( $school->location ?? '' ); ?>" class="regular-text" list="locations-list">
                                 <datalist id="locations-list">
-                                    <?php foreach ( School::get_locations() as $location ) : ?>
+                                    <?php foreach ( $visible_locations as $location ) : ?>
                                         <option value="<?php echo esc_attr( $location ); ?>">
                                     <?php endforeach; ?>
                                 </datalist>
@@ -113,7 +135,7 @@ $classroom_types = [
                             <td>
                                 <input type="text" id="region" name="region" value="<?php echo esc_attr( $school->region ?? '' ); ?>" class="regular-text" list="regions-list">
                                 <datalist id="regions-list">
-                                    <?php foreach ( School::get_regions() as $region ) : ?>
+                                    <?php foreach ( $visible_regions as $region ) : ?>
                                         <option value="<?php echo esc_attr( $region ); ?>">
                                     <?php endforeach; ?>
                                 </datalist>

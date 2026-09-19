@@ -9,6 +9,7 @@ namespace ChromaQA\Admin;
 
 use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
 // Get filter values
 $page = isset( $_GET['paged'] ) ? max( 1, intval( $_GET['paged'] ) ) : 1;
@@ -32,10 +33,13 @@ if ( isset( $_GET['status'] ) && $_GET['status'] ) {
     $args['status'] = sanitize_text_field( $_GET['status'] );
 }
 
+$args = Access_Policy::scope_report_args( $args );
 $reports = Report::all( $args );
-$total_reports = count( Report::all( array_merge( $args, [ 'limit' => 10000 ] ) ) );
+$count_args = $args;
+unset( $count_args['limit'], $count_args['offset'] );
+$total_reports = Report::count( $count_args );
 $total_pages = ceil( $total_reports / $per_page );
-$schools = School::all( [ 'status' => 'active', 'limit' => 100 ] );
+$schools = School::all( Access_Policy::scope_school_args( [ 'status' => 'active', 'limit' => 10000 ] ) );
 ?>
 
 <div class="wrap cqa-wrap">

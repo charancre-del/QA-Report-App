@@ -8,14 +8,17 @@
 namespace ChromaQA\Admin;
 
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
 // Handle delete action
 if ( isset( $_GET['action'] ) && $_GET['action'] === 'delete' && isset( $_GET['id'] ) ) {
     if ( wp_verify_nonce( $_GET['_wpnonce'], 'cqa_delete_school' ) ) {
         $school = School::find( intval( $_GET['id'] ) );
-        if ( $school ) {
+        if ( $school && Access_Policy::can_manage_school( $school ) ) {
             $school->delete();
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'School deleted successfully.', 'chroma-qa-reports' ) . '</p></div>';
+        } else {
+            wp_die( __( 'You do not have permission to delete this school.', 'chroma-qa-reports' ) );
         }
     }
 }
@@ -38,10 +41,15 @@ if ( isset( $_GET['region'] ) && $_GET['region'] ) {
     $args['region'] = sanitize_text_field( $_GET['region'] );
 }
 
+$args = Access_Policy::scope_school_args( $args );
 $schools = School::all( $args );
-$total_schools = School::count( $args );
+$count_args = $args;
+unset( $count_args['limit'], $count_args['offset'] );
+$total_schools = School::count( $count_args );
 $total_pages = ceil( $total_schools / $per_page );
-$regions = School::get_regions();
+$regions = Access_Policy::has_global_scope()
+    ? School::get_regions()
+    : array_values( array_filter( [ Access_Policy::get_region_scope() ] ) );
 ?>
 
 <div class="wrap cqa-wrap">

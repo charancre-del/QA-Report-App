@@ -6,8 +6,9 @@
  */
 
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
-if ( ! current_user_can( 'cqa_manage_schools' ) ) {
+if ( ! Access_Policy::can_manage_any_school() ) {
     wp_die( __( 'You do not have permission to manage schools.', 'chroma-qa-reports' ) );
 }
 
@@ -17,12 +18,19 @@ $school = null;
 
 if ( $action === 'edit' && $school_id ) {
     $school = School::find( $school_id );
-    if ( ! $school ) {
+    if ( ! $school || ! Access_Policy::can_manage_school( $school ) ) {
         wp_die( 'School not found' );
     }
 }
 
 $title = $action === 'edit' ? 'Edit School' : 'Add New School';
+$visible_schools = School::all( Access_Policy::scope_school_args( [ 'limit' => 10000 ] ) );
+$visible_regions = array_values( array_unique( array_filter( wp_list_pluck( $visible_schools, 'region' ) ) ) );
+$visible_locations = array_values( array_unique( array_filter( wp_list_pluck( $visible_schools, 'location' ) ) ) );
+
+if ( $action === 'new' && ! Access_Policy::has_global_scope() && Access_Policy::get_region_scope() ) {
+    $visible_regions = [ Access_Policy::get_region_scope() ];
+}
 ?>
 
 <div class="cqa-dashboard">
@@ -51,7 +59,7 @@ $title = $action === 'edit' ? 'Edit School' : 'Add New School';
                     <label for="region">Region *</label>
                     <input type="text" id="region" name="region" required value="<?php echo esc_attr( $school ? $school->region : '' ); ?>" class="cqa-input" list="regions-list">
                     <datalist id="regions-list">
-                        <?php foreach ( School::get_regions() as $region ) : ?>
+                        <?php foreach ( $visible_regions as $region ) : ?>
                             <option value="<?php echo esc_attr( $region ); ?>">
                         <?php endforeach; ?>
                     </datalist>
@@ -70,7 +78,7 @@ $title = $action === 'edit' ? 'Edit School' : 'Add New School';
                 <label for="location">Location (City/Address)</label>
                 <input type="text" id="location" name="location" value="<?php echo esc_attr( $school ? $school->location : '' ); ?>" class="cqa-input" list="locations-list">
                 <datalist id="locations-list">
-                    <?php foreach ( School::get_locations() as $loc ) : ?>
+                    <?php foreach ( $visible_locations as $loc ) : ?>
                         <option value="<?php echo esc_attr( $loc ); ?>">
                     <?php endforeach; ?>
                 </datalist>

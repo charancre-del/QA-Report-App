@@ -147,6 +147,7 @@ class School {
         $reports_table = Report::get_table_name();
 
         $defaults = [
+            'ids'               => null,
             'status'            => '',
             'region'            => '',
             'compliance_status' => '', // exceeds, meets, needs_improvement
@@ -161,6 +162,16 @@ class School {
 
         $where = [];
         $values = [];
+
+        if ( is_array( $args['ids'] ) ) {
+            $ids = array_values( array_filter( array_map( 'absint', $args['ids'] ) ) );
+            if ( empty( $ids ) ) {
+                $where[] = '1 = 0';
+            } else {
+                $where[] = 's.id IN (' . implode( ', ', array_fill( 0, count( $ids ), '%d' ) ) . ')';
+                $values = array_merge( $values, $ids );
+            }
+        }
 
         if ( ! empty( $args['status'] ) ) {
             $where[] = 's.status = %s';
@@ -220,18 +231,31 @@ class School {
         $where = [];
         $values = [];
 
+        if ( isset( $args['ids'] ) && is_array( $args['ids'] ) ) {
+            $ids = array_values( array_filter( array_map( 'absint', $args['ids'] ) ) );
+            if ( empty( $ids ) ) {
+                $where[] = '1 = 0';
+            } else {
+                $where[] = 'id IN (' . implode( ', ', array_fill( 0, count( $ids ), '%d' ) ) . ')';
+                $values = array_merge( $values, $ids );
+            }
+        }
+
         if ( ! empty( $args['status'] ) ) {
             $where[] = 'status = %s';
             $values[] = $args['status'];
         }
 
+        if ( ! empty( $args['region'] ) ) {
+            $where[] = 'region = %s';
+            $values[] = $args['region'];
+        }
+
         $where_clause = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
 
-        if ( ! empty( $values ) ) {
-            return (int) $wpdb->get_var( $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$table} {$where_clause}",
-                $values
-            ) );
+        if ( ! empty( $where ) ) {
+            $sql = "SELECT COUNT(*) FROM {$table} {$where_clause}";
+            return (int) $wpdb->get_var( empty( $values ) ? $sql : $wpdb->prepare( $sql, $values ) );
         }
 
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );

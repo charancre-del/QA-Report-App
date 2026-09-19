@@ -283,7 +283,9 @@ class Google_OAuth {
                 'user_pass'  => wp_generate_password(),
                 'first_name' => $user_info['given_name'] ?? '',
                 'last_name'  => $user_info['family_name'] ?? '',
-                'role'       => get_option( 'cqa_sso_default_role', 'cqa_qa_officer' ),
+                // New SSO users start fail-closed. An administrator must assign
+                // cqa_school_id or a separately approved broader QA role.
+                'role'       => 'cqa_program_manager',
             ];
 
             $user_id = wp_insert_user( $userdata );

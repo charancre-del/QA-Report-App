@@ -84,6 +84,7 @@ class Plugin {
         // Auth
         require_once CQA_PLUGIN_DIR . 'includes/auth/class-google-oauth.php';
         require_once CQA_PLUGIN_DIR . 'includes/auth/class-user-roles.php';
+        require_once CQA_PLUGIN_DIR . 'includes/auth/class-access-policy.php';
 
         // Integrations
         require_once CQA_PLUGIN_DIR . 'includes/integrations/class-google-drive.php';

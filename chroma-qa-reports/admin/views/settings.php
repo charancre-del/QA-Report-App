@@ -9,11 +9,12 @@ namespace ChromaQA\Admin;
 
 // Get current settings
 $google_client_id = get_option( 'cqa_google_client_id', '' );
-$google_client_secret = get_option( 'cqa_google_client_secret', '' );
-$gemini_api_key = get_option( 'cqa_gemini_api_key', '' );
+$google_client_secret_configured = '' !== (string) get_option( 'cqa_google_client_secret', '' );
+$google_developer_key_configured = '' !== (string) get_option( 'cqa_google_developer_key', '' );
+$gemini_api_key_configured = '' !== (string) get_option( 'cqa_gemini_api_key', '' );
 $drive_root_folder = get_option( 'cqa_drive_root_folder', '' );
 $company_name = get_option( 'cqa_company_name', 'Chroma Early Learning Academy' );
-$google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
+$google_maps_api_key_configured = '' !== (string) get_option( 'cqa_google_maps_api_key', '' );
 ?>
 
 <div class="wrap cqa-wrap">
@@ -64,7 +65,7 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                             </th>
                             <td>
                                 <input type="password" id="cqa_google_client_secret" name="cqa_google_client_secret" 
-                                       value="<?php echo esc_attr( $google_client_secret ); ?>" class="regular-text">
+                                       value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $google_client_secret_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="regular-text">
                             </td>
                         </tr>
                         <tr>
@@ -73,7 +74,7 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                             </th>
                             <td>
                                 <input type="password" id="cqa_google_developer_key" name="cqa_google_developer_key" 
-                                       value="<?php echo esc_attr( get_option( 'cqa_google_developer_key', '' ) ); ?>" class="regular-text">
+                                       value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $google_developer_key_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="regular-text">
                                 <p class="description">
                                     <?php esc_html_e( 'Required for Google Picker and Maps. Create an API key in Google Cloud Console.', 'chroma-qa-reports' ); ?>
                                 </p>
@@ -96,26 +97,17 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                                 <label for="cqa_sso_default_role"><?php esc_html_e( 'Default Role (SSO)', 'chroma-qa-reports' ); ?></label>
                             </th>
                             <td>
-                                <select id="cqa_sso_default_role" name="cqa_sso_default_role">
-                                    <?php
-                                    $current_role = get_option( 'cqa_sso_default_role', 'cqa_qa_officer' );
-                                    $roles = \ChromaQA\Auth\User_Roles::get_roles();
-                                    foreach ( $roles as $key => $label ) : 
-                                    ?>
-                                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $current_role, $key ); ?>>
-                                            <?php echo esc_html( $label ); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <input type="hidden" id="cqa_sso_default_role" name="cqa_sso_default_role" value="cqa_program_manager">
+                                <strong><?php esc_html_e( 'QA Program Manager (no school scope until assigned)', 'chroma-qa-reports' ); ?></strong>
                                 <p class="description">
-                                    <?php esc_html_e( 'Role assigned to new users created via Google SSO.', 'chroma-qa-reports' ); ?>
+                                    <?php esc_html_e( 'New SSO users cannot access school or report data until an administrator assigns an explicit school or approved broader role.', 'chroma-qa-reports' ); ?>
                                 </p>
                             </td>
                         </tr>
                     </table>
 
                     <div class="cqa-oauth-status">
-                        <?php if ( ! empty( $google_client_id ) && ! empty( $google_client_secret ) ) : ?>
+                        <?php if ( ! empty( $google_client_id ) && $google_client_secret_configured ) : ?>
                             <span class="cqa-status-badge success">
                                 <span class="dashicons dashicons-yes-alt"></span>
                                 <?php esc_html_e( 'Credentials Configured', 'chroma-qa-reports' ); ?>
@@ -154,7 +146,7 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                                 <p class="description">
                                     <?php esc_html_e( 'The ID of the Google Drive folder where school folders will be created.', 'chroma-qa-reports' ); ?>
                                 </p>
-                                <?php if ( ! empty( $google_client_id ) && ! empty( $google_client_secret ) ) : ?>
+                                <?php if ( ! empty( $google_client_id ) && $google_client_secret_configured ) : ?>
                                     <button type="button" class="button button-secondary" id="cqa-drive-picker-btn">
                                         <span class="dashicons dashicons-google"></span>
                                         <?php esc_html_e( 'Select Folder', 'chroma-qa-reports' ); ?>
@@ -187,13 +179,13 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                             </th>
                             <td>
                                 <input type="password" id="cqa_gemini_api_key" name="cqa_gemini_api_key" 
-                                       value="<?php echo esc_attr( $gemini_api_key ); ?>" class="regular-text">
+                                       value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $gemini_api_key_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="regular-text">
                             </td>
                         </tr>
                     </table>
 
                     <div class="cqa-oauth-status">
-                        <?php if ( ! empty( $gemini_api_key ) ) : ?>
+                        <?php if ( $gemini_api_key_configured ) : ?>
                             <span class="cqa-status-badge success">
                                 <span class="dashicons dashicons-yes-alt"></span>
                                 <?php esc_html_e( 'API Key Configured', 'chroma-qa-reports' ); ?>
@@ -236,7 +228,7 @@ $google_maps_api_key = get_option( 'cqa_google_maps_api_key', '' );
                             </th>
                             <td>
                                 <input type="password" id="cqa_google_maps_api_key" name="cqa_google_maps_api_key" 
-                                       value="<?php echo esc_attr( $google_maps_api_key ); ?>" class="regular-text">
+                                       value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $google_maps_api_key_configured ? 'Configured — enter a value to replace' : 'Not configured' ); ?>" class="regular-text">
                                 <p class="description">
                                     <?php esc_html_e( 'Required for school heat map and GPS verification features.', 'chroma-qa-reports' ); ?>
                                     <a href="https://console.cloud.google.com/google/maps-apis" target="_blank"><?php esc_html_e( 'Get API Key', 'chroma-qa-reports' ); ?></a>

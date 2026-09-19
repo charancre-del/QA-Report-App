@@ -7,6 +7,7 @@
 
 use ChromaQA\Models\Report;
 use ChromaQA\Models\School;
+use ChromaQA\Auth\Access_Policy;
 
 if ( ! is_user_logged_in() ) {
     wp_redirect( home_url( '/qa-reports/login/' ) );
@@ -32,17 +33,13 @@ if ( $filter_status ) $args['status'] = $filter_status;
 if ( $filter_type ) $args['report_type'] = $filter_type;
 if ( $filter_user ) $args['user_id'] = $filter_user;
 
-// Limit to own reports if not admin/director
-if ( ! current_user_can( 'cqa_view_all_reports' ) ) {
-    $args['user_id'] = get_current_user_id();
-}
-
+$args = Access_Policy::scope_report_args( $args );
 $reports = Report::all( $args );
 // Count distinct for pagination? Report model doesn't support complex count yet efficiently without duplication. 
 // Just showing simple pagination controls.
 $has_next = count( $reports ) === $limit; // Approximation
 
-$schools = School::all();
+$schools = School::all( Access_Policy::scope_school_args( [ 'limit' => 10000 ] ) );
 ?>
 
 <div class="cqa-dashboard">
@@ -197,11 +194,11 @@ $schools = School::all();
                                 <td>
                                     <div class="cqa-table-actions">
                                         <a href="<?php echo home_url( '/qa-reports/report/' . $report->id . '/' ); ?>" class="cqa-btn-icon" title="View">👁️</a>
-                                        <?php if ( current_user_can( 'cqa_edit_all_reports' ) || $report->user_id === get_current_user_id() ) : ?>
+                                        <?php if ( Access_Policy::can_edit_report( $report ) ) : ?>
                                             <a href="<?php echo home_url( '/qa-reports/edit/' . $report->id . '/' ); ?>" class="cqa-btn-icon" title="Edit">✏️</a>
                                         <?php endif; ?>
                                         <a href="<?php echo home_url( '/qa-reports/new/?action=duplicate&id=' . $report->id ); ?>" class="cqa-btn-icon" title="Duplicate">📋</a>
-                                        <?php if ( current_user_can( 'cqa_delete_reports' ) || $report->user_id === get_current_user_id() ) : ?>
+                                        <?php if ( Access_Policy::can_delete_report( $report ) ) : ?>
                                             <button type="button" class="cqa-btn-icon cqa-delete-report" style="background:none;border:none;cursor:pointer;" data-id="<?php echo esc_attr( $report->id ); ?>" onclick="if(window.CQA) CQA.deleteReport(<?php echo esc_attr( $report->id ); ?>)" title="Delete">🗑️</button>
                                         <?php endif; ?>
                                     </div>
