@@ -1,0 +1,10 @@
+data/
+*.snapshot.json
+*.audit.jsonl
+grants.json
+.env*
+.playwright-cli/
+output/playwright/
+node_modules/
+output/pdf/
+tmp/pdfs/

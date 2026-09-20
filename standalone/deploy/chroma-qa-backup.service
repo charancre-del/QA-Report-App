@@ -1,0 +1,16 @@
+[Unit]
+Description=Encrypted Chroma QA database and evidence backup
+
+[Service]
+Type=oneshot
+User=chroma-qa
+Group=chroma-qa
+WorkingDirectory=/opt/chroma-qa/current/standalone
+EnvironmentFile=/etc/chroma-qa/app.env
+EnvironmentFile=/etc/chroma-qa/backup.env
+ExecStart=/bin/sh deploy/backup.sh
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/chroma-qa /var/backups/chroma-qa

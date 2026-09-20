@@ -1,0 +1,5 @@
+{
+  "source": { "url": "https://x3yyntt5tp-staging.wpdns.site", "database": "x3yyadl_staging", "table_prefix": "wp_" },
+  "gates": {},
+  "note": "Intentionally incomplete. No current live data, backup, OIDC or human UAT proof is available."
+}

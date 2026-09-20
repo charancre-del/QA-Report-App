@@ -1,0 +1,25 @@
+[Unit]
+Description=Independent Chroma QA web application
+After=network.target
+
+[Service]
+Type=simple
+User=chroma-qa
+Group=chroma-qa
+WorkingDirectory=/opt/chroma-qa/current/standalone
+EnvironmentFile=/etc/chroma-qa/app.env
+ExecStart=/usr/bin/node src/server.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/chroma-qa /var/log/chroma-qa
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LimitNOFILE=4096
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

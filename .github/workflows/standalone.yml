@@ -1,0 +1,29 @@
+name: Independent QA application
+on:
+  push:
+    paths: ['standalone/**', '.github/workflows/standalone.yml']
+  pull_request:
+    paths: ['standalone/**', '.github/workflows/standalone.yml']
+permissions:
+  contents: read
+jobs:
+  standalone:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['22', '24']
+    defaults:
+      run:
+        working-directory: standalone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: standalone/package-lock.json
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm test
+      - run: php -l tools/export-wordpress.php
+      - run: sh -n deploy/backup.sh

@@ -1,0 +1,18 @@
+{
+  "name": "chroma-qa-standalone",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "start": "node src/server.mjs",
+    "import": "node src/import.mjs"
+  },
+  "dependencies": {
+    "pdfkit": "0.20.2",
+    "sharp": "0.35.4"
+  }
+}
